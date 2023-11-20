@@ -1,0 +1,25 @@
+﻿namespace TeamUp.Domain.SeedWork;
+
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent where TId : TypedId<TId>, new()
+{
+	private readonly List<IDomainEvent> _domainEvents = new();
+
+	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+
+	public TId Id { get; }
+
+	protected Entity(TId id)
+	{
+		Id = id;
+	}
+
+	protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+
+	public void ClearDomainEvents() => _domainEvents.Clear();
+
+	public bool Equals(Entity<TId>? other) => other is not null && Id.Equals(other.Id);
+
+	public override bool Equals(object? obj) => obj is Entity<TId> other && Id.Equals(other.Id);
+
+	public override int GetHashCode() => Id.Value.GetHashCode();
+}
