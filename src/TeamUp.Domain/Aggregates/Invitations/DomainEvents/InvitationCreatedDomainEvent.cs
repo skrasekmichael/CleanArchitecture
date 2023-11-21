@@ -1,6 +1,5 @@
-﻿using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.SeedWork;
+﻿using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Domain.Aggregates.Invitations.DomainEvents;
 
-internal record InvitationCreatedDomainEvent(Invitation Invitation) : IDomainEvent;
+public sealed record InvitationCreatedDomainEvent(Invitation Invitation) : IDomainEvent;

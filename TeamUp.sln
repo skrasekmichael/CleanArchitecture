@@ -5,13 +5,13 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2565E01A-0189-44D1-B8EF-24490DB68608}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Application", "TeamUp.Application\TeamUp.Application.csproj", "{088538A8-5F06-43D3-A3F0-0EE80480136F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Application", "src\TeamUp.Application\TeamUp.Application.csproj", "{088538A8-5F06-43D3-A3F0-0EE80480136F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Domain", "TeamUp.Domain\TeamUp.Domain.csproj", "{B450F5AA-0D07-4A15-93C9-772107912EE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Domain", "src\TeamUp.Domain\TeamUp.Domain.csproj", "{B450F5AA-0D07-4A15-93C9-772107912EE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Infrastructure", "TeamUp.Infrastructure\TeamUp.Infrastructure.csproj", "{E7527EA8-CE3D-4DEA-A888-8914B010CEC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Infrastructure", "src\TeamUp.Infrastructure\TeamUp.Infrastructure.csproj", "{E7527EA8-CE3D-4DEA-A888-8914B010CEC3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Common", "TeamUp.Common\TeamUp.Common.csproj", "{14F9228A-78AF-406F-A8D9-A9B968F743D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Common", "src\TeamUp.Common\TeamUp.Common.csproj", "{14F9228A-78AF-406F-A8D9-A9B968F743D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC1CF8F7-48DE-4123-9124-10F53943EBE8}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B78B958B-7250-4FEC-96F4-4FE0DE49D916}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamUp.ArchitectureTests", "tests\TeamUp.ArchitectureTests\TeamUp.ArchitectureTests.csproj", "{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +46,10 @@ Global
 		{14F9228A-78AF-406F-A8D9-A9B968F743D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14F9228A-78AF-406F-A8D9-A9B968F743D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14F9228A-78AF-406F-A8D9-A9B968F743D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +59,7 @@ Global
 		{B450F5AA-0D07-4A15-93C9-772107912EE8} = {2565E01A-0189-44D1-B8EF-24490DB68608}
 		{E7527EA8-CE3D-4DEA-A888-8914B010CEC3} = {2565E01A-0189-44D1-B8EF-24490DB68608}
 		{14F9228A-78AF-406F-A8D9-A9B968F743D3} = {2565E01A-0189-44D1-B8EF-24490DB68608}
+		{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF} = {B78B958B-7250-4FEC-96F4-4FE0DE49D916}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E9D991D-377D-45D8-9599-801391683CEA}
