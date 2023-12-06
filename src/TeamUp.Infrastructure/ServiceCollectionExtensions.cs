@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
 		services.AddDbContext<ApplicationDbContext>((serviceProvider, optionsBuilder) =>
 		{
 			var options = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>();
-			optionsBuilder.UseSqlServer(options.Value.ConnectionString);
+			optionsBuilder.UseNpgsql(options.Value.ConnectionString);
 		});
 
 		return services;
