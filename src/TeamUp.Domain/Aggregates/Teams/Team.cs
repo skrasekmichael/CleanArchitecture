@@ -76,11 +76,11 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 	{
 		return newRole.Ensure(
 				role => !role.IsOwner(),
-				DomainError.New("Not allowed to have more team owners."))
+				DomainError.New("Not allowed to have multiple team owners."))
 			.Map(_ => GetTeamMemberByUserId(initiatorId))
 			.Ensure(
 				initiator => initiator.Role.CanUpdateTeamRoles(),
-				AuthorizationError.New("Initiator user doesn't have sufficient access rights."))
+				AuthorizationError.New("Insufficient access rights."))
 			.Map(_ => GetTeamMember(memberId))
 			.Then(teamMember => teamMember.UpdateRole(newRole));
 	}
