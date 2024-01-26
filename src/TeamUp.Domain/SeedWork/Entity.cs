@@ -2,7 +2,7 @@
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent where TId : TypedId<TId>, new()
 {
-	private readonly List<IDomainEvent> _domainEvents = new();
+	private readonly List<IDomainEvent> _domainEvents = [];
 
 	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
 

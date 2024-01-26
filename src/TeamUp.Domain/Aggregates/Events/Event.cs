@@ -10,7 +10,7 @@ public sealed record EventId : TypedId<EventId>;
 
 public sealed class Event : AggregateRoot<Event, EventId>
 {
-	private readonly List<EventResponse> _eventResponses = new();
+	private readonly List<EventResponse> _eventResponses = [];
 
 	public EventTypeId EventTypeId { get; private set; }
 	public TeamId TeamId { get; }
@@ -50,9 +50,9 @@ public sealed class Event : AggregateRoot<Event, EventId>
 			.Ensure(
 				status => status.IsOpenToResponses(),
 				DomainError.New($"Event is not open to responses."))
-			.Map(_ => GetResposnseCloseTime())
+			.Map(_ => GetResponseCloseTime())
 			.Ensure(
-				resposnseCloseTime => dateTimeProvider.DateTimeOffsetNow < resposnseCloseTime,
+				responseCloseTime => dateTimeProvider.DateTimeOffsetNow < responseCloseTime,
 				DomainError.New("Time for responses ended.")
 			)
 			.Map(_ => _eventResponses.Find(er => er.TeamMemberId == memberId))
@@ -94,7 +94,7 @@ public sealed class Event : AggregateRoot<Event, EventId>
 			AddDomainEvent(new EventUpdatedDomainEvent(this));
 	}
 
-	private DateTimeOffset GetResposnseCloseTime() => From - MeetTime - ReplyClosingTimeBeforeMeetTime;
+	private DateTimeOffset GetResponseCloseTime() => From - MeetTime - ReplyClosingTimeBeforeMeetTime;
 
 	public static Result<Event> Create(
 		EventTypeId eventTypeId,

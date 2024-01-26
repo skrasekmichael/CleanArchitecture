@@ -9,8 +9,8 @@ public sealed record TeamId : TypedId<TeamId>;
 
 public sealed class Team : AggregateRoot<Team, TeamId>
 {
-	private readonly List<EventType> _eventTypes = new();
-	private readonly List<TeamMember> _members = new();
+	private readonly List<EventType> _eventTypes = [];
+	private readonly List<TeamMember> _members = [];
 
 	public string Name { get; private set; }
 	public IReadOnlyList<EventType> EventTypes => _eventTypes.AsReadOnly();

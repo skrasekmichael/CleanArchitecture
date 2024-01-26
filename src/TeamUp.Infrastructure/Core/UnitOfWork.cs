@@ -18,6 +18,6 @@ internal sealed class UnitOfWork : IUnitOfWork
 	public async Task SaveChangesAsync(CancellationToken ct = default)
 	{
 		await _eventsDispatcher.DispatchDomainEventsAsync(ct);
-		await _context.SaveChangesAsync();
+		await _context.SaveChangesAsync(ct);
 	}
 }
