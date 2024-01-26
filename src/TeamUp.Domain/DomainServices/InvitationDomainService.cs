@@ -29,8 +29,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 			return AuthorizationError.New("Can't invite team members.");
 
 		var user = await _userRepository.GetUserByEmailAsync(email, ct);
-		if (user is null)
-			user = User.Generate(email);
+		user ??= User.Generate(email);
 
 		return _invitationFactory.CreateInvitation(user.Id, teamId);
 	}
