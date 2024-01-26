@@ -5,6 +5,7 @@ root = true
 indent_style = tab
 end_of_line = crlf
 insert_final_newline = true
+spelling_languages = en-US
 
 [*.json]
 indent_style = space
@@ -392,4 +393,4 @@ dotnet_style_allow_multiple_blank_lines_experimental = true:silent
 dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
 
 dotnet_diagnostic.IDE0055.severity = error
-
+dotnet_style_prefer_collection_expression = true:suggestion
