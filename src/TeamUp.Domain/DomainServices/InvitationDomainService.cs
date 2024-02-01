@@ -11,11 +11,14 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 	private readonly ITeamRepository _teamRepository;
 	private readonly InvitationFactory _invitationFactory;
 
-	public InvitationDomainService(IUserRepository userRepository, InvitationFactory invitationFactory, ITeamRepository teamRepository)
+	public InvitationDomainService(
+		IUserRepository userRepository,
+		ITeamRepository teamRepository,
+		InvitationFactory invitationFactory)
 	{
 		_userRepository = userRepository;
-		_invitationFactory = invitationFactory;
 		_teamRepository = teamRepository;
+		_invitationFactory = invitationFactory;
 	}
 
 	public async Task<Result<Invitation>> InviteUserAsync(UserId loggedUserId, TeamId teamId, string email, CancellationToken ct = default)

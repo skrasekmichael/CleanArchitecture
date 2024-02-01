@@ -2,6 +2,4 @@
 
 namespace TeamUp.Domain.SeedWork;
 
-public interface IDomainEvent : INotification
-{
-}
+public interface IDomainEvent : INotification;

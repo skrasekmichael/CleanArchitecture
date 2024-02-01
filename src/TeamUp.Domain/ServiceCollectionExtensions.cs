@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
+using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.DomainServices;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Domain;
 
@@ -11,11 +11,7 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddScoped<IInvitationDomainService, InvitationDomainService>();
 		services.AddScoped<IEventDomainService, EventDomainService>();
-
-		services.AddMediatR(config =>
-		{
-			config.RegisterServicesFromAssembly(typeof(IDomainEventHandler<>).Assembly);
-		});
+		services.AddSingleton<InvitationFactory>();
 
 		return services;
 	}

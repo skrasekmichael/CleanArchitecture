@@ -16,6 +16,10 @@ public sealed class TeamMember : Entity<TeamMemberId>
 	public TeamRole Role { get; private set; }
 	public DateTimeOffset TimeStamp { get; }
 
+#pragma warning disable CS8618 // EF Core constructor
+	private TeamMember() : base() { }
+#pragma warning restore CS8618
+
 	internal TeamMember(
 		TeamMemberId id,
 		UserId userId,

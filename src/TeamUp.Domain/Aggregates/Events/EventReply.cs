@@ -1,11 +1,17 @@
-﻿namespace TeamUp.Domain.Aggregates.Events;
+﻿using TeamUp.Domain.SeedWork;
 
-public sealed record EventReply
+namespace TeamUp.Domain.Aggregates.Events;
+
+public sealed record EventReply : IValueObject
 {
 	private static readonly EventReply YesReply = new(ReplyType.Yes, string.Empty);
 
 	public ReplyType Type { get; }
 	public string Message { get; }
+
+#pragma warning disable CS8618 // EF Core constructor
+	private EventReply() { }
+#pragma warning restore CS8618
 
 	private EventReply(ReplyType type, string message)
 	{

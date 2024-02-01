@@ -6,5 +6,5 @@ internal sealed class DateTimeProvider : IDateTimeProvider
 {
 	public DateTime UtcNow => DateTime.UtcNow;
 
-	public DateTimeOffset DateTimeOffsetNow => DateTimeOffset.Now;
+	public DateTimeOffset DateTimeOffsetUtcNow => DateTimeOffset.UtcNow;
 }

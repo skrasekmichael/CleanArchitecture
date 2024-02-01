@@ -4,5 +4,5 @@ public interface IDateTimeProvider
 {
 	public DateTime UtcNow { get; }
 
-	public DateTimeOffset DateTimeOffsetNow { get; }
+	public DateTimeOffset DateTimeOffsetUtcNow { get; }
 }

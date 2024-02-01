@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Teams;
@@ -22,6 +23,7 @@ internal sealed class EventConfiguration : BaseEntityConfiguration<Event, EventI
 		eventEntityBuilder
 			.HasMany(e => e.EventResponses)
 			.WithOne()
-			.HasForeignKey(eventResponse => eventResponse.EventId);
+			.HasForeignKey(eventResponse => eventResponse.EventId)
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }

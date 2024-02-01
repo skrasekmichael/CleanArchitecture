@@ -2,25 +2,25 @@
 
 public sealed class Password : IEquatable<Password>
 {
-	public const int SaltSize = 16; //128 bit salt
-	public const int HashSize = 64; //512 bit hash
-	public const int TotalSize = SaltSize + HashSize;
+	public const int SALT_SIZE = 16; //128 bit salt
+	public const int HASH_SIZE = 64; //512 bit hash
+	public const int TOTAL_SIZE = SALT_SIZE + HASH_SIZE;
 
 	public byte[] Salt { get; private set; }
 	public byte[] Hash { get; private set; }
 
 	public Password()
 	{
-		Salt = new byte[SaltSize];
-		Hash = new byte[HashSize];
+		Salt = new byte[SALT_SIZE];
+		Hash = new byte[HASH_SIZE];
 	}
 
 	public Password(byte[] salt, byte[] hash)
 	{
-		if (salt.Length != SaltSize)
-			throw new ArgumentException($"Received {salt.Length} bytes, {SaltSize} was expected.", nameof(salt));
-		else if (hash.Length != HashSize)
-			throw new ArgumentException($"Received {hash.Length} bytes, {HashSize} was expected.", nameof(hash));
+		if (salt.Length != SALT_SIZE)
+			throw new ArgumentException($"Received {salt.Length} bytes, {SALT_SIZE} was expected.", nameof(salt));
+		else if (hash.Length != HASH_SIZE)
+			throw new ArgumentException($"Received {hash.Length} bytes, {HASH_SIZE} was expected.", nameof(hash));
 
 		Salt = salt;
 		Hash = hash;
@@ -28,18 +28,18 @@ public sealed class Password : IEquatable<Password>
 
 	public Password(byte[] bytes)
 	{
-		if (bytes.Length != TotalSize)
-			throw new ArgumentException($"Received {bytes.Length} bytes, {TotalSize} was expected.", nameof(bytes));
+		if (bytes.Length != TOTAL_SIZE)
+			throw new ArgumentException($"Received {bytes.Length} bytes, {TOTAL_SIZE} was expected.", nameof(bytes));
 
-		Salt = bytes[..SaltSize];
-		Hash = bytes[SaltSize..];
+		Salt = bytes[..SALT_SIZE];
+		Hash = bytes[SALT_SIZE..];
 	}
 
 	public byte[] GetBytes()
 	{
-		var bytes = new byte[TotalSize];
+		var bytes = new byte[TOTAL_SIZE];
 		Salt.CopyTo(bytes, 0);
-		Hash.CopyTo(bytes, SaltSize);
+		Hash.CopyTo(bytes, SALT_SIZE);
 		return bytes;
 	}
 

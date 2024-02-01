@@ -2,6 +2,4 @@
 
 namespace TeamUp.Domain.SeedWork;
 
-public interface IDomainEventHandler<TDomainEvent> : INotificationHandler<TDomainEvent> where TDomainEvent : IDomainEvent
-{
-}
+public interface IDomainEventHandler<TDomainEvent> : INotificationHandler<TDomainEvent> where TDomainEvent : IDomainEvent;

@@ -1,6 +1,4 @@
-﻿using TeamUp.Common.Abstraction;
-
-namespace TeamUp.Infrastructure.Options;
+﻿namespace TeamUp.Infrastructure.Options;
 
 internal sealed class DatabaseOptions : IApplicationOptions
 {

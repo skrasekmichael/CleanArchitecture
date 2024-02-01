@@ -4,9 +4,13 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent whe
 {
 	private readonly List<IDomainEvent> _domainEvents = [];
 
-	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
 	public TId Id { get; }
+
+#pragma warning disable CS8618 // EF Core constructor
+	protected internal Entity() : base() { }
+#pragma warning restore CS8618
 
 	protected Entity(TId id)
 	{

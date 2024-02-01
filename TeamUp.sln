@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2565E01A-0189-44D1-B8EF-24490DB68608}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Api", "src\TeamUp.Api\TeamUp.Api.csproj", "{F2C98137-BF50-4057-AF00-4066EC92E3E1}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Application", "src\TeamUp.Application\TeamUp.Application.csproj", "{088538A8-5F06-43D3-A3F0-0EE80480136F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.Domain", "src\TeamUp.Domain\TeamUp.Domain.csproj", "{B450F5AA-0D07-4A15-93C9-772107912EE8}"
@@ -22,7 +24,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B78B958B-7250-4FEC-96F4-4FE0DE49D916}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamUp.ArchitectureTests", "tests\TeamUp.ArchitectureTests\TeamUp.ArchitectureTests.csproj", "{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.ArchitectureTests", "tests\TeamUp.ArchitectureTests\TeamUp.ArchitectureTests.csproj", "{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{F77B386C-FDBC-4BB4-AF07-0CF054DBDB7E}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\rundb.ps1 = scripts\rundb.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +37,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2C98137-BF50-4057-AF00-4066EC92E3E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C98137-BF50-4057-AF00-4066EC92E3E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C98137-BF50-4057-AF00-4066EC92E3E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C98137-BF50-4057-AF00-4066EC92E3E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{088538A8-5F06-43D3-A3F0-0EE80480136F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{088538A8-5F06-43D3-A3F0-0EE80480136F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{088538A8-5F06-43D3-A3F0-0EE80480136F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,6 +66,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{F2C98137-BF50-4057-AF00-4066EC92E3E1} = {2565E01A-0189-44D1-B8EF-24490DB68608}
 		{088538A8-5F06-43D3-A3F0-0EE80480136F} = {2565E01A-0189-44D1-B8EF-24490DB68608}
 		{B450F5AA-0D07-4A15-93C9-772107912EE8} = {2565E01A-0189-44D1-B8EF-24490DB68608}
 		{E7527EA8-CE3D-4DEA-A888-8914B010CEC3} = {2565E01A-0189-44D1-B8EF-24490DB68608}

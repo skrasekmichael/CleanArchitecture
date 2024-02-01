@@ -6,5 +6,5 @@ using TeamUp.Domain.Aggregates.Users;
 namespace TeamUp.Domain.DomainServices;
 public interface IEventDomainService
 {
-	Task<Result<Event>> CreateEventAsync(UserId loggedUserId, TeamId teamId, EventTypeId eventTypeId, DateTimeOffset from, DateTimeOffset to, string description, TimeSpan meetTime, TimeSpan replyClosingTimeBeforeMeetTime, CancellationToken ct = default);
+	public Task<Result<Event>> CreateEventAsync(UserId loggedUserId, TeamId teamId, EventTypeId eventTypeId, DateTimeOffset from, DateTimeOffset to, string description, TimeSpan meetTime, TimeSpan replyClosingTimeBeforeMeetTime, CancellationToken ct = default);
 }

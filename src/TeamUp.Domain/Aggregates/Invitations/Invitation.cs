@@ -18,6 +18,10 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 
 	public DateTime CreatedUtc { get; }
 
+#pragma warning disable CS8618 // EF Core constructor
+	private Invitation() : base() { }
+#pragma warning restore CS8618
+
 	internal Invitation(InvitationId id, UserId recipientId, TeamId teamId, DateTime createdUtc) : base(id)
 	{
 		RecipientId = recipientId;

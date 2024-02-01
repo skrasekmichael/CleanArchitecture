@@ -15,6 +15,10 @@ public sealed class EventResponse : Entity<EventResponseId>
 	public EventReply Reply { get; private set; }
 	public DateTime TimeStampUtc { get; private set; }
 
+#pragma warning disable CS8618 // EF Core constructor
+	private EventResponse() : base() { }
+#pragma warning restore CS8618
+
 	private EventResponse(EventResponseId id, TeamMemberId teamMemberId, EventId eventId, EventReply reply, DateTime timeStampUtc) : base(id)
 	{
 		TeamMemberId = teamMemberId;

@@ -2,6 +2,6 @@
 
 public interface ITeamRepository
 {
-	Task<Team?> GetTeamByIdWithTeamMembersAsync(TeamId teamId, CancellationToken ct = default);
-	Task AddTeamAsync(Team team, CancellationToken ct = default);
+	public Task<Team?> GetTeamByIdWithTeamMembersAsync(TeamId teamId, CancellationToken ct = default);
+	public void AddTeam(Team team);
 }

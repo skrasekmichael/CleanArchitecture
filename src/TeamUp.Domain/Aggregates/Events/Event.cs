@@ -23,6 +23,10 @@ public sealed class Event : AggregateRoot<Event, EventId>
 	public TimeSpan ReplyClosingTimeBeforeMeetTime { get; private set; }
 	public IReadOnlyList<EventResponse> EventResponses => _eventResponses.AsReadOnly();
 
+#pragma warning disable CS8618 // EF Core constructor
+	private Event() : base() { }
+#pragma warning restore CS8618
+
 	internal Event(
 		EventId id,
 		EventTypeId eventTypeId,
@@ -52,7 +56,7 @@ public sealed class Event : AggregateRoot<Event, EventId>
 				DomainError.New($"Event is not open to responses."))
 			.Map(_ => GetResponseCloseTime())
 			.Ensure(
-				responseCloseTime => dateTimeProvider.DateTimeOffsetNow < responseCloseTime,
+				responseCloseTime => dateTimeProvider.DateTimeOffsetUtcNow < responseCloseTime,
 				DomainError.New("Time for responses ended.")
 			)
 			.Map(_ => _eventResponses.Find(er => er.TeamMemberId == memberId))
@@ -109,7 +113,7 @@ public sealed class Event : AggregateRoot<Event, EventId>
 		if (from >= to)
 			return ValidationError.New("Event can't end before it starts.");
 
-		if (from >= dateTimeProvider.DateTimeOffsetNow)
+		if (from >= dateTimeProvider.DateTimeOffsetUtcNow)
 			return ValidationError.New("Can't create event in past.");
 
 		return new Event(

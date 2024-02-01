@@ -8,7 +8,6 @@ namespace TeamUp.Infrastructure.Processing;
 internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 {
 	private readonly ApplicationDbContext _context;
-
 	private readonly IPublisher _publisher;
 
 	public DomainEventsDispatcher(ApplicationDbContext context, IPublisher publisher)
