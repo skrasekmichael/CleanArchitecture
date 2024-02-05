@@ -57,3 +57,5 @@ app.UseAuthorization();
 app.MapEndpoints();
 
 app.Run();
+
+public sealed partial class Program;

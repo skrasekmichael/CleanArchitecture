@@ -42,6 +42,10 @@ public static class WebApplicationExtensions
 	{
 		using var scope = app.Services.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-		await dbContext.Database.MigrateAsync(ct);
+
+		if (dbContext.Database.IsNpgsql())
+		{
+			await dbContext.Database.MigrateAsync(ct);
+		}
 	}
 }

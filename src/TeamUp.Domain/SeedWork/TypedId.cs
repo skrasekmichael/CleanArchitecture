@@ -1,7 +1,10 @@
-﻿namespace TeamUp.Domain.SeedWork;
+﻿using System.Text.Json.Serialization;
+
+namespace TeamUp.Domain.SeedWork;
 
 public abstract record TypedId<TSelf> where TSelf : TypedId<TSelf>, new()
 {
+	[JsonInclude]
 	public Guid Value { get; protected init; }
 
 	public static TSelf New() => new()

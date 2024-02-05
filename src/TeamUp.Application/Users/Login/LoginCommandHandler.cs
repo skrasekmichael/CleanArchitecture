@@ -22,8 +22,7 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, Result
 		if (user is null)
 			return AuthenticationError.New("Invalid Credentials");
 
-		var password = _passwordService.HashPassword(request.Password);
-		if (!user.Password.Equals(password))
+		if (!_passwordService.VerifyPassword(request.Password, user.Password))
 			return AuthenticationError.New("Invalid Credentials");
 
 		return _tokenService.GenerateToken(user);

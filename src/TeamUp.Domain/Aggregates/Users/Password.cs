@@ -43,19 +43,15 @@ public sealed class Password : IEquatable<Password>
 		return bytes;
 	}
 
-	public bool Equals(Password? other) => other is Password password && this == password;
+	public bool Equals(Password? other) => other is Password password && Compare(this, password);
 
-	public override bool Equals(object? obj) => obj is Password password && this == password;
+	public override bool Equals(object? obj) => obj is Password password && Compare(this, password);
 
 	public override int GetHashCode() => HashCode.Combine(Salt, Hash);
 
-	public static bool operator ==(Password left, Password right) =>
+	private static bool Compare(Password left, Password right) =>
 		left.Salt.SequenceEqual(right.Salt) &&
 		left.Hash.SequenceEqual(right.Hash);
-
-	public static bool operator !=(Password left, Password right) =>
-		!left.Salt.SequenceEqual(right.Salt) ||
-		!left.Hash.SequenceEqual(right.Hash);
 
 	public override string ToString() => $"{Convert.ToHexString(Salt)}|{Convert.ToHexString(Hash)}";
 }

@@ -21,18 +21,24 @@ internal sealed class PasswordService : IPasswordService
 	public Password HashPassword(string password)
 	{
 		var salt = RandomNumberGenerator.GetBytes(Password.SALT_SIZE);
-		var hash = HashPassword(salt, password + _authentication.Value.Pepper);
+		var hash = HashPassword(salt, password, _authentication.Value.Pepper);
 		return new Password(salt, hash);
 	}
 
-	private byte[] HashPassword(byte[] salt, string password)
+	public bool VerifyPassword(string inputRawPassword, Password dbPassword)
+	{
+		var hash = HashPassword(dbPassword.Salt, inputRawPassword, _authentication.Value.Pepper);
+		return dbPassword.Hash.SequenceEqual(hash);
+	}
+
+	private byte[] HashPassword(byte[] salt, string password, string pepper)
 	{
 		return KeyDerivation.Pbkdf2(
-			password: password,
+			password: string.Concat(password, pepper),
 			salt: salt,
 			prf: KeyDerivationPrf.HMACSHA512,
 			iterationCount: _authentication.Value.Pbkdf2Iterations,
-			numBytesRequested: Password.TOTAL_SIZE
+			numBytesRequested: Password.HASH_SIZE
 		);
 	}
 }
