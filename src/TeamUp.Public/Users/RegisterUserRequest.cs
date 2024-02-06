@@ -2,7 +2,7 @@
 
 using TeamUp.Domain.Aggregates.Users;
 
-namespace TeamUp.Api.Endpoints.UserAccess;
+namespace TeamUp.Public.Users;
 
 public sealed class RegisterUserRequest
 {

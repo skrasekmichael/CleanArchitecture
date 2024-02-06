@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TeamUp.Api.Endpoints.UserAccess;
+namespace TeamUp.Public.Users;
 
 public sealed class LoginRequest
 {

@@ -7,7 +7,7 @@ using TeamUp.Application.Users;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Infrastructure.Options;
 
-namespace TeamUp.Infrastructure.Authentication;
+namespace TeamUp.Infrastructure.Security;
 
 internal sealed class PasswordService : IPasswordService
 {

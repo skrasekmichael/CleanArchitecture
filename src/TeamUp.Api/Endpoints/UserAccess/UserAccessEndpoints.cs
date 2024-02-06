@@ -3,15 +3,15 @@
 using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Extensions;
+using TeamUp.Application.Users;
 using TeamUp.Application.Users.GetUserDetail;
 using TeamUp.Domain.Aggregates.Users;
+using TeamUp.Public.Users;
 
 namespace TeamUp.Api.Endpoints.UserAccess;
 
 public sealed class UserAccessEndpoints : EndpointGroup
 {
-	private static readonly UserMapper UserMapper = new();
-
 	public override void MapEndpoints(RouteGroupBuilder group)
 	{
 		group.MapPost("/register", RegisterUserAsync)
@@ -39,9 +39,10 @@ public sealed class UserAccessEndpoints : EndpointGroup
 		[FromBody] RegisterUserRequest request,
 		[FromServices] ISender sender,
 		[FromServices] LinkGenerator linkGenerator,
+		[FromServices] UserMapper mapper,
 		CancellationToken ct)
 	{
-		var command = UserMapper.ToCommand(request);
+		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
 		return result.Match(
 			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetMyProfileAsync)), userId)
@@ -51,9 +52,10 @@ public sealed class UserAccessEndpoints : EndpointGroup
 	private async Task<IResult> LoginAsync(
 		[FromBody] LoginRequest request,
 		[FromServices] ISender sender,
+		[FromServices] UserMapper mapper,
 		CancellationToken ct)
 	{
-		var command = UserMapper.ToCommand(request);
+		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}
@@ -63,7 +65,7 @@ public sealed class UserAccessEndpoints : EndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new GetUserDetailsQuery(UserId.FromGuid(httpContextAccessor.GetLoggedUserId()));
+		var query = new GetUserDetailsQuery(httpContextAccessor.GetLoggedUserId());
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
 	}

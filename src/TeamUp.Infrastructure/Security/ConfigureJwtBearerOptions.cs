@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using TeamUp.Infrastructure.Options;
 
-namespace TeamUp.Infrastructure.Identity;
+namespace TeamUp.Infrastructure.Security;
 
 internal sealed class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions>
 {

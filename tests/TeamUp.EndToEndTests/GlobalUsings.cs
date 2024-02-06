@@ -1,5 +1,7 @@
 global using Bogus;
 
+global using FluentAssertions;
+
 global using Microsoft.Extensions.DependencyInjection;
 
 global using System.Net;

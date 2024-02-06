@@ -1,10 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-using FluentAssertions;
-
-using TeamUp.Api.Endpoints.UserAccess;
 using TeamUp.Application.Users;
+using TeamUp.EndToEndTests.Extensions;
+using TeamUp.Public.Users;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
@@ -12,16 +11,24 @@ public sealed class AuthTests : BaseEndpointTests
 {
 	public AuthTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
-	public Faker<RegisterUserRequest> ValidRegisterUserRequest = new Faker<RegisterUserRequest>()
+	public Faker<RegisterUserRequest> ValidRegisterUserRequestGenerator = new Faker<RegisterUserRequest>()
 		.RuleFor(r => r.Email, f => f.Internet.Email())
 		.RuleFor(r => r.Name, f => f.Internet.UserName())
 		.RuleFor(r => r.Password, f => f.Internet.Password(length: 10));
+
+	public Faker<User> ActivatedUserGenerator = new Faker<User>()
+		.UsePrivateConstructor()
+		.RuleFor(u => u.Id, f => UserId.FromGuid(f.Random.Guid()))
+		.RuleFor(u => u.Email, f => f.Internet.Email())
+		.RuleFor(u => u.Name, f => f.Internet.UserName())
+		.RuleFor(u => u.Password, new Password())
+		.RuleFor(u => u.Status, UserStatus.Activated);
 
 	[Fact]
 	public async Task RegisterUser_Should_CreateNewUserInDatabase()
 	{
 		//arrange
-		var request = ValidRegisterUserRequest.Generate();
+		var request = ValidRegisterUserRequestGenerator.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
@@ -84,8 +91,7 @@ public sealed class AuthTests : BaseEndpointTests
 		jwt.Claims.Select(claim => (claim.Type, claim.Value))
 			.Should()
 			.Contain([
-				(JwtRegisteredClaimNames.Sub, user.Email),
-				(ClaimTypes.NameIdentifier, user.Id.ToString()),
+				(ClaimTypes.NameIdentifier, user.Id.Value.ToString()),
 				(ClaimTypes.Name, user.Name),
 				(ClaimTypes.Email, user.Email)
 			]);
@@ -100,5 +106,29 @@ public sealed class AuthTests : BaseEndpointTests
 
 		//assert
 		response.Should().Be401Unauthorized();
+	}
+
+	[Fact]
+	public async Task GetMyProfile_AsExistingUser_Should_ReturnUserDetails()
+	{
+		//arrange
+		var user = ActivatedUserGenerator.Generate();
+
+		await UseDbContextAsync(async dbContext =>
+		{
+			dbContext.Users.Add(user);
+			await dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(user);
+
+		//act
+		var response = await Client.GetAsync("/api/v1/users/my-profile");
+
+		//assert
+		response.Should().Be200Ok();
+
+		var userDetails = await response.Content.ReadFromJsonAsync<UserResponse>(JsonSerializerOptions);
+		user.Should().BeEquivalentTo(userDetails, o => o.ExcludingMissingMembers());
 	}
 }

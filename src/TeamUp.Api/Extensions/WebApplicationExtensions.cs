@@ -14,7 +14,8 @@ public static class WebApplicationExtensions
 {
 	public static void MapEndpoints(this WebApplication app)
 	{
-		var apiVersionSet = app.NewApiVersionSet()
+		var apiVersionSet = app
+			.NewApiVersionSet()
 			.HasApiVersion(new ApiVersion(1))
 			.ReportApiVersions()
 			.Build();
@@ -40,8 +41,8 @@ public static class WebApplicationExtensions
 
 	public static async Task ApplyMigrationsAsync(this WebApplication app, CancellationToken ct = default)
 	{
-		using var scope = app.Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+		await using var scope = app.Services.CreateAsyncScope();
+		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
 		if (dbContext.Database.IsNpgsql())
 		{

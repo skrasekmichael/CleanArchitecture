@@ -11,7 +11,7 @@ using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Infrastructure.Options;
 
-namespace TeamUp.Infrastructure.Identity;
+namespace TeamUp.Infrastructure.Security;
 
 internal sealed class TokenService : ITokenService
 {
@@ -42,25 +42,13 @@ internal sealed class TokenService : ITokenService
 		return tokenHandler.WriteToken(token);
 	}
 
-	private List<Claim> GetClaims(User user)
-	{
-		try
-		{
-			return [
-				new(JwtRegisteredClaimNames.Sub, user.Email),
-				new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new(JwtRegisteredClaimNames.Iat, _dateTimeProvider.DateTimeOffsetUtcNow.ToUnixTimeSeconds().ToString()),
-				new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new(ClaimTypes.Name, user.Name),
-				new(ClaimTypes.Email, user.Email)
-			];
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error occurred when generating JWT Claims.");
-			throw;
-		}
-	}
+	private List<Claim> GetClaims(User user) => [
+		new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+		new(JwtRegisteredClaimNames.Iat, _dateTimeProvider.DateTimeOffsetUtcNow.ToUnixTimeSeconds().ToString()),
+		new(ClaimTypes.NameIdentifier, user.Id.Value.ToString()),
+		new(ClaimTypes.Name, user.Name),
+		new(ClaimTypes.Email, user.Email)
+	];
 
 	private SigningCredentials GetSigningCredentials()
 	{
