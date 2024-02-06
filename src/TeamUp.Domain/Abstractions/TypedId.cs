@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TeamUp.Domain.SeedWork;
+namespace TeamUp.Domain.Abstractions;
 
 public abstract record TypedId<TSelf> where TSelf : TypedId<TSelf>, new()
 {

@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
+using TeamUp.Application.Abstractions;
 using TeamUp.Application.Users;
-using TeamUp.Common.Abstraction;
+using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
 using TeamUp.Infrastructure.Authentication;
 using TeamUp.Infrastructure.Core;
 using TeamUp.Infrastructure.Identity;
@@ -35,12 +36,14 @@ public static class ServiceCollectionExtensions
 
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services)
 	{
+		//options
 		services
 			.AddAppOptions<HashingOptions>()
 			.AddAppOptions<DatabaseOptions>()
 			.AddAppOptions<JwtOptions>()
 			.AddAppOptions<ClientOptions>();
 
+		//service implementations
 		services
 			.AddSingleton<IDateTimeProvider, DateTimeProvider>()
 			.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>()
@@ -48,14 +51,17 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<ITokenService, TokenService>()
 			.AddSingleton<IPasswordService, PasswordService>()
 			.AddScoped<IUserRepository, UserRepository>()
-			.AddScoped<ITeamRepository, TeamRepository>();
+			.AddScoped<ITeamRepository, TeamRepository>()
+			.AddScoped<IAppQueryContext, ApplicationDbContextQueryFacade>();
 
+		//db context
 		services.AddDbContext<ApplicationDbContext>((serviceProvider, optionsBuilder) =>
 		{
 			var options = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>();
 			optionsBuilder.UseNpgsql(options.Value.ConnectionString);
 		});
 
+		//health checks
 		services.AddHealthChecks()
 			.AddDbContextCheck<ApplicationDbContext>();
 
@@ -86,8 +92,7 @@ public static class ServiceCollectionExtensions
 		{
 			config.RegisterServicesFromAssemblies(
 				typeof(Domain.ServiceCollectionExtensions).Assembly,
-				typeof(Application.ServiceCollectionExtensions).Assembly
-			);
+				typeof(Application.ServiceCollectionExtensions).Assembly);
 		});
 
 		return services;

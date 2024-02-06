@@ -1,5 +1,5 @@
 ﻿using MediatR;
 
-namespace TeamUp.Domain.SeedWork;
+namespace TeamUp.Domain.Abstractions;
 
 public interface IDomainEvent : INotification;

@@ -3,7 +3,7 @@ using System.Reflection;
 
 using TeamUp.Common;
 
-namespace TeamUp.Domain.SeedWork;
+namespace TeamUp.Domain.Abstractions;
 
 public abstract class AggregateRoot<TSelf, TId> : Entity<TId>
 	where TSelf : AggregateRoot<TSelf, TId>

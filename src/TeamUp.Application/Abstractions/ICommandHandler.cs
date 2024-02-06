@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace TeamUp.Application;
+namespace TeamUp.Application.Abstractions;
 
 public interface ICommandHandler<TCommand> : IRequestHandler<TCommand> where TCommand : ICommand;
 

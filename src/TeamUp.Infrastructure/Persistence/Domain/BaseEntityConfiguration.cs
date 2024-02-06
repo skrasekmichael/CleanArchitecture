@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using TeamUp.Domain.SeedWork;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Infrastructure.Persistence.Domain;
 

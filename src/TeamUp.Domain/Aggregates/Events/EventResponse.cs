@@ -1,7 +1,7 @@
-﻿using TeamUp.Common.Abstraction;
+﻿using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Events.DomainEvents;
 using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Domain.Aggregates.Events;
 

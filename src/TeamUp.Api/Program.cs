@@ -1,6 +1,7 @@
 using Asp.Versioning;
 
 using TeamUp.Api.Extensions;
+using TeamUp.Api.Middlewares;
 using TeamUp.Application;
 using TeamUp.Domain;
 using TeamUp.Infrastructure;
@@ -42,6 +43,9 @@ if (app.Environment.IsDevelopment())
 
 	app.UseSwagger();
 	app.UseSwaggerUI();
+
+	app.UseMiddleware<RequestLoggingMiddleware>();
+	app.UseMiddleware<ResponseLoggingMiddleware>();
 }
 else
 {

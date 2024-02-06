@@ -1,4 +1,4 @@
-﻿using TeamUp.Domain.SeedWork;
+﻿using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 

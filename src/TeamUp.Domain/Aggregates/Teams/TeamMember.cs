@@ -1,5 +1,5 @@
-﻿using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
+﻿using TeamUp.Domain.Abstractions;
+using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 

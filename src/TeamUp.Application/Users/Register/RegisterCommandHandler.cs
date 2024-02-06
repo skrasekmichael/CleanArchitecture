@@ -1,6 +1,7 @@
-﻿using TeamUp.Common;
+﻿using TeamUp.Application.Abstractions;
+using TeamUp.Common;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Application.Users.Register;
 

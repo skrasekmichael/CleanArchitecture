@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-using TeamUp.Domain.SeedWork;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.ArchitectureTests.Domain;
 
@@ -22,7 +22,6 @@ public sealed class EntityTests : BaseTests
 
 		var failingEntityTypes = new List<Type>();
 
-		//act
 		foreach (var entityType in entityTypes)
 		{
 			var constructors = entityType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);

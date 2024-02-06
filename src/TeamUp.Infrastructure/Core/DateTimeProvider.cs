@@ -1,4 +1,4 @@
-﻿using TeamUp.Common.Abstraction;
+﻿using TeamUp.Common.Abstractions;
 
 namespace TeamUp.Infrastructure.Core;
 

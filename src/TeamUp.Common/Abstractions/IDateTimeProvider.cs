@@ -1,4 +1,4 @@
-﻿namespace TeamUp.Common.Abstraction;
+﻿namespace TeamUp.Common.Abstractions;
 
 public interface IDateTimeProvider
 {

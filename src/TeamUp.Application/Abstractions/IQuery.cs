@@ -1,5 +1,5 @@
 ﻿using MediatR;
 
-namespace TeamUp.Application;
+namespace TeamUp.Application.Abstractions;
 
 public interface IQuery<TResponse> : IRequest<TResponse>;

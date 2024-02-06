@@ -1,4 +1,5 @@
-﻿using TeamUp.Common;
+﻿using TeamUp.Application.Abstractions;
+using TeamUp.Common;
 
 namespace TeamUp.Application.Users.Login;
 

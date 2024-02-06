@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-using TeamUp.Domain.SeedWork;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.ArchitectureTests.Domain;
 

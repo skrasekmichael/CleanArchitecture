@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 using TeamUp.Application.Users;
-using TeamUp.Common.Abstraction;
+using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Infrastructure.Options;
 
@@ -49,7 +49,7 @@ internal sealed class TokenService : ITokenService
 			return [
 				new(JwtRegisteredClaimNames.Sub, user.Email),
 				new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+				new(JwtRegisteredClaimNames.Iat, _dateTimeProvider.DateTimeOffsetUtcNow.ToUnixTimeSeconds().ToString()),
 				new(ClaimTypes.NameIdentifier, user.Id.ToString()),
 				new(ClaimTypes.Name, user.Name),
 				new(ClaimTypes.Email, user.Email)
