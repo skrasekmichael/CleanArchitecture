@@ -1,12 +1,16 @@
-﻿namespace TeamUp.Domain.SeedWork;
+﻿namespace TeamUp.Domain.Abstractions;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent where TId : TypedId<TId>, new()
 {
 	private readonly List<IDomainEvent> _domainEvents = [];
 
-	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-	public TId Id { get; }
+	public TId Id { get; private init; }
+
+#pragma warning disable CS8618 // EF Core constructor
+	protected internal Entity() : base() { }
+#pragma warning restore CS8618
 
 	protected Entity(TId id)
 	{

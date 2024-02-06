@@ -1,4 +1,4 @@
-﻿using TeamUp.Common.Abstraction;
+﻿using TeamUp.Common.Abstractions;
 
 namespace TeamUp.Infrastructure.Core;
 
@@ -6,5 +6,5 @@ internal sealed class DateTimeProvider : IDateTimeProvider
 {
 	public DateTime UtcNow => DateTime.UtcNow;
 
-	public DateTimeOffset DateTimeOffsetNow => DateTimeOffset.Now;
+	public DateTimeOffset DateTimeOffsetUtcNow => DateTimeOffset.UtcNow;
 }

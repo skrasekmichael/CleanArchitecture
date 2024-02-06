@@ -1,7 +1,7 @@
-﻿using TeamUp.Common.Abstraction;
+﻿using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Events.DomainEvents;
 using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Domain.Aggregates.Events;
 
@@ -14,6 +14,10 @@ public sealed class EventResponse : Entity<EventResponseId>
 	public EventId EventId { get; }
 	public EventReply Reply { get; private set; }
 	public DateTime TimeStampUtc { get; private set; }
+
+#pragma warning disable CS8618 // EF Core constructor
+	private EventResponse() : base() { }
+#pragma warning restore CS8618
 
 	private EventResponse(EventResponseId id, TeamMemberId teamMemberId, EventId eventId, EventReply reply, DateTime timeStampUtc) : base(id)
 	{

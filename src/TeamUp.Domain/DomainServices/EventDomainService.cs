@@ -1,5 +1,5 @@
 ﻿using TeamUp.Common;
-using TeamUp.Common.Abstraction;
+using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;

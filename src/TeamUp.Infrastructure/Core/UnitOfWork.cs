@@ -1,4 +1,4 @@
-﻿using TeamUp.Domain.SeedWork;
+﻿using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Persistence;
 using TeamUp.Infrastructure.Processing;
 

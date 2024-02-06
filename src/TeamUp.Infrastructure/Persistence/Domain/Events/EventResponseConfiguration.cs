@@ -9,10 +9,11 @@ internal sealed class EventResponseConfiguration : BaseEntityConfiguration<Event
 {
 	protected override void ConfigureEntity(EntityTypeBuilder<EventResponse> eventResponseEntityBuilder)
 	{
-		eventResponseEntityBuilder
-			.HasOne<Event>()
-			.WithMany()
-			.HasForeignKey(eventResponse => eventResponse.EventId);
+		// Since there is no navigation property from EventResponse to Event, specifying would lead to key duplicity
+		//eventResponseEntityBuilder
+		//	.HasOne<Event>()
+		//	.WithMany()
+		//	.HasForeignKey(eventResponse => eventResponse.EventId);
 
 		eventResponseEntityBuilder
 			.HasOne<TeamMember>()

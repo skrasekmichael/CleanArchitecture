@@ -2,7 +2,7 @@
 
 public enum UserStatus
 {
-	Active,
+	Activated,
 	NotActivated,
 	Generated
 }

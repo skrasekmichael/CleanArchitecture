@@ -5,7 +5,7 @@ public sealed class DependencyTests : BaseTests
 	private const string Domain = "Domain";
 	private const string Application = "Application";
 	private const string Infrastructure = "Infrastructure";
-	private const string Presentation = "Api"; //TODOs
+	private const string Presentation = "Api";
 
 	[Theory]
 	[InlineData(Domain)]

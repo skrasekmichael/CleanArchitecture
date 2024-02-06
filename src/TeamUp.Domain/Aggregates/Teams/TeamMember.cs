@@ -1,5 +1,5 @@
-﻿using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
+﻿using TeamUp.Domain.Abstractions;
+using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 
@@ -15,6 +15,10 @@ public sealed class TeamMember : Entity<TeamMemberId>
 	public string Nickname { get; private set; }
 	public TeamRole Role { get; private set; }
 	public DateTimeOffset TimeStamp { get; }
+
+#pragma warning disable CS8618 // EF Core constructor
+	private TeamMember() : base() { }
+#pragma warning restore CS8618
 
 	internal TeamMember(
 		TeamMemberId id,

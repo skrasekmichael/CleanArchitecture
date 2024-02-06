@@ -4,6 +4,7 @@ namespace TeamUp.ArchitectureTests;
 
 public abstract class BaseTests
 {
-	public static readonly Assembly DomainAssembly = typeof(TeamUp.Domain.SeedWork.Entity<>).Assembly;
-	public static readonly Assembly InfrastructureAssembly = typeof(Infrastructure.Persistence.ApplicationDbContext).Assembly;
+	public static readonly Assembly DomainAssembly = typeof(TeamUp.Domain.ServiceCollectionExtensions).Assembly;
+	public static readonly Assembly ApplicationAssembly = typeof(TeamUp.Application.ServiceCollectionExtensions).Assembly;
+	public static readonly Assembly InfrastructureAssembly = typeof(Infrastructure.ServiceCollectionExtensions).Assembly;
 }

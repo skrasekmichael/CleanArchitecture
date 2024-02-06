@@ -3,12 +3,14 @@ using System.Reflection;
 
 using TeamUp.Common;
 
-namespace TeamUp.Domain.SeedWork;
+namespace TeamUp.Domain.Abstractions;
 
 public abstract class AggregateRoot<TSelf, TId> : Entity<TId>
 	where TSelf : AggregateRoot<TSelf, TId>
 	where TId : TypedId<TId>, new()
 {
+	protected internal AggregateRoot() : base() { }
+
 	protected AggregateRoot(TId id) : base(id) { }
 
 	protected bool UpdateProperty<TProperty>(Expression<Func<TSelf, TProperty>> selector, TProperty newValue, IDomainEvent? domainEvent = null)

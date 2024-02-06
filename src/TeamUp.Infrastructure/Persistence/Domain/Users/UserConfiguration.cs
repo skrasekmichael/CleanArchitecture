@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Teams;
@@ -32,11 +33,13 @@ internal sealed class UserConfiguration : BaseEntityConfiguration<User, UserId>
 		userEntityBuilder
 			.HasMany<TeamMember>()
 			.WithOne()
-			.HasForeignKey(teamMember => teamMember.UserId);
+			.HasForeignKey(teamMember => teamMember.UserId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		userEntityBuilder
 			.HasMany<Invitation>()
 			.WithOne()
-			.HasForeignKey(invitation => invitation.RecipientId);
+			.HasForeignKey(invitation => invitation.RecipientId)
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }

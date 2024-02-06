@@ -1,9 +1,9 @@
 ﻿using TeamUp.Common;
-using TeamUp.Common.Abstraction;
+using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Invitations.DomainEvents;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Domain.Aggregates.Invitations;
 
@@ -17,6 +17,10 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 	public TeamId TeamId { get; }
 
 	public DateTime CreatedUtc { get; }
+
+#pragma warning disable CS8618 // EF Core constructor
+	private Invitation() : base() { }
+#pragma warning restore CS8618
 
 	internal Invitation(InvitationId id, UserId recipientId, TeamId teamId, DateTime createdUtc) : base(id)
 	{

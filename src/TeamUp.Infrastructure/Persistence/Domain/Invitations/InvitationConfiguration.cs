@@ -13,11 +13,11 @@ internal sealed class InvitationConfiguration : BaseEntityConfiguration<Invitati
 		invitationEntityBuilder
 			.HasOne<User>()
 			.WithMany()
-			.HasForeignKey(e => e.RecipientId.Value);
+			.HasForeignKey(e => e.RecipientId);
 
 		invitationEntityBuilder
 			.HasOne<Team>()
 			.WithMany()
-			.HasForeignKey(e => e.TeamId.Value);
+			.HasForeignKey(e => e.TeamId);
 	}
 }

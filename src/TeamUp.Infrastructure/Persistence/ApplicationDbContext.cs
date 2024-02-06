@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Infrastructure.Persistence;
 
 public sealed class ApplicationDbContext : DbContext
 {
-	public required DbSet<User> Users { get; init; }
-	public required DbSet<TeamMember> TeamMembers { get; init; }
-	public required DbSet<Invitation> Invitations { get; init; }
-	public required DbSet<Event> Events { get; init; }
+	public DbSet<User> Users => Set<User>();
+	public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
+	public DbSet<Invitation> Invitations => Set<Invitation>();
+	public DbSet<Event> Events => Set<Event>();
 
 	public ApplicationDbContext(DbContextOptions options) : base(options) { }
 

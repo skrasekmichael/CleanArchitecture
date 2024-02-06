@@ -1,7 +1,7 @@
 ﻿using TeamUp.Common;
-using TeamUp.Common.Abstraction;
+using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Domain.SeedWork;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 
@@ -9,12 +9,22 @@ public sealed record TeamId : TypedId<TeamId>;
 
 public sealed class Team : AggregateRoot<Team, TeamId>
 {
+	public const int NAME_MIN_SIZE = 3;
+	public const int NAME_MAX_SIZE = 30;
+
+	public const int NICKNAME_MIN_SIZE = 3;
+	public const int NICKNAME_MAX_SIZE = 30;
+
 	private readonly List<EventType> _eventTypes = [];
 	private readonly List<TeamMember> _members = [];
 
 	public string Name { get; private set; }
 	public IReadOnlyList<EventType> EventTypes => _eventTypes.AsReadOnly();
 	public IReadOnlyList<TeamMember> Members => _members.AsReadOnly();
+
+#pragma warning disable CS8618 // EF Core constructor
+	private Team() : base() { }
+#pragma warning restore CS8618
 
 	private Team(TeamId id, string name) : base(id)
 	{
@@ -46,7 +56,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			this,
 			user.Name,
 			TeamRole.Member,
-			dateTimeProvider.DateTimeOffsetNow
+			dateTimeProvider.DateTimeOffsetUtcNow
 		));
 	}
 
@@ -66,8 +76,11 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 	public Result ChangeNickname(UserId initiatorId, string newNickname)
 	{
 		return newNickname.Ensure(
-				nickname => !string.IsNullOrWhiteSpace(nickname),
-				ValidationError.New("Nickname can't be empty."))
+				nickname => nickname.Length >= NICKNAME_MIN_SIZE,
+				ValidationError.New($"Nickname must be atleast {NICKNAME_MIN_SIZE} characters long."))
+			.Ensure(
+				nickname => nickname.Length <= NICKNAME_MAX_SIZE,
+				ValidationError.New($"Nickname must be shorter than {NICKNAME_MAX_SIZE} characters."))
 			.Map(_ => GetTeamMemberByUserId(initiatorId))
 			.Then(initiator => initiator.UpdateNickname(newNickname));
 	}
@@ -101,10 +114,12 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 
 	public static Result<Team> Create(string name)
 	{
-		if (string.IsNullOrWhiteSpace(name))
-			return ValidationError.New("Name can't be empty.");
-
-		return new Team(TeamId.New(), name);
+		return name.Length switch
+		{
+			< NAME_MIN_SIZE => ValidationError.New($"Name must be atleast {NAME_MIN_SIZE} characters long."),
+			> NAME_MAX_SIZE => ValidationError.New($"Name must be shorter than {NAME_MAX_SIZE} characters."),
+			_ => new Team(TeamId.New(), name)
+		};
 	}
 
 	private Result<TeamMember> GetTeamMemberByUserId(UserId userId)
@@ -120,7 +135,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 	{
 		var teamMember = _members.Find(member => member.Id == memberId);
 		if (teamMember is null)
-			return DomainError.New("Member not found.");
+			return NotFoundError.New("Member not found.");
 
 		return teamMember;
 	}

@@ -16,7 +16,12 @@ internal sealed class TeamMemberConfiguration : BaseEntityConfiguration<TeamMemb
 
 		teamMemberEntityBuilder
 			.HasOne(teamMember => teamMember.Team)
-			.WithMany()
+			.WithMany(team => team.Members)
 			.HasForeignKey(teamMember => teamMember.TeamId);
+
+		teamMemberEntityBuilder
+			.Property(team => team.Nickname)
+			.IsRequired()
+			.HasMaxLength(255);
 	}
 }
