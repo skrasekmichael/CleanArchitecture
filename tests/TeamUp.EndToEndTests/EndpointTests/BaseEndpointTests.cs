@@ -10,6 +10,8 @@ namespace TeamUp.EndToEndTests.EndpointTests;
 [Collection(nameof(AppCollectionFixture))]
 public abstract class BaseEndpointTests : IAsyncLifetime
 {
+	protected static Faker F => FExt.F;
+
 	protected TeamApiWebApplicationFactory AppFactory { get; }
 	protected HttpClient Client { get; }
 

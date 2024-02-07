@@ -124,11 +124,11 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 
 	private Result<TeamMember> GetTeamMemberByUserId(UserId userId)
 	{
-		var initiatorMember = _members.Find(member => member.UserId == userId);
-		if (initiatorMember is null)
+		var teamMember = _members.Find(member => member.UserId == userId);
+		if (teamMember is null)
 			return AuthorizationError.New("Not member of the team.");
 
-		return initiatorMember;
+		return teamMember;
 	}
 
 	private Result<TeamMember> GetTeamMember(TeamMemberId memberId)
