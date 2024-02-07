@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using FluentValidation;
+
+using Microsoft.OpenApi.Models;
 
 namespace TeamUp.Api.Extensions;
 
@@ -35,5 +37,12 @@ public static class ServiceCollectionExtensions
 		});
 
 		return serviceCollection;
+	}
+
+	public static IServiceCollection AddValidators(this IServiceCollection services)
+	{
+		services.AddValidatorsFromAssemblyContaining<Contracts.IRequestBody>(ServiceLifetime.Singleton);
+
+		return services;
 	}
 }

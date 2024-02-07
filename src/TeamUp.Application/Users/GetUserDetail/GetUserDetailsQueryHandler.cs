@@ -2,7 +2,7 @@
 
 using TeamUp.Application.Abstractions;
 using TeamUp.Common;
-using TeamUp.Public.Users;
+using TeamUp.Contracts.Users;
 
 namespace TeamUp.Application.Users.GetUserDetail;
 

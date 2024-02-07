@@ -2,8 +2,8 @@
 
 using TeamUp.Application.Users.Login;
 using TeamUp.Application.Users.Register;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Public.Users;
 
 namespace TeamUp.Application.Users;
 

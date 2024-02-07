@@ -32,6 +32,7 @@ public static class ResultExtensions
 				NotFoundError => StatusCodes.Status404NotFound,
 				ValidationError => StatusCodes.Status400BadRequest,
 				DomainError => StatusCodes.Status400BadRequest,
+				ConflictError => StatusCodes.Status409Conflict,
 
 				InternalError => StatusCodes.Status500InternalServerError,
 				_ => StatusCodes.Status500InternalServerError

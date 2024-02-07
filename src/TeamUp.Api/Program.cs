@@ -29,6 +29,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
 	.AddSwagger()
+	.AddValidators()
 	.AddDomainServices()
 	.AddApplicationServices()
 	.AddInfrastructure()

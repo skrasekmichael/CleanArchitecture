@@ -23,6 +23,9 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterUserComma
 		var password = _passwordService.HashPassword(request.Password);
 		var user = User.Create(request.Name, request.Email, password);
 
+		if (await _userRepository.ConflictingUserExistsAsync(user))
+			return ConflictError.New("User with this email is already registered.");
+
 		_userRepository.AddUser(user);
 		await _unitOfWork.SaveChangesAsync(ct);
 

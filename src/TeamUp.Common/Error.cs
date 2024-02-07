@@ -24,6 +24,7 @@ public abstract record Error<TSelf> : ErrorBase where TSelf : ErrorBase, new()
 public sealed record AuthenticationError : Error<AuthenticationError>;
 public sealed record AuthorizationError : Error<AuthorizationError>;
 public sealed record NotFoundError : Error<NotFoundError>;
+public sealed record ConflictError : Error<ConflictError>;
 public sealed record DomainError : Error<DomainError>;
 public sealed record ValidationError : Error<ValidationError>;
 public sealed record InternalError : Error<InternalError>;

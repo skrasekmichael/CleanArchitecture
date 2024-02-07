@@ -2,8 +2,7 @@
 using System.Security.Claims;
 
 using TeamUp.Application.Users;
-using TeamUp.EndToEndTests.Extensions;
-using TeamUp.Public.Users;
+using TeamUp.Contracts.Users;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
@@ -11,24 +10,11 @@ public sealed class AuthTests : BaseEndpointTests
 {
 	public AuthTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
-	public Faker<RegisterUserRequest> ValidRegisterUserRequestGenerator = new Faker<RegisterUserRequest>()
-		.RuleFor(r => r.Email, f => f.Internet.Email())
-		.RuleFor(r => r.Name, f => f.Internet.UserName())
-		.RuleFor(r => r.Password, f => f.Internet.Password(length: 10));
-
-	public Faker<User> ActivatedUserGenerator = new Faker<User>()
-		.UsePrivateConstructor()
-		.RuleFor(u => u.Id, f => UserId.FromGuid(f.Random.Guid()))
-		.RuleFor(u => u.Email, f => f.Internet.Email())
-		.RuleFor(u => u.Name, f => f.Internet.UserName())
-		.RuleFor(u => u.Password, new Password())
-		.RuleFor(u => u.Status, UserStatus.Activated);
-
 	[Fact]
 	public async Task RegisterUser_Should_CreateNewUserInDatabase()
 	{
 		//arrange
-		var request = ValidRegisterUserRequestGenerator.Generate();
+		var request = UserGenerator.ValidRegisterUserRequest.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
@@ -48,15 +34,60 @@ public sealed class AuthTests : BaseEndpointTests
 	}
 
 	[Fact]
+	public async Task RegisterUser_WithAlreadyUsedEmail_Should_ReturnConflict()
+	{
+		//arrange
+		var user = UserGenerator.ActivatedUser.Generate();
+
+		await UseDbContextAsync(async dbContext =>
+		{
+			dbContext.Users.Add(user);
+			await dbContext.SaveChangesAsync();
+		});
+
+		var request = new RegisterUserRequest()
+		{
+			Email = user.Email,
+			Name = F.Internet.UserName(),
+			Password = UserGenerator.GenerateValidPassword(),
+		};
+
+		//act
+		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
+
+		//assert
+		response.Should().Be409Conflict();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(JsonSerializerOptions);
+		problemDetails.Should().NotBeNull();
+	}
+
+	[Theory]
+	[ClassData(typeof(UserGenerator.InvalidRegisterUserRequests))]
+	public async Task RegisterUser_WithInvalidProperties_Should_ReturnValidationErrors(RegisterUserRequest request)
+	{
+		//arrange
+
+		//act
+		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
+
+		//assert
+		response.Should().Be400BadRequest();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(JsonSerializerOptions);
+		problemDetails.Should().NotBeNull();
+	}
+
+	[Fact]
 	public async Task Login_AsExistingUser_Should_GenerateValidJwtToken()
 	{
 		//arrange
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
-		var rawPassword = "password";
+		var rawPassword = UserGenerator.GenerateValidPassword();
 		var user = User.Create(
-			"Obi-Wan Kenobi",
-			"Kenobi@email.com",
+			F.Internet.UserName(),
+			F.Internet.Email(),
 			passwordService.HashPassword(rawPassword));
 
 		user.Activate();
@@ -112,7 +143,7 @@ public sealed class AuthTests : BaseEndpointTests
 	public async Task GetMyProfile_AsExistingUser_Should_ReturnUserDetails()
 	{
 		//arrange
-		var user = ActivatedUserGenerator.Generate();
+		var user = UserGenerator.ActivatedUser.Generate();
 
 		await UseDbContextAsync(async dbContext =>
 		{

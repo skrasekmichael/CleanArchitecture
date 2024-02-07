@@ -1,6 +1,6 @@
 ﻿using TeamUp.Domain.Aggregates.Users;
 
-namespace TeamUp.Public.Users;
+namespace TeamUp.Contracts.Users;
 
 public sealed class UserResponse
 {

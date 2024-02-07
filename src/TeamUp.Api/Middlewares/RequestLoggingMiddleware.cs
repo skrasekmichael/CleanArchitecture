@@ -15,7 +15,7 @@ public sealed class RequestLoggingMiddleware
 	{
 		var headers = string.Join("\n\t", context.Request.Headers.Select(header => $"Header: {header.Key} - {header.Value}"));
 
-		_logger.LogInformation("Request: {method} {schema}://{path} from {remoteHost} {headers}", context.Request.Method, context.Request.Scheme, context.Request.Path, context.Connection.RemoteIpAddress, headers);
+		_logger.LogInformation("Request: {method} {schema}://{host}{path} from {remoteHost} {headers}", context.Request.Method, context.Request.Scheme, context.Request.Host, context.Request.Path, context.Connection.RemoteIpAddress, headers);
 
 		await _next(context);
 	}

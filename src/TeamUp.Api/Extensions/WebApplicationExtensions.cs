@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using TeamUp.Api.Endpoints;
 using TeamUp.Api.Endpoints.UserAccess;
+using TeamUp.Api.Filters;
 using TeamUp.Infrastructure.Persistence;
 
 namespace TeamUp.Api.Extensions;
@@ -22,6 +23,7 @@ public static class WebApplicationExtensions
 
 		var apiGroup = app
 			.MapGroup("api/v{version:apiVersion}")
+			.AddEndpointFilter<ValidationFilter>()
 			.WithApiVersionSet(apiVersionSet)
 			.WithOpenApi();
 
@@ -36,7 +38,7 @@ public static class WebApplicationExtensions
 		var groupEndpoints = new TGroup();
 		groupEndpoints.MapEndpoints(group);
 
-		return group;
+		return apiGroup;
 	}
 
 	public static async Task ApplyMigrationsAsync(this WebApplication app, CancellationToken ct = default)

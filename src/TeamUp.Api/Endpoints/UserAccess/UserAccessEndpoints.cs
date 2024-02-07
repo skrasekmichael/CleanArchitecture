@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users;
 using TeamUp.Application.Users.GetUserDetail;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Users;
-using TeamUp.Public.Users;
 
 namespace TeamUp.Api.Endpoints.UserAccess;
 
@@ -29,7 +29,7 @@ public sealed class UserAccessEndpoints : EndpointGroup
 
 		group.MapGet("/my-profile", GetMyProfileAsync)
 			.Produces<UserResponse>(StatusCodes.Status200OK)
-			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
 			.WithName(nameof(GetMyProfileAsync))
 			.MapToApiVersion(1)
 			.RequireAuthorization();

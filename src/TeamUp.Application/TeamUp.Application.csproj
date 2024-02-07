@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TeamUp.Domain\TeamUp.Domain.csproj" />
-    <ProjectReference Include="..\TeamUp.Public\TeamUp.Public.csproj" />
+    <ProjectReference Include="..\TeamUp.Contracts\TeamUp.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
