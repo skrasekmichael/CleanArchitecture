@@ -13,13 +13,13 @@ using TeamUp.Infrastructure.Options;
 
 namespace TeamUp.Infrastructure.Security;
 
-internal sealed class TokenService : ITokenService
+internal sealed class JwtTokenService : ITokenService
 {
-	private readonly ILogger<TokenService> _logger;
+	private readonly ILogger<JwtTokenService> _logger;
 	private readonly IOptions<JwtOptions> _jwtSettings;
 	private readonly IDateTimeProvider _dateTimeProvider;
 
-	public TokenService(ILogger<TokenService> logger, IOptions<JwtOptions> jwtSettings, IDateTimeProvider dateTimeProvider)
+	public JwtTokenService(ILogger<JwtTokenService> logger, IOptions<JwtOptions> jwtSettings, IDateTimeProvider dateTimeProvider)
 	{
 		_logger = logger;
 		_jwtSettings = jwtSettings;

@@ -26,19 +26,19 @@ internal sealed class InvitationAcceptedEventHandler : IDomainEventHandler<Invit
 		_logger = logger;
 	}
 
-	public async Task Handle(InvitationAcceptedDomainEvent notification, CancellationToken cancellationToken)
+	public async Task Handle(InvitationAcceptedDomainEvent domainEvent, CancellationToken ct)
 	{
-		var user = await _userRepository.GetUserByIdAsync(notification.UserId, cancellationToken);
+		var user = await _userRepository.GetUserByIdAsync(domainEvent.UserId, ct);
 		if (user is null)
 		{
-			_logger.LogWarning("Accepted invitation for user ({userId}) that doesn't exist.", notification.UserId);
+			_logger.LogWarning("Accepted invitation for user ({userId}) that doesn't exist.", domainEvent.UserId);
 			return;
 		}
 
-		var team = await _teamRepository.GetTeamByIdWithTeamMembersAsync(notification.TeamId, cancellationToken);
+		var team = await _teamRepository.GetTeamByIdWithTeamMembersAsync(domainEvent.TeamId, ct);
 		if (team is null)
 		{
-			_logger.LogWarning("Accepted invitation for team ({teamId}) that doesn't exist.", notification.TeamId);
+			_logger.LogWarning("Accepted invitation for team ({teamId}) that doesn't exist.", domainEvent.TeamId);
 			return;
 		}
 

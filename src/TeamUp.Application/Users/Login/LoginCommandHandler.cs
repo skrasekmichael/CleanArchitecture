@@ -26,6 +26,9 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, Result
 		if (!_passwordService.VerifyPassword(request.Password, user.Password))
 			return AuthenticationError.New("Invalid Credentials");
 
+		if (user.Status != UserStatus.Activated)
+			return AuthenticationError.New("Account is not activated");
+
 		return _tokenService.GenerateToken(user);
 	}
 }

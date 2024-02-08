@@ -4,6 +4,7 @@ using System.Text.Json;
 using Npgsql;
 
 using TeamUp.Application.Users;
+using TeamUp.EndToEndTests.Mocks;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
@@ -11,9 +12,11 @@ namespace TeamUp.EndToEndTests.EndpointTests;
 public abstract class BaseEndpointTests : IAsyncLifetime
 {
 	protected static Faker F => FExt.F;
+	protected static object EmptyObject { get; } = new { };
 
 	protected TeamApiWebApplicationFactory AppFactory { get; }
 	protected HttpClient Client { get; }
+	internal MailInbox Inbox { get; }
 
 	protected JsonSerializerOptions JsonSerializerOptions { get; } = new()
 	{
@@ -24,6 +27,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 	{
 		AppFactory = appFactory;
 		Client = appFactory.CreateClient();
+		Inbox = appFactory.Services.GetRequiredService<MailInbox>();
 	}
 
 	public async Task InitializeAsync()
@@ -31,6 +35,8 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		await using var connection = new NpgsqlConnection(AppFactory.ConnectionString);
 		await connection.OpenAsync();
 		await AppFactory.Respawner.ResetAsync(connection);
+
+		Inbox.Clear();
 	}
 
 	public void Authenticate(string name, string email)

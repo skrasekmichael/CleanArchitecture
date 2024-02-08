@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
+using Quartz;
+
 using TeamUp.Application.Abstractions;
 using TeamUp.Application.Users;
 using TeamUp.Common.Abstractions;
@@ -15,6 +17,7 @@ using TeamUp.Infrastructure.Persistence;
 using TeamUp.Infrastructure.Persistence.Domain.Teams;
 using TeamUp.Infrastructure.Persistence.Domain.Users;
 using TeamUp.Infrastructure.Processing;
+using TeamUp.Infrastructure.Processing.Outbox;
 using TeamUp.Infrastructure.Security;
 
 namespace TeamUp.Infrastructure;
@@ -39,14 +42,18 @@ public static class ServiceCollectionExtensions
 			.AddAppOptions<HashingOptions>()
 			.AddAppOptions<DatabaseOptions>()
 			.AddAppOptions<JwtOptions>()
-			.AddAppOptions<ClientOptions>();
+			.AddAppOptions<ClientOptions>()
+			.AddAppOptions<EmailOptions>();
 
 		//service implementations
 		services
 			.AddSingleton<IDateTimeProvider, DateTimeProvider>()
+			.AddSingleton<IEmailSender, EmailSender>()
+			.AddScoped<IIntegrationEventManager, IntegrationEventManager>()
 			.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>()
+			.AddScoped<IIntegrationEventsDispatcher, IntegrationEventsDispatcher>()
 			.AddScoped<IUnitOfWork, UnitOfWork>()
-			.AddSingleton<ITokenService, TokenService>()
+			.AddSingleton<ITokenService, JwtTokenService>()
 			.AddSingleton<IPasswordService, PasswordService>()
 			.AddScoped<IUserRepository, UserRepository>()
 			.AddScoped<ITeamRepository, TeamRepository>()
@@ -62,6 +69,22 @@ public static class ServiceCollectionExtensions
 		//health checks
 		services.AddHealthChecks()
 			.AddDbContextCheck<ApplicationDbContext>();
+
+		//background jobs
+		services.AddQuartzHostedService();
+		services.AddQuartz(configurator =>
+		{
+			var processOutboxJobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
+			configurator
+				.AddJob<ProcessOutboxMessagesJob>(processOutboxJobKey)
+				.AddTrigger(trigger => trigger
+					.ForJob(processOutboxJobKey)
+					.WithSimpleSchedule(schedule => schedule
+						.WithIntervalInSeconds(5)
+						.RepeatForever()
+					)
+				);
+		});
 
 		return services;
 	}

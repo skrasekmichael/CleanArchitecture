@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users;
+using TeamUp.Application.Users.Activation;
 using TeamUp.Application.Users.GetUserDetail;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Users;
@@ -18,6 +19,12 @@ public sealed class UserAccessEndpoints : EndpointGroup
 			.Produces<UserId>(StatusCodes.Status201Created)
 			.ProducesValidationProblem()
 			.WithName(nameof(RegisterUserAsync))
+			.MapToApiVersion(1);
+
+		group.MapPost("/{userId:guid}/activate", ActivateAccountAsync)
+			.Produces(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status404NotFound)
+			.WithName(nameof(ActivateAccountAsync))
 			.MapToApiVersion(1);
 
 		group.MapPost("/login", LoginAsync)
@@ -47,6 +54,16 @@ public sealed class UserAccessEndpoints : EndpointGroup
 		return result.Match(
 			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetMyProfileAsync)), userId)
 		);
+	}
+
+	private async Task<IResult> ActivateAccountAsync(
+		[FromRoute] Guid userId,
+		[FromServices] ISender sender,
+		CancellationToken ct)
+	{
+		var command = new ActivateAccountCommand(UserId.FromGuid(userId));
+		var result = await sender.Send(command, ct);
+		return result.Match(TypedResults.Ok);
 	}
 
 	private async Task<IResult> LoginAsync(

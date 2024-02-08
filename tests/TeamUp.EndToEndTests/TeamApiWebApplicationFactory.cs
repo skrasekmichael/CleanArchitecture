@@ -7,6 +7,9 @@ using Npgsql;
 
 using Respawn;
 
+using TeamUp.Common.Abstractions;
+using TeamUp.EndToEndTests.Mocks;
+
 using Testcontainers.PostgreSql;
 
 namespace TeamUp.EndToEndTests;
@@ -49,14 +52,19 @@ public sealed class TeamApiWebApplicationFactory : WebApplicationFactory<Program
 	{
 		builder.ConfigureServices(services =>
 		{
+			//db context
 			services.RemoveAll<DbContextOptions>();
 			services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
 			services.RemoveAll<ApplicationDbContext>();
-
 			services.AddDbContext<ApplicationDbContext>(options =>
 			{
 				options.UseNpgsql(ConnectionString);
 			});
+
+			//email
+			services.RemoveAll<IEmailSender>();
+			services.AddSingleton<IEmailSender, EmailSenderMock>();
+			services.AddSingleton<MailInbox>();
 		});
 	}
 
