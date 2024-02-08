@@ -16,7 +16,7 @@ internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 		_publisher = publisher;
 	}
 
-	public async Task DispatchDomainEventsAsync(CancellationToken ct = default)
+	public Task DispatchDomainEventsAsync(CancellationToken ct = default)
 	{
 		//get all entities with unpublished domain events
 		var entities = _context.ChangeTracker.Entries<IHasDomainEvent>()
@@ -31,9 +31,7 @@ internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 		entities.ForEach(entity => entity.ClearDomainEvents());
 
 		//publish all domain events
-		foreach (var domainEvent in domainEvents)
-		{
-			await _publisher.Publish(domainEvent, ct);
-		}
+		var tasks = domainEvents.Select(domainEvent => _publisher.Publish(domainEvent, ct));
+		return Task.WhenAll(tasks);
 	}
 }

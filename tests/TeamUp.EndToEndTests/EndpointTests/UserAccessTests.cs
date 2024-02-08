@@ -6,12 +6,12 @@ using TeamUp.Contracts.Users;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
-public sealed class AuthTests : BaseEndpointTests
+public sealed class UserAccessTests : BaseEndpointTests
 {
-	public AuthTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+	public UserAccessTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	[Fact]
-	public async Task RegisterUser_Should_CreateNewUserInDatabase()
+	public async Task RegisterUser_Should_CreateNewUserInDatabase_And_SendActivationEmail()
 	{
 		//arrange
 		var request = UserGenerator.ValidRegisterUserRequest.Generate();
@@ -31,6 +31,9 @@ public sealed class AuthTests : BaseEndpointTests
 		user!.Name.Should().BeEquivalentTo(request.Name);
 		user.Email.Should().BeEquivalentTo(request.Email);
 		user.Password.Should().NotBeEquivalentTo(request.Password);
+
+		await Task.Delay(6_000); //wait for email
+		Inbox.Should().Contain(email => email.EmailAddress == request.Email);
 	}
 
 	[Fact]
@@ -79,7 +82,7 @@ public sealed class AuthTests : BaseEndpointTests
 	}
 
 	[Fact]
-	public async Task Login_AsExistingUser_Should_GenerateValidJwtToken()
+	public async Task Login_AsActivatedUser_Should_GenerateValidJwtToken()
 	{
 		//arrange
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
@@ -126,6 +129,118 @@ public sealed class AuthTests : BaseEndpointTests
 				(ClaimTypes.Name, user.Name),
 				(ClaimTypes.Email, user.Email)
 			]);
+	}
+
+	[Fact]
+	public async Task Login_AsInactivatedUser_Should_ReturnUnauthorized()
+	{
+		//arrange
+		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
+
+		var rawPassword = UserGenerator.GenerateValidPassword();
+		var user = User.Create(
+			F.Internet.UserName(),
+			F.Internet.Email(),
+			passwordService.HashPassword(rawPassword));
+
+		await UseDbContextAsync(async dbContext =>
+		{
+			dbContext.Add(user);
+			await dbContext.SaveChangesAsync();
+		});
+
+		var request = new LoginRequest
+		{
+			Email = user.Email,
+			Password = rawPassword
+		};
+
+		//act
+		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+
+		//assert
+		response.Should().Be401Unauthorized();
+	}
+
+	[Fact]
+	public async Task Login_AsNonexistentUser_Should_ReturnUnauthorized()
+	{
+		//arrange
+
+		var request = new LoginRequest
+		{
+			Email = F.Internet.Email(),
+			Password = UserGenerator.GenerateValidPassword()
+		};
+
+		//act
+		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+
+		//assert
+		response.Should().Be401Unauthorized();
+	}
+
+	[Fact]
+	public async Task Login_WithIncorrectPassword_Should_ReturnUnauthorized()
+	{
+		//arrange
+		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
+
+		var rawPassword = UserGenerator.GenerateValidPassword();
+		var user = User.Create(
+			F.Internet.UserName(),
+			F.Internet.Email(),
+			passwordService.HashPassword(rawPassword));
+
+		user.Activate();
+		user.ClearDomainEvents();
+
+		await UseDbContextAsync(async dbContext =>
+		{
+			dbContext.Add(user);
+			await dbContext.SaveChangesAsync();
+		});
+
+		var request = new LoginRequest
+		{
+			Email = user.Email,
+			Password = rawPassword + "x"
+		};
+
+		//act
+		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+
+		//assert
+		response.Should().Be401Unauthorized();
+	}
+
+	[Fact]
+	public async Task ActivateAccount_Should_SetUserStatusAsActivatedInDatabase()
+	{
+		//arrange
+		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
+
+		var rawPassword = UserGenerator.GenerateValidPassword();
+		var user = User.Create(
+			F.Internet.UserName(),
+			F.Internet.Email(),
+			passwordService.HashPassword(rawPassword));
+
+		await UseDbContextAsync(async dbContext =>
+		{
+			dbContext.Add(user);
+			await dbContext.SaveChangesAsync();
+		});
+
+		//act
+		var response = await Client.PostAsJsonAsync($"/api/v1/users/{user.Id.Value}/activate", EmptyObject);
+
+		//assert
+		response.Should().Be200Ok();
+
+		var activatedUser = await UseDbContextAsync(async dbContext => await dbContext.Users.FindAsync(user.Id));
+		activatedUser.Should().NotBeNull();
+		activatedUser!.Status.Should().Be(UserStatus.Activated);
 	}
 
 	[Fact]
