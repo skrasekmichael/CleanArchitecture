@@ -19,14 +19,11 @@ internal sealed class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQ
 
 	public async Task<Result<UserResponse>> Handle(GetUserDetailsQuery request, CancellationToken ct)
 	{
-		var result = await _queryContext.Users
+		var user = await _queryContext.Users
 			.Where(user => user.Id == request.UserId)
 			.Select(user => _mapper.ToResponse(user))
 			.FirstOrDefaultAsync(ct);
 
-		if (result is null)
-			return NotFoundError.New("User not found.");
-
-		return result;
+		return user.EnsureNotNull(NotFoundError.New("User not found."));
 	}
 }

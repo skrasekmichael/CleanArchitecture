@@ -81,12 +81,41 @@ public static class ResultFunctionalExtensions
 		return self;
 	}
 
+	public static Result<TObj> EnsureNotNull<TObj, TError>(this TObj? self, TError error)
+		where TError : ErrorBase
+	{
+		if (self is null)
+			return error;
+
+		return self;
+	}
+
+	public static Result<TValue> EnsureNotNull<TValue, TError>(this Result<TValue?> self, TError error) where TError : ErrorBase
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		if (self.Value is null)
+			return error;
+
+		return self.Value;
+	}
+
 	public static Result<TValue> Tap<TValue>(this Result<TValue> self, Action<TValue> func)
 	{
 		if (self.IsFailure)
 			return self;
 
 		func(self.Value!);
+		return self;
+	}
+
+	public static async Task<Result<TValue>> TapAsync<TValue>(this Result<TValue> self, Func<TValue, Task> asyncFunc)
+	{
+		if (self.IsFailure)
+			return self;
+
+		await asyncFunc(self.Value!);
 		return self;
 	}
 

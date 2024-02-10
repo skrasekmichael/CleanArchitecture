@@ -19,7 +19,7 @@ internal sealed class ApplicationDbContextQueryFacade : IAppQueryContext
 	}
 
 	public IQueryable<User> Users => _context.Users.AsNoTracking();
-	public IQueryable<TeamMember> TeamMembers => _context.TeamMembers.AsNoTracking();
+	public IQueryable<Team> Teams => _context.Teams.AsNoTracking();
 	public IQueryable<Invitation> Invitations => _context.Invitations.AsNoTracking();
 	public IQueryable<Event> Events => _context.Events.AsNoTracking();
 }

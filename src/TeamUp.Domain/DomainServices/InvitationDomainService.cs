@@ -23,7 +23,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 
 	public async Task<Result<Invitation>> InviteUserAsync(UserId loggedUserId, TeamId teamId, string email, CancellationToken ct = default)
 	{
-		var team = await _teamRepository.GetTeamByIdWithTeamMembersAsync(teamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(teamId, ct);
 		var member = team?.Members.FirstOrDefault(member => member.UserId == loggedUserId);
 		if (member is null)
 			return AuthorizationError.New("Not member of the team.");

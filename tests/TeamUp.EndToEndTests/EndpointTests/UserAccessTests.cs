@@ -3,6 +3,7 @@ using System.Security.Claims;
 
 using TeamUp.Application.Users;
 using TeamUp.Contracts.Users;
+using TeamUp.EndToEndTests.Extensions;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
@@ -23,12 +24,12 @@ public sealed class UserAccessTests : BaseEndpointTests
 		response.Should().Be201Created();
 
 		var userId = await response.Content.ReadFromJsonAsync<UserId>(JsonSerializerOptions);
-		userId.Should().NotBeNull();
+		userId.ShouldNotBeNull();
 
 		var user = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(userId));
-		user.Should().NotBeNull();
+		user.ShouldNotBeNull();
 
-		user!.Name.Should().BeEquivalentTo(request.Name);
+		user.Name.Should().BeEquivalentTo(request.Name);
 		user.Email.Should().BeEquivalentTo(request.Email);
 		user.Password.Should().NotBeEquivalentTo(request.Password);
 
@@ -62,7 +63,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		response.Should().Be409Conflict();
 
 		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(JsonSerializerOptions);
-		problemDetails.Should().NotBeNull();
+		problemDetails.ShouldNotBeNull();
 	}
 
 	[Theory]
@@ -78,7 +79,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		response.Should().Be400BadRequest();
 
 		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(JsonSerializerOptions);
-		problemDetails.Should().NotBeNull();
+		problemDetails.ShouldNotBeNull();
 	}
 
 	[Fact]
@@ -120,7 +121,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		var handler = new JwtSecurityTokenHandler();
 		var jwt = handler.ReadJwtToken(token);
 
-		jwt.Should().NotBeNull();
+		jwt.ShouldNotBeNull();
 		jwt.ValidTo.Ticks.Should().BeGreaterThan(DateTime.UtcNow.Ticks);
 		jwt.Claims.Select(claim => (claim.Type, claim.Value))
 			.Should()
@@ -239,8 +240,8 @@ public sealed class UserAccessTests : BaseEndpointTests
 		response.Should().Be200Ok();
 
 		var activatedUser = await UseDbContextAsync(async dbContext => await dbContext.Users.FindAsync(user.Id));
-		activatedUser.Should().NotBeNull();
-		activatedUser!.Status.Should().Be(UserStatus.Activated);
+		activatedUser.ShouldNotBeNull();
+		activatedUser.Status.Should().Be(UserStatus.Activated);
 	}
 
 	[Fact]
@@ -274,7 +275,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		//assert
 		response.Should().Be200Ok();
 
-		var userDetails = await response.Content.ReadFromJsonAsync<UserResponse>(JsonSerializerOptions);
-		user.Should().BeEquivalentTo(userDetails, o => o.ExcludingMissingMembers());
+		var userResponse = await response.Content.ReadFromJsonAsync<UserResponse>(JsonSerializerOptions);
+		user.Should().BeEquivalentTo(userResponse, o => o.ExcludingMissingMembers());
 	}
 }

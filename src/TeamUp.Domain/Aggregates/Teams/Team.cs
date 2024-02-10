@@ -45,7 +45,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 		return Result.Success;
 	}
 
-	internal void AddTeamMember(User user, IDateTimeProvider dateTimeProvider)
+	internal void AddTeamMember(User user, IDateTimeProvider dateTimeProvider, TeamRole role = TeamRole.Member)
 	{
 		if (_members.Find(member => member.UserId == user.Id) is not null)
 			return;
@@ -55,7 +55,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			user.Id,
 			this,
 			user.Name,
-			TeamRole.Member,
+			role,
 			dateTimeProvider.DateTimeOffsetUtcNow
 		));
 	}
@@ -112,14 +112,17 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			});
 	}
 
-	public static Result<Team> Create(string name)
+	public static Result<Team> Create(string name, User owner, IDateTimeProvider dateTimeProvider)
 	{
-		return name.Length switch
-		{
-			< NAME_MIN_SIZE => ValidationError.New($"Name must be atleast {NAME_MIN_SIZE} characters long."),
-			> NAME_MAX_SIZE => ValidationError.New($"Name must be shorter than {NAME_MAX_SIZE} characters."),
-			_ => new Team(TeamId.New(), name)
-		};
+		return name
+			.Ensure(
+				name => name.Length >= NAME_MIN_SIZE,
+				ValidationError.New($"Name must be atleast {NAME_MIN_SIZE} characters long."))
+			.Ensure(
+				name => name.Length <= NAME_MAX_SIZE,
+				ValidationError.New($"Name must be shorter than {NAME_MAX_SIZE} characters."))
+			.Map(name => new Team(TeamId.New(), name))
+			.Tap(team => team.AddTeamMember(owner, dateTimeProvider, TeamRole.Owner));
 	}
 
 	private Result<TeamMember> GetTeamMemberByUserId(UserId userId)

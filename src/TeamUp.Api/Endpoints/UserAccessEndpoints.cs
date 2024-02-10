@@ -9,11 +9,11 @@ using TeamUp.Application.Users.GetUserDetail;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Users;
 
-namespace TeamUp.Api.Endpoints.UserAccess;
+namespace TeamUp.Api.Endpoints;
 
-public sealed class UserAccessEndpoints : EndpointGroup
+public sealed class UserAccessEndpoints : IEndpointGroup
 {
-	public override void MapEndpoints(RouteGroupBuilder group)
+	public void MapEndpoints(RouteGroupBuilder group)
 	{
 		group.MapPost("/register", RegisterUserAsync)
 			.Produces<UserId>(StatusCodes.Status201Created)

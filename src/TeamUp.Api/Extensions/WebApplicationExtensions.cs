@@ -5,7 +5,6 @@ using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 
 using TeamUp.Api.Endpoints;
-using TeamUp.Api.Endpoints.UserAccess;
 using TeamUp.Api.Filters;
 using TeamUp.Infrastructure.Persistence;
 
@@ -27,16 +26,23 @@ public static class WebApplicationExtensions
 			.WithApiVersionSet(apiVersionSet)
 			.WithOpenApi();
 
-		apiGroup.MapEndpointGroup<UserAccessEndpoints>("users");
+		apiGroup
+			.MapEndpointGroup<UserAccessEndpoints>("users")
+			.MapEndpointGroup<TeamEndpoints>("teams");
 	}
 
-	public static RouteGroupBuilder MapEndpointGroup<TGroup>(this RouteGroupBuilder apiGroup, [StringSyntax("Route")] string prefix)
-		where TGroup : EndpointGroup, new()
+	public static RouteGroupBuilder MapEndpointGroup<TGroup>(
+		this RouteGroupBuilder apiGroup,
+		[StringSyntax("Route")] string prefix,
+		Action<RouteGroupBuilder>? configureGroup = null)
+		where TGroup : IEndpointGroup, new()
 	{
 		var group = apiGroup.MapGroup(prefix);
 
 		var groupEndpoints = new TGroup();
 		groupEndpoints.MapEndpoints(group);
+
+		configureGroup?.Invoke(group);
 
 		return apiGroup;
 	}

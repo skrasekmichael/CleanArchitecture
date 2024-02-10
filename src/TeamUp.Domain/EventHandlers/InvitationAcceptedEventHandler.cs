@@ -35,7 +35,7 @@ internal sealed class InvitationAcceptedEventHandler : IDomainEventHandler<Invit
 			return;
 		}
 
-		var team = await _teamRepository.GetTeamByIdWithTeamMembersAsync(domainEvent.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(domainEvent.TeamId, ct);
 		if (team is null)
 		{
 			_logger.LogWarning("Accepted invitation for team ({teamId}) that doesn't exist.", domainEvent.TeamId);

@@ -8,7 +8,7 @@ namespace TeamUp.Application.Abstractions;
 public interface IAppQueryContext
 {
 	public IQueryable<User> Users { get; }
-	public IQueryable<TeamMember> TeamMembers { get; }
+	public IQueryable<Team> Teams { get; }
 	public IQueryable<Invitation> Invitations { get; }
 	public IQueryable<Event> Events { get; }
 }

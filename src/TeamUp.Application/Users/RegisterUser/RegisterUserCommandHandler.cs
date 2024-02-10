@@ -5,13 +5,13 @@ using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Application.Users.Register;
 
-internal sealed class RegisterCommandHandler : ICommandHandler<RegisterUserCommand, Result<UserId>>
+internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Result<UserId>>
 {
 	private readonly IUserRepository _userRepository;
 	private readonly IPasswordService _passwordService;
 	private readonly IUnitOfWork _unitOfWork;
 
-	public RegisterCommandHandler(IUserRepository userRepository, IPasswordService passwordService, IUnitOfWork unitOfWork)
+	public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordService passwordService, IUnitOfWork unitOfWork)
 	{
 		_userRepository = userRepository;
 		_passwordService = passwordService;
