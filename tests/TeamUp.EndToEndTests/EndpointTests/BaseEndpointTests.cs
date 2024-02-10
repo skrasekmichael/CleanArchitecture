@@ -63,7 +63,28 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		await scope.DisposeAsync();
 	}
 
+	protected async Task UseDbContextAsync(Func<ApplicationDbContext, Task> apply)
+	{
+		await using var scope = AppFactory.Services.CreateAsyncScope();
+
+		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+		await apply(dbContext);
+
+		await scope.DisposeAsync();
+	}
+
 	protected async ValueTask<T> UseDbContextAsync<T>(Func<ApplicationDbContext, ValueTask<T>> apply)
+	{
+		await using var scope = AppFactory.Services.CreateAsyncScope();
+
+		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+		var result = await apply(dbContext);
+
+		await scope.DisposeAsync();
+		return result;
+	}
+
+	protected async Task<T> UseDbContextAsync<T>(Func<ApplicationDbContext, Task<T>> apply)
 	{
 		await using var scope = AppFactory.Services.CreateAsyncScope();
 

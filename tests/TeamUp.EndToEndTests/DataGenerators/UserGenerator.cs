@@ -1,5 +1,4 @@
 ﻿using TeamUp.Contracts.Users;
-using TeamUp.EndToEndTests.Extensions;
 
 namespace TeamUp.EndToEndTests.DataGenerators;
 
