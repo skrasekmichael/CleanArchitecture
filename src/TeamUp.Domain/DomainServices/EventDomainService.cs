@@ -28,7 +28,7 @@ internal sealed class EventDomainService : IEventDomainService
 		TimeSpan replyClosingTimeBeforeMeetTime,
 		CancellationToken ct = default)
 	{
-		var team = await _teamRepository.GetTeamByIdWithTeamMembersAsync(teamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(teamId, ct);
 		if (team is null)
 			return DomainError.New("Team doesn't exist.");
 

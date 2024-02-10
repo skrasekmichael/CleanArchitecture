@@ -11,7 +11,7 @@ namespace TeamUp.Infrastructure.Persistence;
 public sealed class ApplicationDbContext : DbContext
 {
 	public DbSet<User> Users => Set<User>();
-	public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
+	public DbSet<Team> Teams => Set<Team>();
 	public DbSet<Invitation> Invitations => Set<Invitation>();
 	public DbSet<Event> Events => Set<Event>();
 
