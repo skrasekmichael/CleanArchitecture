@@ -3,7 +3,6 @@ using System.Security.Claims;
 
 using TeamUp.Application.Users;
 using TeamUp.Contracts.Users;
-using TeamUp.EndToEndTests.Extensions;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
@@ -43,10 +42,10 @@ public sealed class UserAccessTests : BaseEndpointTests
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		var request = new RegisterUserRequest()
@@ -97,10 +96,10 @@ public sealed class UserAccessTests : BaseEndpointTests
 		user.Activate();
 		user.ClearDomainEvents();
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		var request = new LoginRequest
@@ -144,10 +143,10 @@ public sealed class UserAccessTests : BaseEndpointTests
 			F.Internet.Email(),
 			passwordService.HashPassword(rawPassword));
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		var request = new LoginRequest
@@ -196,10 +195,10 @@ public sealed class UserAccessTests : BaseEndpointTests
 		user.Activate();
 		user.ClearDomainEvents();
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		var request = new LoginRequest
@@ -227,10 +226,10 @@ public sealed class UserAccessTests : BaseEndpointTests
 			F.Internet.Email(),
 			passwordService.HashPassword(rawPassword));
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		//act
@@ -239,7 +238,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		//assert
 		response.Should().Be200Ok();
 
-		var activatedUser = await UseDbContextAsync(async dbContext => await dbContext.Users.FindAsync(user.Id));
+		var activatedUser = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(user.Id));
 		activatedUser.ShouldNotBeNull();
 		activatedUser.Status.Should().Be(UserStatus.Activated);
 	}
@@ -261,10 +260,10 @@ public sealed class UserAccessTests : BaseEndpointTests
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		Authenticate(user);

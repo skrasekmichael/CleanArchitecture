@@ -1,13 +1,13 @@
-﻿using TeamUp.EndToEndTests.Extensions;
-
-namespace TeamUp.EndToEndTests.DataGenerators;
+﻿namespace TeamUp.EndToEndTests.DataGenerators;
 
 public sealed class TeamGenerator : BaseGenerator
 {
-	private static readonly PrivateBinder TeamBinder = new("_members");
+	private const string TEAM_MEMBERS_FIELD = "_members";
+
+	private static readonly PrivateBinder TeamBinder = new(TEAM_MEMBERS_FIELD);
 	private static readonly PrivateBinder TeamMemberBinder = new(
-		nameof(Domain.Aggregates.Teams.TeamMember.UserId).GetBackingField(),
-		nameof(Domain.Aggregates.Teams.TeamMember.TeamId).GetBackingField()
+		nameof(TeamMember.UserId).GetBackingField(),
+		nameof(TeamMember.TeamId).GetBackingField()
 	);
 
 	public static string GenerateValidTeamName() => F.Random.AlphaNumeric(10);
@@ -17,15 +17,15 @@ public sealed class TeamGenerator : BaseGenerator
 		.RuleFor(t => t.Id, f => TeamId.FromGuid(f.Random.Uuid()))
 		.RuleFor(t => t.Name, GenerateValidTeamName());
 
-	public static readonly Faker<TeamMember> TeamMember = new Faker<TeamMember>(binder: TeamMemberBinder)
+	public static readonly Faker<TeamMember> EmptyTeamMember = new Faker<TeamMember>(binder: TeamMemberBinder)
 		.UsePrivateConstructor()
 		.RuleFor(tm => tm.Id, f => TeamMemberId.FromGuid(f.Random.Uuid()));
 
 	public static Team GenerateTeamWithOwner(User owner)
 	{
 		return EmptyTeam
-			.RuleFor("_members", (f, t) => new List<TeamMember> {
-				TeamMember
+			.RuleFor(TEAM_MEMBERS_FIELD, (f, t) => new List<TeamMember> {
+				EmptyTeamMember
 					.RuleForBackingField(tm => tm.TeamId, t.Id)
 					.RuleForBackingField(tm => tm.UserId, owner.Id)
 					.RuleFor(tm => tm.Nickname, owner.Name)

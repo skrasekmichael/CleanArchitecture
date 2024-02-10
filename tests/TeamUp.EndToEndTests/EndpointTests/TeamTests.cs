@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using TeamUp.Contracts.Teams;
-using TeamUp.EndToEndTests.Extensions;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
@@ -14,10 +13,10 @@ public sealed class TeamTests : BaseEndpointTests
 	{
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		Authenticate(user);
@@ -36,13 +35,11 @@ public sealed class TeamTests : BaseEndpointTests
 		var teamId = await response.Content.ReadFromJsonAsync<TeamId>();
 		teamId.ShouldNotBeNull();
 
-		var team = await UseDbContextAsync(async dbContext =>
-		{
-			return await dbContext.Teams
+		var team = await UseDbContextAsync(dbContext =>
+			dbContext.Teams
 				.Include(team => team.Members)
 				.Include(team => team.EventTypes)
-				.FirstOrDefaultAsync(team => team.Id == teamId);
-		});
+				.FirstOrDefaultAsync(team => team.Id == teamId));
 
 		team.ShouldNotBeNull();
 		team.Name.Should().Be(createTeamRequest.Name);
@@ -62,11 +59,11 @@ public sealed class TeamTests : BaseEndpointTests
 		var user = UserGenerator.ActivatedUser.Generate();
 		var team = TeamGenerator.GenerateTeamWithOwner(user);
 
-		await UseDbContextAsync(async dbContext =>
+		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
 			dbContext.Teams.Add(team);
-			await dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync();
 		});
 
 		Authenticate(user);

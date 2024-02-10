@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TeamUp.Api\TeamUp.Api.csproj" />
+    <ProjectReference Include="..\TeamUp.TestsCommon\TeamUp.TestsCommon.csproj" />
   </ItemGroup>
 
 </Project>
