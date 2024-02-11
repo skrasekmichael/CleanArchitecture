@@ -34,7 +34,7 @@ public sealed class User : AggregateRoot<User, UserId>
 		AddDomainEvent(new UserActivatedDomainEvent(this));
 	}
 
-	public static User Generate(string email) => new(
+	internal static User Generate(string email) => new(
 		UserId.New(),
 		email,
 		email,
@@ -42,7 +42,7 @@ public sealed class User : AggregateRoot<User, UserId>
 		UserStatus.Generated
 	);
 
-	public static User Create(string name, string email, Password password) => new(
+	internal static User Create(string name, string email, Password password) => new(
 		UserId.New(),
 		name,
 		email,

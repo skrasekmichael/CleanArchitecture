@@ -39,12 +39,6 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		Inbox.Clear();
 	}
 
-	public void Authenticate(string name, string email)
-	{
-		var user = User.Create(name, email, new Password());
-		Authenticate(user);
-	}
-
 	public void Authenticate(User user)
 	{
 		var tokenService = AppFactory.Services.GetRequiredService<ITokenService>();

@@ -24,16 +24,12 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 	public async Task<Result<Invitation>> InviteUserAsync(UserId loggedUserId, TeamId teamId, string email, CancellationToken ct = default)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(teamId, ct);
-		var member = team?.Members.FirstOrDefault(member => member.UserId == loggedUserId);
-		if (member is null)
-			return AuthorizationError.New("Not member of the team.");
-
-		if (!member.Role.CanInviteTeamMembers())
-			return AuthorizationError.New("Can't invite team members.");
-
-		var user = await _userRepository.GetUserByEmailAsync(email, ct);
-		user ??= User.Generate(email);
-
-		return _invitationFactory.CreateInvitation(user.Id, teamId);
+		return await team
+			.EnsureNotNull(TeamErrors.TeamNotFound)
+			.Then(team => team.GetTeamMemberByUserId(loggedUserId))
+			.Ensure(member => member.Role.CanInviteTeamMembers(), TeamErrors.UnauthorizedToInviteTeamMembers)
+			.ThenAsync(_ => _userRepository.GetUserByEmailAsync(email, ct))
+			.ThenAsync(user => user ?? User.Generate(email))
+			.ThenAsync(user => _invitationFactory.CreateInvitation(user.Id, teamId));
 	}
 }

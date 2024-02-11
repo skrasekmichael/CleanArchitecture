@@ -3,6 +3,7 @@
 using TeamUp.Application.Abstractions;
 using TeamUp.Common;
 using TeamUp.Contracts.Teams;
+using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Application.Teams.GetTeam;
 
@@ -36,9 +37,7 @@ internal sealed class GetTeamQueryHandler : IQueryHandler<GetTeamQuery, Result<T
 			.FirstOrDefaultAsync(ct);
 
 		return team
-			.EnsureNotNull(NotFoundError.New("Team not found."))
-			.Ensure(
-				team => team.Members.Any(member => member.UserId == request.InitiatorId),
-				AuthorizationError.New("Not member of the team."));
+			.EnsureNotNull(TeamErrors.TeamNotFound)
+			.Ensure(team => team.Members.Any(member => member.UserId == request.InitiatorId), TeamErrors.NotMemberOfTeam);
 	}
 }

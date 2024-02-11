@@ -11,13 +11,23 @@ public sealed class UserGenerator : BaseGenerator
 		.RuleFor(r => r.Name, f => f.Internet.UserName())
 		.RuleFor(r => r.Password, GenerateValidPassword());
 
-	public static readonly Faker<User> ActivatedUser = new Faker<User>()
+	private static readonly Faker<User> EmptyUser = new Faker<User>()
 		.UsePrivateConstructor()
 		.RuleFor(u => u.Id, f => UserId.FromGuid(f.Random.Guid()))
 		.RuleFor(u => u.Email, f => f.Internet.Email())
-		.RuleFor(u => u.Name, f => f.Internet.UserName())
+		.RuleFor(u => u.Name, f => f.Internet.UserName());
+
+	public static readonly Faker<User> ActivatedUser = EmptyUser
 		.RuleFor(u => u.Password, new Password())
 		.RuleFor(u => u.Status, UserStatus.Activated);
+
+	public static User GenerateUser(Password password, UserStatus status)
+	{
+		return EmptyUser
+			.RuleFor(u => u.Password, password)
+			.RuleFor(u => u.Status, status)
+			.Generate();
+	}
 
 	public sealed class InvalidRegisterUserRequests : TheoryData<RegisterUserRequest>
 	{

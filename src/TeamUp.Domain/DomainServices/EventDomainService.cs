@@ -29,27 +29,19 @@ internal sealed class EventDomainService : IEventDomainService
 		CancellationToken ct = default)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(teamId, ct);
-		if (team is null)
-			return DomainError.New("Team doesn't exist.");
-
-		var member = team.Members.FirstOrDefault(member => member.UserId == loggedUserId);
-		if (member is null)
-			return AuthorizationError.New("Not member of the team.");
-
-		if (!member.Role.CanCreateEvents())
-			return AuthorizationError.New("Can't create events.");
-
-		if (team.EventTypes.All(type => type.Id != eventTypeId))
-			return ValidationError.New("Event type doesn't exist.");
-
-		return Event.Create(
-			eventTypeId,
-			team.Id,
-			from, to,
-			description,
-			meetTime,
-			replyClosingTimeBeforeMeetTime,
-			_dateTimeProvider
-		);
+		return team
+			.EnsureNotNull(TeamErrors.NotMemberOfTeam)
+			.Ensure(team => team.EventTypes.Any(type => type.Id == eventTypeId), TeamErrors.EventTypeNotFound)
+			.And(team => team.GetTeamMemberByUserId(loggedUserId))
+			.Ensure((_, member) => member.Role.CanCreateEvents(), TeamErrors.UnauthorizedToCreateEvents)
+			.Then((team, _) => Event.Create(
+				eventTypeId,
+				team.Id,
+				from, to,
+				description,
+				meetTime,
+				replyClosingTimeBeforeMeetTime,
+				_dateTimeProvider
+			));
 	}
 }

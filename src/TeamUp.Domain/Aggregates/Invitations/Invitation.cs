@@ -37,7 +37,7 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 	public Result Accept(IDateTimeProvider dateTimeProvider)
 	{
 		if (HasExpired(dateTimeProvider))
-			return DomainError.New("Invitation has expired.");
+			return DomainError.New("Invitation has expired.", "Invitations.Expired");
 
 		AddDomainEvent(new InvitationAcceptedDomainEvent(RecipientId, TeamId));
 		return Result.Success;

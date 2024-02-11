@@ -19,12 +19,10 @@ internal sealed class ActivateAccountCommandHandler : ICommandHandler<ActivateAc
 	public async Task<Result> Handle(ActivateAccountCommand request, CancellationToken ct)
 	{
 		var user = await _userRepository.GetUserByIdAsync(request.UserId, ct);
-		if (user is null)
-			return NotFoundError.New("User not found");
-
-		user.Activate();
-		await _unitOfWork.SaveChangesAsync(ct);
-
-		return Result.Success;
+		return await user
+			.EnsureNotNull(UserErrors.UserNotFound)
+			.Tap(user => user.Activate())
+			.TapAsync(_ => _unitOfWork.SaveChangesAsync(ct))
+			.ToResultAsync();
 	}
 }
