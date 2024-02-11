@@ -3,6 +3,7 @@
 using TeamUp.Application.Abstractions;
 using TeamUp.Common;
 using TeamUp.Contracts.Users;
+using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Application.Users.GetUserDetail;
 
@@ -24,6 +25,6 @@ internal sealed class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQ
 			.Select(user => _mapper.ToResponse(user))
 			.FirstOrDefaultAsync(ct);
 
-		return user.EnsureNotNull(NotFoundError.New("User not found."));
+		return user.EnsureNotNull(UserErrors.UserNotFound);
 	}
 }

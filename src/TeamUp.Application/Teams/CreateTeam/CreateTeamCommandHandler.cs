@@ -27,10 +27,10 @@ internal sealed class CreateTeamCommandHandler : ICommandHandler<CreateTeamComma
 	{
 		var user = await _userRepository.GetUserByIdAsync(request.OwnerId, ct);
 		return await user
-			.EnsureNotNull(NotFoundError.New("Account does not exist."))
-			.Map(user => Team.Create(request.Name, user, _dateTimeProvider))
+			.EnsureNotNull(UserErrors.AccountNotFound)
+			.Then(user => Team.Create(request.Name, user, _dateTimeProvider))
 			.Tap(_teamRepository.AddTeam)
-			.Map(team => team.Id)
+			.Then(team => team.Id)
 			.TapAsync(_ => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

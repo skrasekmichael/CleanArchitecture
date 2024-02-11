@@ -20,15 +20,10 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, Result
 	public async Task<Result<string>> Handle(LoginCommand request, CancellationToken ct)
 	{
 		var user = await _userRepository.GetUserByEmailAsync(request.Email, ct);
-		if (user is null)
-			return AuthenticationError.New("Invalid Credentials");
-
-		if (!_passwordService.VerifyPassword(request.Password, user.Password))
-			return AuthenticationError.New("Invalid Credentials");
-
-		if (user.Status != UserStatus.Activated)
-			return AuthenticationError.New("Account is not activated");
-
-		return _tokenService.GenerateToken(user);
+		return user
+			.EnsureNotNull(AuthenticationErrors.InvalidCredentials)
+			.Ensure(user => _passwordService.VerifyPassword(request.Password, user.Password), AuthenticationErrors.InvalidCredentials)
+			.Ensure(user => user.Status == UserStatus.Activated, AuthenticationErrors.NotActivatedAccount)
+			.Then(user => _tokenService.GenerateToken(user));
 	}
 }

@@ -3,6 +3,9 @@ using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
 
+using Rules = TeamUp.Domain.Aggregates.Teams.TeamRules;
+using Errors = TeamUp.Domain.Aggregates.Teams.TeamErrors;
+
 namespace TeamUp.Domain.Aggregates.Teams;
 
 public sealed record TeamId : TypedId<TeamId>;
@@ -63,47 +66,37 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 	public Result RemoveTeamMember(UserId initiatorId, TeamMemberId teamMemberId)
 	{
 		return GetTeamMember(teamMemberId)
-			.Ensure(
-				member => !member.Role.IsOwner(),
-				DomainError.New("Cannot remove owner of the team."))
+			.Ensure(Rules.MemberIsNotTeamOwner, Errors.CannotRemoveTeamOwner)
 			.And(() => GetTeamMemberByUserId(initiatorId))
-			.Ensure(
-				(member, initiator) => initiator.Role.CanRemoveTeamMembers() || member.UserId == initiatorId,
-				AuthorizationError.New("Removing team member denied."))
+			.Ensure(Rules.MemberCanBeRemovedByInitiator)
 			.Then((member, _) => _members.Remove(member));
 	}
 
 	public Result ChangeNickname(UserId initiatorId, string newNickname)
 	{
-		return newNickname.Ensure(
-				nickname => nickname.Length >= NICKNAME_MIN_SIZE,
-				ValidationError.New($"Nickname must be atleast {NICKNAME_MIN_SIZE} characters long."))
-			.Ensure(
-				nickname => nickname.Length <= NICKNAME_MAX_SIZE,
-				ValidationError.New($"Nickname must be shorter than {NICKNAME_MAX_SIZE} characters."))
-			.Map(_ => GetTeamMemberByUserId(initiatorId))
-			.Then(initiator => initiator.UpdateNickname(newNickname));
+		return newNickname
+			.Ensure(Rules.NicknameMinSize, Rules.NicknameMaxSize)
+			.Then(_ => GetTeamMemberByUserId(initiatorId))
+			.Tap(initiator => initiator.UpdateNickname(newNickname))
+			.ToResult();
 	}
 
 	public Result SetMemberRole(UserId initiatorId, TeamMemberId memberId, TeamRole newRole)
 	{
-		return newRole.Ensure(
-				role => !role.IsOwner(),
-				DomainError.New("Not allowed to have multiple team owners."))
-			.Map(_ => GetTeamMemberByUserId(initiatorId))
-			.Ensure(
-				initiator => initiator.Role.CanUpdateTeamRoles(),
-				AuthorizationError.New("Insufficient access rights."))
-			.Map(_ => GetTeamMember(memberId))
-			.Then(teamMember => teamMember.UpdateRole(newRole));
+		return newRole
+			.Ensure(Rules.RoleIsNotOwner, Errors.CannotHaveMultipleTeamOwners)
+			.Then(_ => GetTeamMemberByUserId(initiatorId))
+			.Ensure(Rules.MemberCanUpdateTeamRoles)
+			.Then(_ => GetTeamMember(memberId))
+			.Ensure(Rules.MemberIsNotTeamOwner, Errors.CannotChangeTeamOwnersRole)
+			.Tap(teamMember => teamMember.UpdateRole(newRole))
+			.ToResult();
 	}
 
 	public Result ChangeOwnership(UserId initiatorId, TeamMemberId memberId)
 	{
 		return GetTeamMemberByUserId(initiatorId)
-			.Ensure(
-				initiator => initiator.Role.IsOwner(),
-				AuthorizationError.New("Only team owner can change ownership."))
+			.Ensure(Rules.MemberCanChangeOwnership)
 			.And(() => GetTeamMember(memberId))
 			.Then((initiator, member) =>
 			{
@@ -112,34 +105,33 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			});
 	}
 
+	public Result ChangeTeamName(UserId initiatorId, string newName)
+	{
+		return newName
+			.Ensure(Rules.TeamNameMinSize, Rules.TeamNameMaxSize)
+			.Then(_ => GetTeamMemberByUserId(initiatorId))
+			.Ensure(Rules.MemberCanChangeTeamName)
+			.Then(_ => Name = newName)
+			.ToResult();
+	}
+
 	public static Result<Team> Create(string name, User owner, IDateTimeProvider dateTimeProvider)
 	{
 		return name
-			.Ensure(
-				name => name.Length >= NAME_MIN_SIZE,
-				ValidationError.New($"Name must be atleast {NAME_MIN_SIZE} characters long."))
-			.Ensure(
-				name => name.Length <= NAME_MAX_SIZE,
-				ValidationError.New($"Name must be shorter than {NAME_MAX_SIZE} characters."))
-			.Map(name => new Team(TeamId.New(), name))
+			.Ensure(Rules.TeamNameMinSize, Rules.TeamNameMaxSize)
+			.Then(name => new Team(TeamId.New(), name))
 			.Tap(team => team.AddTeamMember(owner, dateTimeProvider, TeamRole.Owner));
 	}
 
-	private Result<TeamMember> GetTeamMemberByUserId(UserId userId)
+	public Result<TeamMember> GetTeamMemberByUserId(UserId userId)
 	{
 		var teamMember = _members.Find(member => member.UserId == userId);
-		if (teamMember is null)
-			return AuthorizationError.New("Not member of the team.");
-
-		return teamMember;
+		return teamMember.EnsureNotNull(Errors.NotMemberOfTeam);
 	}
 
 	private Result<TeamMember> GetTeamMember(TeamMemberId memberId)
 	{
 		var teamMember = _members.Find(member => member.Id == memberId);
-		if (teamMember is null)
-			return NotFoundError.New("Member not found.");
-
-		return teamMember;
+		return teamMember.EnsureNotNull(Errors.MemberNotFound);
 	}
 }

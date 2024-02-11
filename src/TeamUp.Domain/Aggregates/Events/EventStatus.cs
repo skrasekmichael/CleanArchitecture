@@ -9,5 +9,5 @@ public enum EventStatus
 
 public static class EventStatusExtensions
 {
-	public static bool IsOpenToResponses(this EventStatus status) => status == EventStatus.Open;
+	public static bool IsOpenForResponses(this EventStatus status) => status == EventStatus.Open;
 }

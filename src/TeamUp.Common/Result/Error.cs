@@ -1,21 +1,18 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace TeamUp.Common;
+﻿namespace TeamUp.Common;
 
 public abstract record ErrorBase
 {
-	public string Code { get; internal init; } = null!;
-	public string Message { get; internal init; } = null!;
+	public string Code { get; protected init; } = null!;
+	public string Message { get; protected init; } = null!;
 }
 
-public abstract record Error<TSelf> : ErrorBase where TSelf : ErrorBase, new()
+public abstract record Error<TSelf> : ErrorBase where TSelf : Error<TSelf>, new()
 {
-	public static TSelf New(string message, [CallerMemberName] string? caller = null, [CallerFilePath] string? filePath = null)
+	public static TSelf New(string message, string code = "")
 	{
-		var className = Path.GetFileNameWithoutExtension(filePath);
 		return new TSelf()
 		{
-			Code = $"{className}.{caller}",
+			Code = code,
 			Message = message
 		};
 	}

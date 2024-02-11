@@ -62,7 +62,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		response.Should().Be409Conflict();
 
 		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(JsonSerializerOptions);
-		problemDetails.ShouldNotBeNull();
+		problemDetails.ShouldContainError(UserErrors.ConflictingEmail);
 	}
 
 	[Theory]
@@ -88,13 +88,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = User.Create(
-			F.Internet.UserName(),
-			F.Internet.Email(),
-			passwordService.HashPassword(rawPassword));
-
-		user.Activate();
-		user.ClearDomainEvents();
+		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -138,10 +132,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = User.Create(
-			F.Internet.UserName(),
-			F.Internet.Email(),
-			passwordService.HashPassword(rawPassword));
+		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.NotActivated);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -160,6 +151,9 @@ public sealed class UserAccessTests : BaseEndpointTests
 
 		//assert
 		response.Should().Be401Unauthorized();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		problemDetails.ShouldContainError(AuthenticationErrors.NotActivatedAccount);
 	}
 
 	[Fact]
@@ -178,6 +172,9 @@ public sealed class UserAccessTests : BaseEndpointTests
 
 		//assert
 		response.Should().Be401Unauthorized();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
 	}
 
 	[Fact]
@@ -187,13 +184,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = User.Create(
-			F.Internet.UserName(),
-			F.Internet.Email(),
-			passwordService.HashPassword(rawPassword));
-
-		user.Activate();
-		user.ClearDomainEvents();
+		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -212,6 +203,9 @@ public sealed class UserAccessTests : BaseEndpointTests
 
 		//assert
 		response.Should().Be401Unauthorized();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
 	}
 
 	[Fact]
@@ -221,10 +215,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = User.Create(
-			F.Internet.UserName(),
-			F.Internet.Email(),
-			passwordService.HashPassword(rawPassword));
+		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.NotActivated);
 
 		await UseDbContextAsync(dbContext =>
 		{

@@ -50,23 +50,21 @@ public sealed class Event : AggregateRoot<Event, EventId>
 
 	public Result SetMemberResponse(IDateTimeProvider dateTimeProvider, TeamMemberId memberId, EventReply reply)
 	{
+		static bool IsNotClosed(IDateTimeProvider dateTimeProvider, DateTimeOffset responseCloseTime) => dateTimeProvider.DateTimeOffsetUtcNow < responseCloseTime;
+
 		return Status
-			.Ensure(
-				status => status.IsOpenToResponses(),
-				DomainError.New($"Event is not open to responses."))
-			.Map(_ => GetResponseCloseTime())
-			.Ensure(
-				responseCloseTime => dateTimeProvider.DateTimeOffsetUtcNow < responseCloseTime,
-				DomainError.New("Time for responses ended.")
-			)
-			.Map(_ => _eventResponses.Find(er => er.TeamMemberId == memberId))
-			.Then(response =>
+			.Ensure(status => status.IsOpenForResponses(), EventErrors.NotOpenForResponses)
+			.Then(_ => GetResponseCloseTime())
+			.Ensure(responseCloseTime => IsNotClosed(dateTimeProvider, responseCloseTime), EventErrors.ClosedForResponses)
+			.Then(_ => _eventResponses.Find(er => er.TeamMemberId == memberId))
+			.Tap(response =>
 			{
 				if (response is null)
 					_eventResponses.Add(EventResponse.Create(dateTimeProvider, memberId, Id, reply));
 				else
 					response.UpdateReply(dateTimeProvider, reply);
-			});
+			})
+			.ToResult();
 	}
 
 	public void UpdateStatus(EventStatus status)
@@ -110,22 +108,19 @@ public sealed class Event : AggregateRoot<Event, EventId>
 		TimeSpan replyClosingTimeBeforeMeetTime,
 		IDateTimeProvider dateTimeProvider)
 	{
-		if (from >= to)
-			return ValidationError.New("Event can't end before it starts.");
-
-		if (from >= dateTimeProvider.DateTimeOffsetUtcNow)
-			return ValidationError.New("Can't create event in past.");
-
-		return new Event(
-			EventId.New(),
-			eventTypeId,
-			teamId,
-			from,
-			to,
-			description,
-			EventStatus.Open,
-			meetTime,
-			replyClosingTimeBeforeMeetTime
-		);
+		return from
+			.Ensure(from => from < to, EventErrors.CannotEndBeforeStart)
+			.Ensure(from => from > dateTimeProvider.DateTimeOffsetUtcNow, EventErrors.CannotStartInPast)
+			.Then(_ => new Event(
+				EventId.New(),
+				eventTypeId,
+				teamId,
+				from,
+				to,
+				description,
+				EventStatus.Open,
+				meetTime,
+				replyClosingTimeBeforeMeetTime
+			));
 	}
 }
