@@ -32,7 +32,7 @@ public sealed class UserAccessTests : BaseEndpointTests
 		user.Email.Should().BeEquivalentTo(request.Email);
 		user.Password.Should().NotBeEquivalentTo(request.Password);
 
-		await Task.Delay(6_000); //wait for email
+		await WaitForIntegrationEventsAsync(); //wait for email
 		Inbox.Should().Contain(email => email.EmailAddress == request.Email);
 	}
 

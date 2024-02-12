@@ -17,6 +17,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 	protected TeamApiWebApplicationFactory AppFactory { get; }
 	protected HttpClient Client { get; }
 	internal MailInbox Inbox { get; }
+	internal BackgroundCallback BackgroundCallback { get; }
 
 	protected JsonSerializerOptions JsonSerializerOptions { get; } = new()
 	{
@@ -27,7 +28,9 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 	{
 		AppFactory = appFactory;
 		Client = appFactory.CreateClient();
+
 		Inbox = appFactory.Services.GetRequiredService<MailInbox>();
+		BackgroundCallback = appFactory.Services.GetRequiredService<OutboxBackgroundCallback>();
 	}
 
 	public async Task InitializeAsync()
@@ -87,6 +90,13 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 
 		await scope.DisposeAsync();
 		return result;
+	}
+
+	protected async Task WaitForIntegrationEventsAsync(int millisecondsTimeout = 10_000)
+	{
+		var waitTask = BackgroundCallback.WaitForCallbackAsync();
+		var completedTask = await Task.WhenAny(waitTask, Task.Delay(millisecondsTimeout));
+		completedTask.Should().Be(waitTask, "Background callback has to be called");
 	}
 
 	public Task DisposeAsync() => Task.CompletedTask;

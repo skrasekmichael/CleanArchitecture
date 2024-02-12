@@ -4,7 +4,9 @@ using TeamUp.Infrastructure.Persistence;
 
 namespace TeamUp.Infrastructure.Processing.Outbox;
 
-internal sealed class ProcessOutboxMessagesJob : IJob
+public interface IProcessOutboxMessagesJob : IJob;
+
+internal sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
 {
 	private readonly ApplicationDbContext _dbContext;
 	private readonly IIntegrationEventsDispatcher _dispatcher;
