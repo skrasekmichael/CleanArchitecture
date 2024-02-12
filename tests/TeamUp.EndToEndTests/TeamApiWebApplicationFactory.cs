@@ -9,6 +9,7 @@ using Respawn;
 
 using TeamUp.Common.Abstractions;
 using TeamUp.EndToEndTests.Mocks;
+using TeamUp.Infrastructure.Processing.Outbox;
 
 using Testcontainers.PostgreSql;
 
@@ -62,9 +63,12 @@ public sealed class TeamApiWebApplicationFactory : WebApplicationFactory<Program
 			});
 
 			//email
-			services.RemoveAll<IEmailSender>();
-			services.AddSingleton<IEmailSender, EmailSenderMock>();
+			services.Replace<IEmailSender, EmailSenderMock>();
 			services.AddSingleton<MailInbox>();
+
+			//background services
+			services.AddSingleton<OutboxBackgroundCallback>();
+			services.Replace<IProcessOutboxMessagesJob, ProcessOutboxMessagesWithCallbackJob>();
 		});
 	}
 

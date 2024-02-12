@@ -71,12 +71,13 @@ public static class ServiceCollectionExtensions
 			.AddDbContextCheck<ApplicationDbContext>();
 
 		//background jobs
+		services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 		services.AddQuartzHostedService();
 		services.AddQuartz(configurator =>
 		{
-			var processOutboxJobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
+			var processOutboxJobKey = new JobKey(nameof(IProcessOutboxMessagesJob));
 			configurator
-				.AddJob<ProcessOutboxMessagesJob>(processOutboxJobKey)
+				.AddJob<IProcessOutboxMessagesJob>(processOutboxJobKey)
 				.AddTrigger(trigger => trigger
 					.ForJob(processOutboxJobKey)
 					.WithSimpleSchedule(schedule => schedule
@@ -84,6 +85,7 @@ public static class ServiceCollectionExtensions
 						.RepeatForever()
 					)
 				);
+
 		});
 
 		return services;
