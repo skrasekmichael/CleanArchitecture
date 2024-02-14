@@ -6,6 +6,7 @@ using TeamUp.Api.Endpoints.Teams;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.GetTeam;
 using TeamUp.Application.Teams.RemoveTeamMember;
+using TeamUp.Application.Teams.SetMemberRole;
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Teams;
 
@@ -39,6 +40,15 @@ public sealed class TeamEndpoints : IEndpointGroup
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound)
 			.WithName(nameof(RemoveTeamMemberAsync))
+			.MapToApiVersion(1);
+
+		group.MapPut("/{teamId:guid}/{teamMemberId:guid}/role", UpdateTeamRoleAsync)
+			.Produces(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status400BadRequest)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound)
+			.WithName(nameof(UpdateTeamRoleAsync))
 			.MapToApiVersion(1);
 	}
 
@@ -79,6 +89,24 @@ public sealed class TeamEndpoints : IEndpointGroup
 			httpContextAccessor.GetLoggedUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
+		);
+		var result = await sender.Send(query, ct);
+		return result.Match(TypedResults.Ok);
+	}
+
+	private async Task<IResult> UpdateTeamRoleAsync(
+		[FromRoute] Guid teamId,
+		[FromRoute] Guid teamMemberId,
+		[FromBody] UpdateTeamRoleRequest request,
+		[FromServices] ISender sender,
+		[FromServices] IHttpContextAccessor httpContextAccessor,
+		CancellationToken ct)
+	{
+		var query = new SetMemberRoleCommand(
+			httpContextAccessor.GetLoggedUserId(),
+			TeamId.FromGuid(teamId),
+			TeamMemberId.FromGuid(teamMemberId),
+			request.Role
 		);
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
