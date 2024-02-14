@@ -15,6 +15,8 @@ internal sealed class TeamRepository : ITeamRepository
 
 	public void AddTeam(Team team) => _context.Teams.Add(team);
 
+	public void RemoveTeam(Team team) => _context.Teams.Remove(team);
+
 	public async Task<Team?> GetTeamByIdAsync(TeamId teamId, CancellationToken ct = default)
 	{
 		return await _context.Teams

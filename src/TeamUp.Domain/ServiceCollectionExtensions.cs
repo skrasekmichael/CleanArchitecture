@@ -12,7 +12,8 @@ public static class ServiceCollectionExtensions
 	{
 		services
 			.AddScoped<IInvitationDomainService, InvitationDomainService>()
-			.AddScoped<IEventDomainService, EventDomainService>();
+			.AddScoped<IEventDomainService, EventDomainService>()
+			.AddScoped<ITeamDomainService, TeamDomainService>();
 
 		services
 			.AddSingleton<InvitationFactory>()

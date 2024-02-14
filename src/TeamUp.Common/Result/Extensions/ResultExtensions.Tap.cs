@@ -20,6 +20,16 @@ public static partial class ResultExtensions
 		return Result.Success;
 	}
 
+	public static async Task<Result> TapAsync(this Task<Result> selfTask, Func<Task> asyncFunc)
+	{
+		var self = await selfTask;
+		if (self.IsFailure)
+			return self;
+
+		await asyncFunc();
+		return Result.Success;
+	}
+
 	public static async Task<Result<TValue>> TapAsync<TValue>(this Result<TValue> self, Func<TValue, Task> asyncFunc)
 	{
 		if (self.IsFailure)
