@@ -23,5 +23,16 @@ public static class FakerExtensions
 		return faker.RuleFor(backingField, _ => value);
 	}
 
+	public static Faker<T> RuleForBackingField<T, TProperty>(this Faker<T> faker, Expression<Func<T, TProperty>> property, Func<Faker, TProperty> setter) where T : class
+	{
+		if (property.Body is not MemberExpression memberExpression || memberExpression.Member is not PropertyInfo propertyInfo)
+		{
+			throw new ArgumentException("Expression must be a MemberExpression pointing to a PropertyInfo", nameof(property));
+		}
+
+		var backingField = propertyInfo.Name.GetBackingField();
+		return faker.RuleFor(backingField, setter);
+	}
+
 	public static string GetBackingField(this string propertyName) => $"<{propertyName}>k__BackingField";
 }

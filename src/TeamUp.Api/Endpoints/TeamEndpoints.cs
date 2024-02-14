@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TeamUp.Api.Endpoints.Teams;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.GetTeam;
+using TeamUp.Application.Teams.RemoveTeamMember;
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Teams;
 
@@ -30,6 +31,15 @@ public sealed class TeamEndpoints : IEndpointGroup
 			.ProducesProblem(StatusCodes.Status404NotFound)
 			.WithName(nameof(GetTeamAsync))
 			.MapToApiVersion(1);
+
+		group.MapDelete("/{teamId:guid}/{teamMemberId:guid}", RemoveTeamMemberAsync)
+			.Produces(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status400BadRequest)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound)
+			.WithName(nameof(RemoveTeamMemberAsync))
+			.MapToApiVersion(1);
 	}
 
 	private async Task<IResult> CreateTeamAsync(
@@ -54,6 +64,22 @@ public sealed class TeamEndpoints : IEndpointGroup
 		CancellationToken ct)
 	{
 		var query = new GetTeamQuery(httpContextAccessor.GetLoggedUserId(), TeamId.FromGuid(teamId));
+		var result = await sender.Send(query, ct);
+		return result.Match(TypedResults.Ok);
+	}
+
+	private async Task<IResult> RemoveTeamMemberAsync(
+		[FromRoute] Guid teamId,
+		[FromRoute] Guid teamMemberId,
+		[FromServices] ISender sender,
+		[FromServices] IHttpContextAccessor httpContextAccessor,
+		CancellationToken ct)
+	{
+		var query = new RemoveTeamMemberCommand(
+			httpContextAccessor.GetLoggedUserId(),
+			TeamId.FromGuid(teamId),
+			TeamMemberId.FromGuid(teamMemberId)
+		);
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
 	}

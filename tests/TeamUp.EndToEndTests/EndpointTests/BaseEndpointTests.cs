@@ -50,16 +50,6 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
 	}
 
-	protected async ValueTask UseDbContextAsync(Func<ApplicationDbContext, ValueTask> apply)
-	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
-
-		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-		await apply(dbContext);
-
-		await scope.DisposeAsync();
-	}
-
 	protected async Task UseDbContextAsync(Func<ApplicationDbContext, Task> apply)
 	{
 		await using var scope = AppFactory.Services.CreateAsyncScope();
