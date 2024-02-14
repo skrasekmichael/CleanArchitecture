@@ -147,4 +147,33 @@ public sealed class TeamTests : BaseEndpointTests
 				.IgnoringCyclicReferences();
 		});
 	}
+
+	[Fact]
+	public async Task GetTeam_WhenNotMemberOfTeam_Should_ResultInForbidden()
+	{
+		//arrange
+		var owner = UserGenerator.ActivatedUser.Generate();
+		var initiatorUser = UserGenerator.ActivatedUser.Generate();
+		var members = UserGenerator.ActivatedUser.Generate(19);
+		var team = TeamGenerator.GenerateTeamWith(owner, members);
+
+		await UseDbContextAsync(dbContext =>
+		{
+			dbContext.Users.AddRange([owner, initiatorUser]);
+			dbContext.Users.AddRange(members);
+			dbContext.Teams.Add(team);
+			return dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(initiatorUser);
+
+		//act
+		var response = await Client.GetAsync($"/api/v1/teams/{team.Id.Value}");
+
+		//assert
+		response.Should().Be403Forbidden();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
+	}
 }

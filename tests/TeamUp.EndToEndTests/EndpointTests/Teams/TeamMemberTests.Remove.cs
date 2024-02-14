@@ -255,7 +255,7 @@ public sealed partial class TeamMemberTests : BaseEndpointTests
 	}
 
 	[Fact]
-	public async Task RemoveTeamMember_FromTeamThaDoesNotExist_Should_ResultInNotFound()
+	public async Task RemoveTeamMember_FromTeamThatDoesNotExist_Should_ResultInNotFound()
 	{
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();
@@ -279,5 +279,36 @@ public sealed partial class TeamMemberTests : BaseEndpointTests
 
 		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
+	}
+
+	[Fact]
+	public async Task RemoveTeamMember_WhenNotMemberOfTeam_Should_ResultInForbidden()
+	{
+		//arrange
+		var owner = UserGenerator.ActivatedUser.Generate();
+		var initiatorUser = UserGenerator.ActivatedUser.Generate();
+		var members = UserGenerator.ActivatedUser.Generate(19);
+		var team = TeamGenerator.GenerateTeamWith(owner, members);
+
+		var targetMemberId = team.Members.FirstOrDefault(member => member.Role != TeamRole.Owner)!.Id;
+
+		await UseDbContextAsync(dbContext =>
+		{
+			dbContext.Users.AddRange([owner, initiatorUser]);
+			dbContext.Users.AddRange(members);
+			dbContext.Teams.Add(team);
+			return dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(initiatorUser);
+
+		//act
+		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+
+		//assert
+		response.Should().Be403Forbidden();
+
+		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 }
