@@ -25,7 +25,7 @@ public static class TeamRules
 	public static readonly RuleWithError<TeamMember> MemberCanChangeTeamName = new(MemberIsOwner, TeamErrors.UnauthorizedToChangeTeamName);
 
 	public static readonly RuleWithError<(TeamMember Member, TeamMember Initiator)> MemberCanBeRemovedByInitiator = new(
-		context => context.Member.Role.CanRemoveTeamMembers() || context.Initiator.Id == context.Member.Id,
+		context => context.Initiator.Role.CanRemoveTeamMembers() || context.Initiator.Id == context.Member.Id,
 		TeamErrors.UnauthorizedToRemoveTeamMembers
 	);
 }

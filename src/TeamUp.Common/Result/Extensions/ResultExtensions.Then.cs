@@ -10,6 +10,14 @@ public static partial class ResultExtensions
 		return mapper(self.Value!);
 	}
 
+	public static Result Then<TValue>(this Result<TValue> self, Func<TValue, Result> mapper)
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		return mapper(self.Value!);
+	}
+
 	public static Result<TOut> Then<TValue, TOut>(this Result<TValue> self, Func<TValue, Result<TOut>> mapper)
 	{
 		if (self.IsFailure)

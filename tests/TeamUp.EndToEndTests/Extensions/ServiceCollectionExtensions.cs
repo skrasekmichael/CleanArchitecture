@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
-
-namespace TeamUp.EndToEndTests.Extensions;
+﻿namespace TeamUp.EndToEndTests.Extensions;
 
 public static class ServiceCollectionExtensions
 {

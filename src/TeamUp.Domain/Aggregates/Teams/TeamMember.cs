@@ -36,6 +36,8 @@ public sealed class TeamMember : Entity<TeamMemberId>
 		TimeStamp = timeStamp;
 	}
 
+	public override string ToString() => $"{Nickname} ({Role})";
+
 	internal void UpdateNickname(string nickname)
 	{
 		Nickname = nickname;

@@ -1,4 +1,6 @@
-﻿namespace TeamUp.EndToEndTests.DataGenerators;
+﻿using System.Linq;
+
+namespace TeamUp.EndToEndTests.DataGenerators;
 
 public sealed class TeamGenerator : BaseGenerator
 {
@@ -32,6 +34,37 @@ public sealed class TeamGenerator : BaseGenerator
 					.RuleFor(tm => tm.Role, TeamRole.Owner)
 					.Generate()
 			})
+			.Generate();
+	}
+
+	public static Team GenerateTeamWith(User owner, List<User> members, params (User User, TeamRole Role)[] userMembers)
+		=> GenerateTeamWith(members, userMembers.Concat([(owner, TeamRole.Owner)]).ToArray());
+
+	public static Team GenerateTeamWith(List<User> members, params (User User, TeamRole Role)[] userMembers)
+	{
+		userMembers.Where(x => x.Role == TeamRole.Owner).Should().ContainSingle("team has to have exactly 1 owner");
+		members.Should().NotContain(userMembers.Select(x => x.User));
+
+		return EmptyTeam
+			.RuleFor(TEAM_MEMBERS_FIELD, (f, t) =>
+				userMembers.Select(um =>
+					EmptyTeamMember
+						.RuleForBackingField(tm => tm.TeamId, t.Id)
+						.RuleForBackingField(tm => tm.UserId, um.User.Id)
+						.RuleFor(tm => tm.Nickname, um.User.Name)
+						.RuleFor(tm => tm.Role, um.Role)
+						.Generate()
+				).Concat(
+					members.Select(member =>
+						EmptyTeamMember
+							.RuleForBackingField(tm => tm.TeamId, t.Id)
+							.RuleForBackingField(tm => tm.UserId, member.Id)
+							.RuleFor(tm => tm.Nickname, member.Name)
+							.RuleFor(tm => tm.Role, TeamRole.Member)
+							.Generate()
+					)
+				).ToList()
+			)
 			.Generate();
 	}
 }

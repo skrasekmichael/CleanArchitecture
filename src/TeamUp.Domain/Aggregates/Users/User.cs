@@ -28,6 +28,8 @@ public sealed class User : AggregateRoot<User, UserId>
 		AddDomainEvent(new UserCreatedDomainEvent(this));
 	}
 
+	public override string ToString() => Name;
+
 	public void Activate()
 	{
 		Status = UserStatus.Activated;
