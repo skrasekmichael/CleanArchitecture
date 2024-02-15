@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Endpoints.Teams;
 using TeamUp.Api.Extensions;
+using TeamUp.Application.Teams.ChangeOwnership;
 using TeamUp.Application.Teams.DeleteTeam;
 using TeamUp.Application.Teams.GetTeam;
 using TeamUp.Application.Teams.RemoveTeamMember;
@@ -50,6 +51,14 @@ public sealed class TeamEndpoints : IEndpointGroup
 			.ProducesProblem(StatusCodes.Status404NotFound)
 			.ProducesValidationProblem()
 			.WithName(nameof(UpdateTeamNameAsync))
+			.MapToApiVersion(1);
+
+		group.MapPut("/{teamId:guid}/owner", ChangeOwnerShipAsync)
+			.Produces(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound)
+			.WithName(nameof(ChangeOwnerShipAsync))
 			.MapToApiVersion(1);
 
 		group.MapDelete("/{teamId:guid}/{teamMemberId:guid}", RemoveTeamMemberAsync)
@@ -120,6 +129,22 @@ public sealed class TeamEndpoints : IEndpointGroup
 			httpContextAccessor.GetLoggedUserId(),
 			TeamId.FromGuid(teamId),
 			request.Name
+		);
+		var result = await sender.Send(query, ct);
+		return result.Match(TypedResults.Ok);
+	}
+
+	private async Task<IResult> ChangeOwnerShipAsync(
+		[FromRoute] Guid teamId,
+		[FromBody] Guid teamMemberId,
+		[FromServices] ISender sender,
+		[FromServices] IHttpContextAccessor httpContextAccessor,
+		CancellationToken ct)
+	{
+		var query = new ChangeOwnershipCommand(
+			httpContextAccessor.GetLoggedUserId(),
+			TeamId.FromGuid(teamId),
+			TeamMemberId.FromGuid(teamMemberId)
 		);
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
