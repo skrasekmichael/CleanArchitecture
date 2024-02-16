@@ -8,6 +8,7 @@ using TeamUp.Application.Teams.ChangeOwnership;
 using TeamUp.Application.Teams.DeleteTeam;
 using TeamUp.Application.Teams.GetTeam;
 using TeamUp.Application.Teams.RemoveTeamMember;
+using TeamUp.Application.Teams.SetMemberNickname;
 using TeamUp.Application.Teams.SetMemberRole;
 using TeamUp.Application.Teams.SetTeamName;
 using TeamUp.Contracts.Teams;
@@ -79,6 +80,15 @@ public sealed class TeamEndpoints : IEndpointGroup
 			.ProducesValidationProblem()
 			.WithName(nameof(UpdateTeamRoleAsync))
 			.MapToApiVersion(1);
+
+		group.MapPut("/{teamId:guid}/nickname", ChangeNicknameAsync)
+			.Produces(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound)
+			.ProducesValidationProblem()
+			.WithName(nameof(ChangeNicknameAsync))
+			.MapToApiVersion(1);
 	}
 
 	private async Task<IResult> CreateTeamAsync(
@@ -113,8 +123,8 @@ public sealed class TeamEndpoints : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new DeleteTeamCommand(httpContextAccessor.GetLoggedUserId(), TeamId.FromGuid(teamId));
-		var result = await sender.Send(query, ct);
+		var command = new DeleteTeamCommand(httpContextAccessor.GetLoggedUserId(), TeamId.FromGuid(teamId));
+		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}
 
@@ -125,12 +135,12 @@ public sealed class TeamEndpoints : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new SetTeamNameCommand(
+		var command = new SetTeamNameCommand(
 			httpContextAccessor.GetLoggedUserId(),
 			TeamId.FromGuid(teamId),
 			request.Name
 		);
-		var result = await sender.Send(query, ct);
+		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}
 
@@ -141,12 +151,12 @@ public sealed class TeamEndpoints : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new ChangeOwnershipCommand(
+		var command = new ChangeOwnershipCommand(
 			httpContextAccessor.GetLoggedUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);
-		var result = await sender.Send(query, ct);
+		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}
 
@@ -157,12 +167,12 @@ public sealed class TeamEndpoints : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new RemoveTeamMemberCommand(
+		var command = new RemoveTeamMemberCommand(
 			httpContextAccessor.GetLoggedUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);
-		var result = await sender.Send(query, ct);
+		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}
 
@@ -174,13 +184,29 @@ public sealed class TeamEndpoints : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new SetMemberRoleCommand(
+		var command = new SetMemberRoleCommand(
 			httpContextAccessor.GetLoggedUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId),
 			request.Role
 		);
-		var result = await sender.Send(query, ct);
+		var result = await sender.Send(command, ct);
+		return result.Match(TypedResults.Ok);
+	}
+
+	private async Task<IResult> ChangeNicknameAsync(
+		[FromRoute] Guid teamId,
+		[FromBody] ChangeNicknameRequest request,
+		[FromServices] ISender sender,
+		[FromServices] IHttpContextAccessor httpContextAccessor,
+		CancellationToken ct)
+	{
+		var command = new ChangeNicknameCommand(
+			httpContextAccessor.GetLoggedUserId(),
+			TeamId.FromGuid(teamId),
+			request.Nickname
+		);
+		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}
 }

@@ -14,6 +14,8 @@ public sealed class TeamGenerator : BaseGenerator
 
 	public static string GenerateValidTeamName() => F.Random.AlphaNumeric(10);
 
+	public static string GenerateValidNickname() => F.Random.AlphaNumeric(10);
+
 	public static readonly Faker<Team> EmptyTeam = new Faker<Team>(binder: TeamBinder)
 		.UsePrivateConstructor()
 		.RuleFor(t => t.Id, f => TeamId.FromGuid(f.Random.Uuid()))
