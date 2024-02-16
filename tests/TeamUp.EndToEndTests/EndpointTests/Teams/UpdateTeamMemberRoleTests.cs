@@ -4,9 +4,9 @@ using TeamUp.Contracts.Teams;
 
 namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 
-public sealed partial class TeamMemberTests
+public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 {
-	private static TeamRole? GetRole(TeamMember member, Team team) => team.Members.FirstOrDefault(m => m.Id == member.Id)?.Role;
+	public UpdateTeamMemberRoleTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	[Theory]
 	[InlineData(TeamRole.Member, TeamRole.Admin)]
@@ -60,7 +60,7 @@ public sealed partial class TeamMemberTests
 		updatedMember.Role.Should().Be(newRole);
 
 		teamMembers.Except([updatedMember])
-			.Should().OnlyContain(member => member.Role == GetRole(member, team));
+			.Should().OnlyContain(member => TeamContainsMemberWithSameRole(team, member));
 	}
 
 	[Theory]
@@ -116,7 +116,7 @@ public sealed partial class TeamMemberTests
 		updatedMember.Role.Should().Be(newRole);
 
 		teamMembers.Except([updatedMember])
-			.Should().OnlyContain(member => member.Role == GetRole(member, team));
+			.Should().OnlyContain(member => TeamContainsMemberWithSameRole(team, member));
 	}
 
 	[Theory]
