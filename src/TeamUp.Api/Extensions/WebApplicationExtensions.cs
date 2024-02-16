@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Asp.Versioning;
+﻿using Asp.Versioning;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -27,24 +25,8 @@ public static class WebApplicationExtensions
 			.WithOpenApi();
 
 		apiGroup
-			.MapEndpointGroup<UserAccessEndpoints>("users")
-			.MapEndpointGroup<TeamEndpoints>("teams");
-	}
-
-	public static RouteGroupBuilder MapEndpointGroup<TGroup>(
-		this RouteGroupBuilder apiGroup,
-		[StringSyntax("Route")] string prefix,
-		Action<RouteGroupBuilder>? configureGroup = null)
-		where TGroup : IEndpointGroup, new()
-	{
-		var group = apiGroup.MapGroup(prefix);
-
-		var groupEndpoints = new TGroup();
-		groupEndpoints.MapEndpoints(group);
-
-		configureGroup?.Invoke(group);
-
-		return apiGroup;
+			.MapEndpointGroup<UserAccessEndpointGroup>("users")
+			.MapEndpointGroup<TeamEndpointGroup>("teams");
 	}
 
 	public static async Task ApplyMigrationsAsync(this WebApplication app, CancellationToken ct = default)
