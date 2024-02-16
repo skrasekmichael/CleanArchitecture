@@ -1,8 +1,8 @@
 ﻿namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 
-public sealed partial class TeamMemberTests : BaseEndpointTests
+public sealed class RemoveTeamMemberTests : BaseTeamTests
 {
-	public TeamMemberTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+	public RemoveTeamMemberTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	[Theory]
 	[InlineData(TeamRole.Member)]
