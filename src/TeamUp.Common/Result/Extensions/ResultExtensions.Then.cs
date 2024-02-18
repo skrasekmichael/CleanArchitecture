@@ -49,6 +49,14 @@ public static partial class ResultExtensions
 		return Result.Success;
 	}
 
+	public static Result<TOut> Then<TFirst, TSecond, TOut>(this Result<(TFirst, TSecond)> self, Func<TFirst, TSecond, TOut> mapper)
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		return mapper(self.Value.Item1, self.Value.Item2);
+	}
+
 	public static Result<TOut> Then<TFirst, TSecond, TOut>(this Result<(TFirst, TSecond)> self, Func<TFirst, TSecond, Result<TOut>> mapper)
 	{
 		if (self.IsFailure)

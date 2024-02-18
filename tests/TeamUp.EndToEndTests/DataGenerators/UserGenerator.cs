@@ -29,32 +29,32 @@ public sealed class UserGenerator : BaseGenerator
 			.Generate();
 	}
 
-	public sealed class InvalidRegisterUserRequests : TheoryData<RegisterUserRequest>
+	public sealed class InvalidRegisterUserRequests : TheoryData<InvalidRequest<RegisterUserRequest>>
 	{
 		public InvalidRegisterUserRequests()
 		{
-			Add(new RegisterUserRequest()
+			this.Add(x => x.Email, new RegisterUserRequest
 			{
 				Email = "invalid email",
 				Name = F.Internet.UserName(),
 				Password = GenerateValidPassword()
 			});
 
-			Add(new RegisterUserRequest()
+			this.Add(x => x.Name, new RegisterUserRequest
 			{
 				Email = F.Internet.Email(),
 				Name = "xx",
 				Password = GenerateValidPassword()
 			});
 
-			Add(new RegisterUserRequest()
+			this.Add(x => x.Name, new RegisterUserRequest
 			{
 				Email = F.Internet.Email(),
 				Name = F.Lorem.Random.AlphaNumeric(User.NAME_MAX_SIZE + 1),
 				Password = GenerateValidPassword()
 			});
 
-			Add(new RegisterUserRequest()
+			this.Add(x => x.Password, new RegisterUserRequest
 			{
 				Email = F.Internet.Email(),
 				Name = F.Internet.UserName(),

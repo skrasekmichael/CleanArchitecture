@@ -17,6 +17,7 @@ public static class TeamErrors
 	public static readonly AuthorizationError UnauthorizedToCreateEvents = AuthorizationError.New("Not allowed to create events.", "Teams.NotAllowedToCreateEvents");
 	public static readonly AuthorizationError UnauthorizedToInviteTeamMembers = AuthorizationError.New("Not allowed to invite team members.", "Teams.NotAllowedToInviteTeamMembers");
 	public static readonly AuthorizationError UnauthorizedToDeleteTeam = AuthorizationError.New("Not allowed to delete team.", "Teams.NotAllowedToDeleteTeam");
+	public static readonly AuthorizationError UnauthorizedToCreateEventTypes = AuthorizationError.New("Not allowed to create event types.", "Teams.NotAllowedToCreateEventTypes");
 
 	public static readonly NotFoundError TeamNotFound = NotFoundError.New("Team not found.", "Teams.NotFound");
 	public static readonly NotFoundError MemberNotFound = NotFoundError.New("Member not found.", "Teams.Members.NotFound");

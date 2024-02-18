@@ -15,6 +15,7 @@ public sealed class TeamEndpointGroup : IEndpointGroup
 			.MapEndpoint<RemoveTeamMemberEndpoint>()
 			.MapEndpoint<UpdateTeamMemberRoleEndpoint>()
 			.MapEndpoint<UpdateTeamNameEndpoint>()
-			.MapEndpoint<ChangeNicknameEndpoint>();
+			.MapEndpoint<ChangeNicknameEndpoint>()
+			.MapEndpoint<CreateEventTypeEndpoint>();
 	}
 }

@@ -13,6 +13,7 @@ public static class TeamRules
 	public static readonly Rule<TeamMember> MemberIsNotTeamOwner = member => !member.Role.IsOwner();
 	public static readonly Rule<TeamMember> MemberIsOwner = member => member.Role.IsOwner();
 	static readonly Rule<TeamMember> MemberCanUpdateTeamRolesRule = member => member.Role.CanUpdateTeamRoles();
+	static readonly Rule<TeamMember> MemberCanManipulateEventTypesRule = member => member.Role.CanManipulateEventTypes();
 
 	public static readonly RuleWithError<string> TeamNameMinSize = new(TeamNameMinSizeRule, TeamErrors.TeamNameMinSize);
 	public static readonly RuleWithError<string> TeamNameMaxSize = new(TeamNameMaxSizeRule, TeamErrors.TeamNameMaxSize);
@@ -23,6 +24,7 @@ public static class TeamRules
 	public static readonly RuleWithError<TeamMember> MemberCanUpdateTeamRoles = new(MemberCanUpdateTeamRolesRule, TeamErrors.UnauthorizedToUpdateTeamRoles);
 	public static readonly RuleWithError<TeamMember> MemberCanChangeOwnership = new(MemberIsOwner, TeamErrors.UnauthorizedToChangeTeamOwnership);
 	public static readonly RuleWithError<TeamMember> MemberCanChangeTeamName = new(MemberIsOwner, TeamErrors.UnauthorizedToChangeTeamName);
+	public static readonly RuleWithError<TeamMember> MemberCanCreateEventTypes = new(MemberCanManipulateEventTypesRule, TeamErrors.UnauthorizedToCreateEventTypes);
 
 	public static readonly RuleWithError<(TeamMember Member, TeamMember Initiator)> MemberCanBeRemovedByInitiator = new(
 		context => context.Initiator.Role.CanRemoveTeamMembers() || context.Initiator.Id == context.Member.Id,
