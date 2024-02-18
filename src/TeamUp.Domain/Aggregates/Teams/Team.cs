@@ -34,18 +34,13 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 		Name = name;
 	}
 
-	public Result UpdateOrCreateEventType(EventTypeId id, string name, string description)
+	public Result<EventTypeId> CreateEventType(UserId initiatorId, string name, string description)
 	{
-		var eventType = _eventTypes.Find(et => et.Id == id);
-		if (eventType is null)
-		{
-			_eventTypes.Add(EventType.Create(name, description, this));
-			return Result.Success;
-		}
-
-		eventType.UpdateName(name);
-		eventType.UpdateDescription(description);
-		return Result.Success;
+		return GetTeamMemberByUserId(initiatorId)
+			.Ensure(Rules.MemberCanCreateEventTypes)
+			.Then(_ => EventType.Create(name, description, this))
+			.Tap(_eventTypes.Add)
+			.Then(eventType => eventType.Id);
 	}
 
 	internal void AddTeamMember(User user, IDateTimeProvider dateTimeProvider, TeamRole role = TeamRole.Member)
@@ -69,7 +64,8 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			.Ensure(Rules.MemberIsNotTeamOwner, Errors.CannotRemoveTeamOwner)
 			.And(() => GetTeamMemberByUserId(initiatorId))
 			.Ensure(Rules.MemberCanBeRemovedByInitiator)
-			.Then((member, _) => _members.Remove(member));
+			.Tap((member, _) => _members.Remove(member))
+			.ToResult();
 	}
 
 	public Result ChangeNickname(UserId initiatorId, string newNickname)

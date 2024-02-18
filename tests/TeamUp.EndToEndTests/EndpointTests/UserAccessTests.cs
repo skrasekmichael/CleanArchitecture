@@ -67,18 +67,18 @@ public sealed class UserAccessTests : BaseEndpointTests
 
 	[Theory]
 	[ClassData(typeof(UserGenerator.InvalidRegisterUserRequests))]
-	public async Task RegisterUser_WithInvalidProperties_Should_ReturnValidationErrors(RegisterUserRequest request)
+	public async Task RegisterUser_WithInvalidProperties_Should_ReturnValidationErrors(InvalidRequest<RegisterUserRequest> request)
 	{
 		//arrange
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
+		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request.Request);
 
 		//assert
 		response.Should().Be400BadRequest();
 
 		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(JsonSerializerOptions);
-		problemDetails.ShouldNotBeNull();
+		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
 	}
 
 	[Fact]

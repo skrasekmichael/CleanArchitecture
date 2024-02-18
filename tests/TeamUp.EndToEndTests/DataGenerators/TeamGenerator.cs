@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 
+using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
+
 namespace TeamUp.EndToEndTests.DataGenerators;
 
 public sealed class TeamGenerator : BaseGenerator
@@ -24,6 +27,10 @@ public sealed class TeamGenerator : BaseGenerator
 	public static readonly Faker<TeamMember> EmptyTeamMember = new Faker<TeamMember>(binder: TeamMemberBinder)
 		.UsePrivateConstructor()
 		.RuleFor(tm => tm.Id, f => TeamMemberId.FromGuid(f.Random.Uuid()));
+
+	public static readonly Faker<UpsertEventTypeRequest> ValidUpsertEventTypeRequest = new Faker<UpsertEventTypeRequest>()
+		.RuleFor(r => r.Name, f => f.Random.AlphaNumeric(10))
+		.RuleFor(r => r.Description, f => f.Random.AlphaNumeric(40));
 
 	public static Team GenerateTeamWithOwner(User owner)
 	{
@@ -68,5 +75,23 @@ public sealed class TeamGenerator : BaseGenerator
 				).ToList()
 			)
 			.Generate();
+	}
+
+	public sealed class InvalidUpsertEventTypeRequest : TheoryData<InvalidRequest<UpsertEventTypeRequest>>
+	{
+		public InvalidUpsertEventTypeRequest()
+		{
+			this.Add(x => x.Name, new UpsertEventTypeRequest
+			{
+				Name = "",
+				Description = "xxx"
+			});
+
+			this.Add(x => x.Description, new UpsertEventTypeRequest
+			{
+				Name = "xxx",
+				Description = ""
+			});
+		}
 	}
 }

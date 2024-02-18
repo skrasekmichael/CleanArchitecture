@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-using TeamUp.Common;
+﻿using TeamUp.Common;
 
 namespace TeamUp.EndToEndTests.Extensions;
 
