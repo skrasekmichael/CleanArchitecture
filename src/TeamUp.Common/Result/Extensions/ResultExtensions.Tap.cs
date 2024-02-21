@@ -7,7 +7,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self;
 
-		func(self.Value!);
+		func(self.Value);
 		return self;
 	}
 
@@ -35,7 +35,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self;
 
-		await asyncFunc(self.Value!);
+		await asyncFunc(self.Value);
 		return self;
 	}
 

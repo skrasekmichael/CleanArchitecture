@@ -5,65 +5,25 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 	public RemoveTeamMemberTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	[Theory]
-	[InlineData(TeamRole.Member)]
-	[InlineData(TeamRole.Coordinator)]
-	[InlineData(TeamRole.Admin)]
-	public async Task RemoveTeamMember_AsOwner_WhenRemovingAdminOrLower_Should_RemoveTeamMemberFromTeam(TeamRole targetMemberRole)
+	[InlineData(TeamRole.Admin, TeamRole.Member)]
+	[InlineData(TeamRole.Admin, TeamRole.Coordinator)]
+	[InlineData(TeamRole.Admin, TeamRole.Admin)]
+	[InlineData(TeamRole.Owner, TeamRole.Member)]
+	[InlineData(TeamRole.Owner, TeamRole.Coordinator)]
+	[InlineData(TeamRole.Owner, TeamRole.Admin)]
+	public async Task RemoveTeamMember_AsOwnerOrAdmin_WhenRemovingAdminOrLower_Should_RemoveTeamMemberFromTeamInDatabase(TeamRole initiatorTeamRole, TeamRole targetMemberRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var targetUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (targetUser, targetMemberRole));
-
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == targetUser.Id)!.Id;
-
-		await UseDbContextAsync(dbContext =>
-		{
-			dbContext.Users.Add(owner);
-			dbContext.Users.Add(targetUser);
-			dbContext.Users.AddRange(members);
-			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
-		});
-
-		Authenticate(owner);
-
-		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
-
-		//assert
-		response.Should().Be200Ok();
-
-		await UseDbContextAsync(async dbContext =>
-		{
-			var targetMember = await dbContext.Set<TeamMember>().FindAsync(targetMemberId);
-			targetMember.Should().BeNull("this member has been removed");
-
-			var targetMemberUser = await dbContext.Users.FindAsync(targetUser.Id);
-			targetMemberUser.ShouldNotBeNull();
-			targetMemberUser.Should().BeEquivalentTo(targetUser);
-		});
-	}
-
-	[Theory]
-	[InlineData(TeamRole.Member)]
-	[InlineData(TeamRole.Coordinator)]
-	[InlineData(TeamRole.Admin)]
-	public async Task RemoveTeamMember_AsAdmin_WhenRemovingAdminOrLower_Should_RemoveTeamMemberFromTeam(TeamRole targetMemberRole)
-	{
-		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var targetUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, TeamRole.Admin), (targetUser, targetMemberRole));
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorTeamRole, targetUser, targetMemberRole, members);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == targetUser.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.AddRange([owner, initiatorUser, targetUser]);
+			dbContext.Users.AddRange([initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
@@ -92,25 +52,24 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 	[InlineData(TeamRole.Member)]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
-	public async Task RemoveTeamMember_AsAdminOrLower_WhenRemovingMyself_Should_RemoveTeamMemberFromTeam(TeamRole memberRole)
+	public async Task RemoveTeamMember_AsAdminOrLower_WhenRemovingMyself_Should_RemoveTeamMemberFromTeamInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var user = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (user, memberRole));
+		var initiatorUser = UserGenerator.ActivatedUser.Generate();
+		var members = UserGenerator.ActivatedUser.Generate(19);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == user.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.AddRange([owner, user]);
+			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
 		});
 
-		Authenticate(user);
+		Authenticate(initiatorUser);
 
 		//act
 		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
@@ -123,9 +82,9 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 			var targetMember = await dbContext.Set<TeamMember>().FindAsync(targetMemberId);
 			targetMember.Should().BeNull("this member has been removed");
 
-			var targetMemberUser = await dbContext.Users.FindAsync(user.Id);
+			var targetMemberUser = await dbContext.Users.FindAsync(initiatorUser.Id);
 			targetMemberUser.ShouldNotBeNull();
-			targetMemberUser.Should().BeEquivalentTo(user);
+			targetMemberUser.Should().BeEquivalentTo(initiatorUser);
 		});
 	}
 
@@ -141,7 +100,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		var members = UserGenerator.ActivatedUser.Generate(18);
 		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, memberRole), (targetUser, TeamRole.Member));
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == targetUser.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -164,14 +123,14 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 	}
 
 	[Fact]
-	public async Task RemoveTeamMember_AsOwner_WhenRemovingMyself_Should_ResultInDomainError_BadRequest()
+	public async Task RemoveTeamMember_AsOwner_WhenRemovingMyself_Should_ResultInBadRequest_DomainError()
 	{
 		//arrange
 		var owner = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
 		var team = TeamGenerator.GenerateTeamWith(owner, members);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == owner.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == owner.Id).Id;
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -194,7 +153,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 	}
 
 	[Fact]
-	public async Task RemoveTeamMember_AsAdmin_WhenRemovingTeamOwner_Should_ResultInDomainError_BadRequest()
+	public async Task RemoveTeamMember_AsAdmin_WhenRemovingTeamOwner_Should_ResultInBadRequest_DomainError()
 	{
 		//arrange
 		var owner = UserGenerator.ActivatedUser.Generate();
@@ -202,7 +161,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		var members = UserGenerator.ActivatedUser.Generate(18);
 		var team = TeamGenerator.GenerateTeamWith(owner, members, (user, TeamRole.Admin));
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == owner.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == owner.Id).Id;
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -255,7 +214,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 	}
 
 	[Fact]
-	public async Task RemoveTeamMember_FromTeamThatDoesNotExist_Should_ResultInNotFound()
+	public async Task RemoveTeamMember_FromUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();
@@ -290,7 +249,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		var members = UserGenerator.ActivatedUser.Generate(19);
 		var team = TeamGenerator.GenerateTeamWith(owner, members);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.Role != TeamRole.Owner)!.Id;
+		var targetMemberId = team.Members.First(member => member.Role != TeamRole.Owner).Id;
 
 		await UseDbContextAsync(dbContext =>
 		{

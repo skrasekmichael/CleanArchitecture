@@ -18,12 +18,12 @@ public sealed class TeamGenerator : BaseGenerator
 
 	public static readonly Faker<Team> EmptyTeam = new Faker<Team>(binder: TeamBinder)
 		.UsePrivateConstructor()
-		.RuleFor(t => t.Id, f => TeamId.FromGuid(f.Random.Uuid()))
+		.RuleFor(t => t.Id, f => TeamId.FromGuid(f.Random.Guid()))
 		.RuleFor(t => t.Name, GenerateValidTeamName());
 
 	public static readonly Faker<TeamMember> EmptyTeamMember = new Faker<TeamMember>(binder: TeamMemberBinder)
 		.UsePrivateConstructor()
-		.RuleFor(tm => tm.Id, f => TeamMemberId.FromGuid(f.Random.Uuid()));
+		.RuleFor(tm => tm.Id, f => TeamMemberId.FromGuid(f.Random.Guid()));
 
 	public static readonly Faker<UpsertEventTypeRequest> ValidUpsertEventTypeRequest = new Faker<UpsertEventTypeRequest>()
 		.RuleFor(r => r.Name, f => f.Random.AlphaNumeric(10))
@@ -51,6 +51,21 @@ public sealed class TeamGenerator : BaseGenerator
 		{
 			TeamRole.Owner => GenerateTeamWith(members, (user, TeamRole.Owner)),
 			_ => GenerateTeamWith(members[1..], (members.First(), TeamRole.Owner), (user, role))
+		};
+	}
+
+	public static Team GenerateTeamWith(
+		User user1, TeamRole role1,
+		User user2, TeamRole role2,
+		List<User> members)
+	{
+		var hasOwner = (role1 != TeamRole.Owner && role2 != TeamRole.Owner && members.Count == 0);
+		hasOwner.Should().Be(false, "team has to have exactly 1 owner");
+
+		return (role1, role2) switch
+		{
+			(TeamRole.Owner, _) or (_, TeamRole.Owner) => GenerateTeamWith(members, (user1, role1), (user2, role2)),
+			_ => GenerateTeamWith(members[1..], (members.First(), TeamRole.Owner), (user1, role1), (user2, role2))
 		};
 	}
 
