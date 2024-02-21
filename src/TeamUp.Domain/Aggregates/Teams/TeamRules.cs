@@ -1,4 +1,5 @@
 ﻿using TeamUp.Common;
+using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 
@@ -29,5 +30,10 @@ public static class TeamRules
 	public static readonly RuleWithError<(TeamMember Member, TeamMember Initiator)> MemberCanBeRemovedByInitiator = new(
 		context => context.Initiator.Role.CanRemoveTeamMembers() || context.Initiator.Id == context.Member.Id,
 		TeamErrors.UnauthorizedToRemoveTeamMembers
+	);
+
+	public static readonly RuleWithError<(Team Team, User? User)> InvitedUserIsNotTeamMember = new(
+		context => context.User is null || context.Team.Members.FirstOrDefault(member => member.UserId == context.User.Id) is null,
+		TeamErrors.CannotInviteUserThatIsTeamMember
 	);
 }

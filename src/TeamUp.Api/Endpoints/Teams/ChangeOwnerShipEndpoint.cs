@@ -8,7 +8,7 @@ using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Api.Endpoints.Teams;
 
-public class ChangeOwnerShipEndpoint : IEndpointGroup
+public class ChangeOwnershipEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
@@ -17,7 +17,7 @@ public class ChangeOwnerShipEndpoint : IEndpointGroup
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound)
-			.WithName(nameof(ChangeOwnerShipEndpoint))
+			.WithName(nameof(ChangeOwnershipEndpoint))
 			.MapToApiVersion(1);
 	}
 

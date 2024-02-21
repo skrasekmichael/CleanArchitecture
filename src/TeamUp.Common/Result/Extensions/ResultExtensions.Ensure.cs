@@ -48,6 +48,12 @@ public static partial class ResultExtensions
 		return self;
 	}
 
+	public static async Task<Result<TValue>> Ensure<TValue, TError>(this Task<Result<TValue>> selfTask, Rule<TValue> rule, TError error) where TError : ErrorBase
+	{
+		var self = await selfTask;
+		return self.Ensure(rule, error);
+	}
+
 	public static Result<TObj> EnsureNotNull<TObj, TError>(this TObj? self, TError error) where TError : ErrorBase
 	{
 		if (self is null)
@@ -67,6 +73,17 @@ public static partial class ResultExtensions
 		return self.Value;
 	}
 
+	public static Result<TValue> EnsureNotNull<TValue, TProperty, TError>(this Result<TValue> self, Func<TValue, TProperty?> selector, TError error) where TError : ErrorBase
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		if (selector(self.Value!) is null)
+			return error;
+
+		return self.Value;
+	}
+
 	public static Result<(TFirst, TSecond)> Ensure<TFirst, TSecond, TError>(this Result<(TFirst, TSecond)> self, Rule<TFirst, TSecond> rule, TError error) where TError : ErrorBase
 	{
 		if (self.IsFailure)
@@ -76,5 +93,25 @@ public static partial class ResultExtensions
 			return error;
 
 		return self;
+	}
+
+	public static Result<(TFirst, TSecond)> Ensure<TFirst, TSecond, TRule>(this Result<(TFirst, TSecond)> self, TRule rule) where TRule : IRuleWithError<(TFirst, TSecond)>
+	{
+		if (self.IsFailure)
+			return self;
+
+		return rule.Apply(self.Value!);
+	}
+
+	public static async Task<Result<(TFirst, TSecond)>> Ensure<TFirst, TSecond, TError>(this Task<Result<(TFirst, TSecond)>> selfTask, Rule<TFirst, TSecond> rule, TError error) where TError : ErrorBase
+	{
+		var self = await selfTask;
+		return self.Ensure(rule, error);
+	}
+
+	public static async Task<Result<(TFirst, TSecond)>> Ensure<TFirst, TSecond, TRule>(this Task<Result<(TFirst, TSecond)>> selfTask, TRule rule) where TRule : IRuleWithError<(TFirst, TSecond)>
+	{
+		var self = await selfTask;
+		return self.Ensure(rule);
 	}
 }

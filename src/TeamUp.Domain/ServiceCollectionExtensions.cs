@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
 			.AddScoped<ITeamDomainService, TeamDomainService>();
 
 		services
-			.AddSingleton<InvitationFactory>()
+			.AddScoped<InvitationFactory>()
 			.AddScoped<UserFactory>();
 
 		return services;

@@ -3,7 +3,7 @@ using TeamUp.Api.Extensions;
 
 namespace TeamUp.Api.Endpoints;
 
-public sealed class TeamEndpointGroup : IEndpointGroup
+public sealed class TeamsEndpointGroup : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
@@ -11,7 +11,7 @@ public sealed class TeamEndpointGroup : IEndpointGroup
 			.MapEndpoint<CreateTeamEndpoint>()
 			.MapEndpoint<GetTeamEndpoint>()
 			.MapEndpoint<DeleteTeamEndpoint>()
-			.MapEndpoint<ChangeOwnerShipEndpoint>()
+			.MapEndpoint<ChangeOwnershipEndpoint>()
 			.MapEndpoint<RemoveTeamMemberEndpoint>()
 			.MapEndpoint<UpdateTeamMemberRoleEndpoint>()
 			.MapEndpoint<UpdateTeamNameEndpoint>()
