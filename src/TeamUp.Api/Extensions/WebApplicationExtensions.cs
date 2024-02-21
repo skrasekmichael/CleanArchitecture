@@ -26,7 +26,8 @@ public static class WebApplicationExtensions
 
 		apiGroup
 			.MapEndpointGroup<UserAccessEndpointGroup>("users")
-			.MapEndpointGroup<TeamEndpointGroup>("teams");
+			.MapEndpointGroup<TeamsEndpointGroup>("teams")
+			.MapEndpointGroup<InvitationsEndpointGroup>("invitations");
 	}
 
 	public static async Task ApplyMigrationsAsync(this WebApplication app, CancellationToken ct = default)

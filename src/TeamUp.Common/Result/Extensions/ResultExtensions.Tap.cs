@@ -39,6 +39,19 @@ public static partial class ResultExtensions
 		return self;
 	}
 
+	public static async Task<Result<TValue>> TapAsync<TValue>(this Task<Result<TValue>> selfTask, Func<TValue, Task> asyncFunc)
+	{
+		var self = await selfTask;
+		return await self.TapAsync(asyncFunc);
+	}
+
+	public static async Task<Result<TValue>> Tap<TValue>(this Task<Result<TValue>> selfTask, Action<TValue> func)
+	{
+		var self = await selfTask;
+		self.Tap(func);
+		return self;
+	}
+
 	public static Result<(TFirst, TSecond)> Tap<TFirst, TSecond>(this Result<(TFirst, TSecond)> self, Action<TFirst, TSecond> func)
 	{
 		if (self.IsFailure)
@@ -46,5 +59,11 @@ public static partial class ResultExtensions
 
 		func(self.Value.Item1, self.Value.Item2);
 		return self;
+	}
+
+	public static async Task<Result<(TFirst, TSecond)>> Tap<TFirst, TSecond>(this Task<Result<(TFirst, TSecond)>> selfTask, Action<TFirst, TSecond> func)
+	{
+		var self = await selfTask;
+		return self.Tap(func);
 	}
 }

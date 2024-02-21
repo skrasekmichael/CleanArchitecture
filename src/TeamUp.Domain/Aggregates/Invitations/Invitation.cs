@@ -16,7 +16,7 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 	public UserId RecipientId { get; }
 	public TeamId TeamId { get; }
 
-	public DateTime CreatedUtc { get; }
+	public DateTime CreatedUtc { get; init; }
 
 #pragma warning disable CS8618 // EF Core constructor
 	private Invitation() : base() { }
@@ -39,7 +39,7 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 		if (HasExpired(dateTimeProvider))
 			return DomainError.New("Invitation has expired.", "Invitations.Expired");
 
-		AddDomainEvent(new InvitationAcceptedDomainEvent(RecipientId, TeamId));
+		AddDomainEvent(new InvitationAcceptedDomainEvent(this));
 		return Result.Success;
 	}
 

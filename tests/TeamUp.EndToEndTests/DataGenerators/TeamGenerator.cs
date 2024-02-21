@@ -1,7 +1,4 @@
-﻿using System.Linq;
-
-using TeamUp.Contracts.Teams;
-using TeamUp.Contracts.Users;
+﻿using TeamUp.Contracts.Teams;
 
 namespace TeamUp.EndToEndTests.DataGenerators;
 
@@ -44,6 +41,17 @@ public sealed class TeamGenerator : BaseGenerator
 					.Generate()
 			})
 			.Generate();
+	}
+
+	public static Team GenerateTeamWith(User user, TeamRole role, List<User> members)
+	{
+		(role != TeamRole.Owner && members.Count == 0).Should().Be(false, "team has to have exactly 1 owner");
+
+		return role switch
+		{
+			TeamRole.Owner => GenerateTeamWith(members, (user, TeamRole.Owner)),
+			_ => GenerateTeamWith(members[1..], (members.First(), TeamRole.Owner), (user, role))
+		};
 	}
 
 	public static Team GenerateTeamWith(User owner, List<User> members, params (User User, TeamRole Role)[] userMembers)

@@ -16,8 +16,11 @@ public static class TeamErrors
 	public static readonly AuthorizationError UnauthorizedToRemoveTeamMembers = AuthorizationError.New("Not allowed to remove team members.", "Teams.NotAllowedToRemoveMembers");
 	public static readonly AuthorizationError UnauthorizedToCreateEvents = AuthorizationError.New("Not allowed to create events.", "Teams.NotAllowedToCreateEvents");
 	public static readonly AuthorizationError UnauthorizedToInviteTeamMembers = AuthorizationError.New("Not allowed to invite team members.", "Teams.NotAllowedToInviteTeamMembers");
+	public static readonly AuthorizationError UnauthorizedToReadInvitationList = AuthorizationError.New("Not allowed to read invitation list.", "Teams.NotAllowedToReadInvitations");
 	public static readonly AuthorizationError UnauthorizedToDeleteTeam = AuthorizationError.New("Not allowed to delete team.", "Teams.NotAllowedToDeleteTeam");
 	public static readonly AuthorizationError UnauthorizedToCreateEventTypes = AuthorizationError.New("Not allowed to create event types.", "Teams.NotAllowedToCreateEventTypes");
+
+	public static readonly ConflictError UserIsAlreadyInvited = ConflictError.New("User has been already invited to this team.", "Teams.UserIsAlreadyInvited");
 
 	public static readonly NotFoundError TeamNotFound = NotFoundError.New("Team not found.", "Teams.NotFound");
 	public static readonly NotFoundError MemberNotFound = NotFoundError.New("Member not found.", "Teams.Members.NotFound");
@@ -26,4 +29,5 @@ public static class TeamErrors
 	public static readonly DomainError CannotChangeTeamOwnersRole = DomainError.New("Cannot change role of the team owner.", "Teams.CannotChangeOwnersRole");
 	public static readonly DomainError CannotHaveMultipleTeamOwners = DomainError.New("Cannot have multiple team owners.", "Teams.CannotHaveMultipleOwners");
 	public static readonly DomainError CannotRemoveTeamOwner = DomainError.New("Cannot remove owner of the team.", "Teams.CannotRemoveOwner");
+	public static readonly DomainError CannotInviteUserThatIsTeamMember = DomainError.New("Cannot invite user that is already member of the team.", "Teams.CannotInviteUserThatIsTeamMember");
 }

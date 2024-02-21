@@ -30,7 +30,7 @@ public sealed class CreateTeamEndpoint : IEndpointGroup
 		var command = new CreateTeamCommand(httpContextAccessor.GetLoggedUserId(), request.Name);
 		var result = await sender.Send(command, ct);
 		return result.Match(teamId => TypedResults.Created(
-			uri: linkGenerator.GetPathByName(nameof(GetTeamEndpoint)),
+			uri: linkGenerator.GetPathByName(nameof(GetTeamEndpoint), teamId.Value),
 			value: teamId
 		));
 	}

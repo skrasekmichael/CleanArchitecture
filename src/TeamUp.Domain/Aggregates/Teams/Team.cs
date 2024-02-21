@@ -94,11 +94,12 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 		return GetTeamMemberByUserId(initiatorId)
 			.Ensure(Rules.MemberCanChangeOwnership)
 			.And(() => GetTeamMember(memberId))
-			.Then((initiator, member) =>
+			.Tap((initiator, member) =>
 			{
 				initiator.UpdateRole(TeamRole.Admin);
 				member.UpdateRole(TeamRole.Owner);
-			});
+			})
+			.ToResult();
 	}
 
 	public Result ChangeTeamName(UserId initiatorId, string newName)
