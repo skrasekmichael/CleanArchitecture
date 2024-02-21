@@ -31,60 +31,27 @@ public sealed class GetTeamTests : BaseTeamTests
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 
-	[Fact]
-	public async Task GetTeam_WithOneMember_AsTeamOwner_Should_ReturnTeamFromDatabase()
-	{
-		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
-		var team = TeamGenerator.GenerateTeamWithOwner(user);
-
-		await UseDbContextAsync(dbContext =>
-		{
-			dbContext.Users.Add(user);
-			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
-		});
-
-		Authenticate(user);
-
-		//act
-		var response = await Client.GetAsync($"/api/v1/teams/{team.Id.Value}");
-
-		//assert
-		response.Should().Be200Ok();
-
-		var teamResponse = await response.Content.ReadFromJsonAsync<TeamResponse>();
-		teamResponse.ShouldNotBeNull();
-		team.Should().BeEquivalentTo(teamResponse, options =>
-		{
-			return options
-				.ExcludingMissingMembers()
-				.IgnoringCyclicReferences();
-		});
-	}
-
 	[Theory]
 	[InlineData(TeamRole.Member)]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
-	public async Task GetTeam_With20Members_AsAdminOrLower_Should_ReturnTeamFromDatabase(TeamRole asRole)
+	[InlineData(TeamRole.Owner)]
+	public async Task GetTeam_AsTeamMember_Should_ReturnTeam(TeamRole initiatorRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var user = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (user, asRole));
+		var initiatorUser = UserGenerator.ActivatedUser.Generate();
+		var members = UserGenerator.ActivatedUser.Generate(19);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorRole, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.Add(owner);
-			dbContext.Users.Add(user);
+			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
 		});
 
-		Authenticate(user);
+		Authenticate(initiatorUser);
 
 		//act
 		var response = await Client.GetAsync($"/api/v1/teams/{team.Id.Value}");

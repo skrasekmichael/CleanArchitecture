@@ -130,7 +130,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 	}
 
 	[Fact]
-	public async Task ChangeOwnership_WhenNotMember_Should_ResultInForbidden()
+	public async Task ChangeOwnership_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
 		var owner = UserGenerator.ActivatedUser.Generate();

@@ -27,7 +27,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self;
 
-		if (!rule(self.Value!))
+		if (!rule(self.Value))
 			return error;
 
 		return self;
@@ -40,7 +40,7 @@ public static partial class ResultExtensions
 
 		foreach (var rule in rules)
 		{
-			var result = rule.Apply(self.Value!);
+			var result = rule.Apply(self.Value);
 			if (result.IsFailure)
 				return result;
 		}
@@ -78,7 +78,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		if (selector(self.Value!) is null)
+		if (selector(self.Value) is null)
 			return error;
 
 		return self.Value;
@@ -100,7 +100,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self;
 
-		return rule.Apply(self.Value!);
+		return rule.Apply(self.Value);
 	}
 
 	public static async Task<Result<(TFirst, TSecond)>> Ensure<TFirst, TSecond, TError>(this Task<Result<(TFirst, TSecond)>> selfTask, Rule<TFirst, TSecond> rule, TError error) where TError : ErrorBase

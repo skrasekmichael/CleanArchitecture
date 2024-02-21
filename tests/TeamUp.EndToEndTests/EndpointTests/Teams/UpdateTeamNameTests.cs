@@ -48,14 +48,13 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	public async Task UpdateTeamName_AsAdminOrLower_Should_ResultInForbidden(TeamRole teamRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, teamRole));
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.AddRange([owner, initiatorUser]);
+			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
@@ -79,7 +78,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	}
 
 	[Fact]
-	public async Task UpdateTeamName_ThatDoesNotExist_Should_ResultInForbidden()
+	public async Task UpdateTeamName_OfUnExistingTeam_Should_ResultInForbidden()
 	{
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();
@@ -146,7 +145,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	[InlineData("")]
 	[InlineData("x")]
 	[InlineData("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")]
-	public async Task UpdateTeamName_WithInvalidTeamName_AsOwner_Should_ResultInBadRequest(string name)
+	public async Task UpdateTeamName_WithInvalidTeamName_AsOwner_Should_ResultInBadRequest_ValidationErrors(string name)
 	{
 		//arrange
 		var owner = UserGenerator.ActivatedUser.Generate();

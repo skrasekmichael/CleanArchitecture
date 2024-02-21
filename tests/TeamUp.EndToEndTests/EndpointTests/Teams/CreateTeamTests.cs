@@ -9,7 +9,7 @@ public sealed class CreateTeamTests : BaseTeamTests
 	public CreateTeamTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	[Fact]
-	public async Task CreateTeam_Should_CreateNewTeamInDatabase_WithOneTeamMember()
+	public async Task CreateTeam_Should_CreateNewTeamInDatabase_WithOneTeamOwner()
 	{
 		//arrange
 		var user = UserGenerator.ActivatedUser.Generate();

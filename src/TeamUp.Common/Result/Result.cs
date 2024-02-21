@@ -33,7 +33,7 @@ public sealed class Result<TValue>
 	public bool IsFailure => !IsSuccess;
 
 	private readonly TValue? _value;
-	public TValue? Value => IsSuccess ? _value :
+	public TValue Value => IsSuccess ? _value! :
 		throw new InvalidOperationException("Value of failure result cannot be accessed.");
 
 	private readonly ErrorBase? _error = null;

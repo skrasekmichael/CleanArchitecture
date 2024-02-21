@@ -7,7 +7,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		return mapper(self.Value!);
+		return mapper(self.Value);
 	}
 
 	public static Result Then<TValue>(this Result<TValue> self, Func<TValue, Result> mapper)
@@ -15,7 +15,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		return mapper(self.Value!);
+		return mapper(self.Value);
 	}
 
 	public static Result<TOut> Then<TValue, TOut>(this Result<TValue> self, Func<TValue, Result<TOut>> mapper)
@@ -23,7 +23,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		return mapper(self.Value!);
+		return mapper(self.Value);
 	}
 
 	public static async Task<Result<TOut>> ThenAsync<TValue, TOut>(this Result<TValue> self, Func<TValue, Task<TOut>> asyncMapper)
@@ -31,7 +31,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		return await asyncMapper(self.Value!);
+		return await asyncMapper(self.Value);
 	}
 
 	public static async Task<Result<TOut>> Then<TValue, TOut>(this Task<Result<TValue>> selfTask, Func<TValue, TOut> mapper)
@@ -67,7 +67,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		return await asyncMapper(self.Value!.Item1, self.Value.Item2);
+		return await asyncMapper(self.Value.Item1, self.Value.Item2);
 	}
 
 	public static async Task<Result<TOut>> ThenAsync<TFirst, TSecond, TOut>(this Task<Result<(TFirst, TSecond)>> selfTask, Func<TFirst, TSecond, Task<TOut>> asyncMapper)
@@ -81,7 +81,7 @@ public static partial class ResultExtensions
 		if (self.IsFailure)
 			return self.Error;
 
-		return await asyncMapper(self.Value!.Item1, self.Value.Item2);
+		return await asyncMapper(self.Value.Item1, self.Value.Item2);
 	}
 
 	public static async Task<Result<TOut>> ThenAsync<TFirst, TSecond, TOut>(this Task<Result<(TFirst, TSecond)>> selfTask, Func<TFirst, TSecond, Task<Result<TOut>>> asyncMapper)

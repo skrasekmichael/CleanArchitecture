@@ -10,13 +10,13 @@ public sealed class InviteUserTests : BaseInvitationTests
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
 	[InlineData(TeamRole.Owner)]
-	public async Task InviteUser_ThatIsActivated_AsCoordinatorOrHigher_Should_CreateInvitationInDatabase_And_SendInvitationEmail(TeamRole teamRole)
+	public async Task InviteUser_ThatIsActivated_AsCoordinatorOrHigher_Should_CreateInvitationInDatabase_And_SendInvitationEmail(TeamRole initiatorRole)
 	{
 		//arrange
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var targetUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorRole, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -57,12 +57,12 @@ public sealed class InviteUserTests : BaseInvitationTests
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
 	[InlineData(TeamRole.Owner)]
-	public async Task InviteUser_ThatIsNotRegistered_AsCoordinatorOrHigher_Should_CreateInvitationInDatabase_And_GenerateNewUser_And_SendInvitationEmail(TeamRole teamRole)
+	public async Task InviteUser_ThatIsNotRegistered_AsCoordinatorOrHigher_Should_CreateInvitationInDatabase_And_GenerateNewUser_And_SendInvitationEmail(TeamRole initiatorRole)
 	{
 		//arrange
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorRole, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -111,12 +111,12 @@ public sealed class InviteUserTests : BaseInvitationTests
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
 	[InlineData(TeamRole.Owner)]
-	public async Task InviteUser_ThatIsAlreadyInTeam_AsCoordinatorOrHigher_Should_ResultInBadRequest(TeamRole teamRole)
+	public async Task InviteUser_ThatIsAlreadyInTeam_AsCoordinatorOrHigher_Should_ResultInBadRequest_DomainError(TeamRole initiatorRole)
 	{
 		//arrange
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorRole, members);
 		var targetUser = members.First();
 
 		await UseDbContextAsync(dbContext =>
@@ -184,13 +184,13 @@ public sealed class InviteUserTests : BaseInvitationTests
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
 	[InlineData(TeamRole.Owner)]
-	public async Task InviteUser_ThatIsAlreadyInvited_AsCoordinatorOrHigher_Should_ResultInConflict(TeamRole teamRole)
+	public async Task InviteUser_ThatIsAlreadyInvited_AsCoordinatorOrHigher_Should_ResultInConflict(TeamRole initiatorRole)
 	{
 		//arrange
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var targetUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorRole, members);
 		var invitation = InvitationGenerator.GenerateInvitation(targetUser.Id, team.Id, DateTime.UtcNow);
 
 		await UseDbContextAsync(dbContext =>
@@ -289,7 +289,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 
 	[Theory]
 	[ClassData(typeof(InvitationGenerator.InvalidInviteUserRequest))]
-	public async Task InviteUser_WithInvalidRequest_Should_ResultInBadRequest(InvalidRequest<InviteUserRequest> request)
+	public async Task InviteUser_WithInvalidRequest_Should_ResultInBadRequest_ValidationErrors(InvalidRequest<InviteUserRequest> request)
 	{
 		//arrange
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();

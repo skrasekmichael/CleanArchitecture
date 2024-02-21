@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using TeamUp.Contracts.Teams;
-using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 
@@ -9,62 +8,21 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 {
 	public ChangeNicknameTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
-	[Fact]
-	public async Task ChangeNickname_ToValidNickname_AsOwner_Should_UpdateNicknameInDatabase()
-	{
-		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
-
-		await UseDbContextAsync(dbContext =>
-		{
-			dbContext.Users.Add(owner);
-			dbContext.Users.AddRange(members);
-			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
-		});
-
-		Authenticate(owner);
-
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == owner.Id)!.Id;
-		var request = new ChangeNicknameRequest
-		{
-			Nickname = TeamGenerator.GenerateValidNickname()
-		};
-
-		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/nickname", request);
-
-		//assert
-		response.Should().Be200Ok();
-
-		var member = await UseDbContextAsync(dbContext =>
-		{
-			return dbContext
-				.Set<TeamMember>()
-				.SingleOrDefaultAsync(member => member.Id == targetMemberId);
-		});
-
-		member.ShouldNotBeNull();
-		member.Nickname.Should().Be(request.Nickname);
-	}
-
 	[Theory]
 	[InlineData(TeamRole.Member)]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
-	public async Task ChangeNickname_ToValidNickname_AsAdminOrLower_Should_UpdateNicknameInDatabase(TeamRole teamRole)
+	[InlineData(TeamRole.Owner)]
+	public async Task ChangeNickname_ToValidNickname_AsTeamMember_Should_UpdateNicknameInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, teamRole));
+		var members = UserGenerator.ActivatedUser.Generate(19);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.AddRange([owner, initiatorUser]);
+			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
@@ -72,7 +30,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 
 		Authenticate(initiatorUser);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == initiatorUser.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
 		var request = new ChangeNicknameRequest
 		{
 			Nickname = TeamGenerator.GenerateValidNickname()
@@ -163,7 +121,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 	[InlineData("")]
 	[InlineData("x")]
 	[InlineData("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")]
-	public async Task ChangeNickname_ToInvalidName_Should_ResultInBadRequest(string invalidName)
+	public async Task ChangeNickname_ToInvalidName_Should_ResultInBadRequest_ValidationErrors(string invalidName)
 	{
 		//arrange
 		var owner = UserGenerator.ActivatedUser.Generate();

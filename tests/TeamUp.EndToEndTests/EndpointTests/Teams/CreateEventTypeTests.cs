@@ -6,61 +6,20 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 {
 	public CreateEventTypeTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
-	[Fact]
-	public async Task CreateEventType_AsOwner_Should_AddNewEventTypeToTeamInDatabase()
-	{
-		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
-
-		await UseDbContextAsync(dbContext =>
-		{
-			dbContext.Users.Add(owner);
-			dbContext.Users.AddRange(members);
-			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
-		});
-
-		Authenticate(owner);
-
-		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
-
-		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/teams/{team.Id.Value}/event-types", request);
-
-		//assert
-		response.Should().Be201Created();
-
-		var eventTypeId = await response.Content.ReadFromJsonAsync<EventTypeId>();
-		eventTypeId.ShouldNotBeNull();
-
-		await UseDbContextAsync(async dbContext =>
-		{
-			var createdEventType = await dbContext.Set<EventType>().FindAsync(eventTypeId);
-			createdEventType.Should().BeEquivalentTo(request);
-
-			var updatedTeam = await dbContext.Teams.FindAsync(team.Id);
-			updatedTeam.ShouldNotBeNull();
-			updatedTeam.EventTypes.Should().ContainSingle();
-			updatedTeam.EventTypes[0].Should().BeEquivalentTo(createdEventType);
-		});
-	}
-
 	[Theory]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
-	public async Task CreateEventType_AsAdminOrCoordinator_Should_AddNewEventTypeToTeamInDatabase(TeamRole teamRole)
+	[InlineData(TeamRole.Owner)]
+	public async Task CreateEventType_AsCoordinatorOrHigher_Should_AddNewEventTypeToTeamInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, teamRole));
+		var members = UserGenerator.ActivatedUser.Generate(19);
+		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.AddRange([owner, initiatorUser]);
+			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
@@ -182,7 +141,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 
 	[Theory]
 	[ClassData(typeof(TeamGenerator.InvalidUpsertEventTypeRequest))]
-	public async Task CreateEventType_WithInvalidParameters_AsOwner_Should_ResultInBadRequest(InvalidRequest<UpsertEventTypeRequest> request)
+	public async Task CreateEventType_WithInvalidParameters_AsOwner_Should_ResultInBadRequest_ValidationErrors(InvalidRequest<UpsertEventTypeRequest> request)
 	{
 		//arrange
 		var owner = UserGenerator.ActivatedUser.Generate();

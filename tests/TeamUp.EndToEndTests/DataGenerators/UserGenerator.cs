@@ -21,6 +21,10 @@ public sealed class UserGenerator : BaseGenerator
 		.RuleFor(u => u.Password, new Password())
 		.RuleFor(u => u.Status, UserStatus.Activated);
 
+	public static readonly Faker<User> NotActivatedUser = EmptyUser
+		.RuleFor(u => u.Password, new Password())
+		.RuleFor(u => u.Status, UserStatus.NotActivated);
+
 	public static User GenerateUser(Password password, UserStatus status)
 	{
 		return EmptyUser
