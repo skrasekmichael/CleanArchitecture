@@ -30,7 +30,7 @@ public sealed class RegisterUserEndpoint : IEndpointGroup
 		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
 		return result.Match(
-			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetMyProfileEndpoint)), userId)
+			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetUserDetailsEndpoint)), userId)
 		);
 	}
 }
