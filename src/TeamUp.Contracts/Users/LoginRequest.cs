@@ -2,6 +2,8 @@
 
 using FluentValidation;
 
+using TeamUp.Contracts.Abstractions;
+
 namespace TeamUp.Contracts.Users;
 
 public sealed class LoginRequest : IRequestBody

@@ -1,5 +1,4 @@
-﻿using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.Aggregates.Users;
+﻿using TeamUp.Contracts.Users;
 
 namespace TeamUp.Contracts.Teams;
 

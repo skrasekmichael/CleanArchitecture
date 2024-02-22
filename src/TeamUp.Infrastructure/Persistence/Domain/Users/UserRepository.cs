@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Infrastructure.Persistence.Domain.Users;

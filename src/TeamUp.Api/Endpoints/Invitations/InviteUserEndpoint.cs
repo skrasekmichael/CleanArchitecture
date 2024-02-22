@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Invitations.InviteUser;
 using TeamUp.Contracts.Invitations;
-using TeamUp.Domain.Aggregates.Invitations;
 
 namespace TeamUp.Api.Endpoints.Invitations;
 

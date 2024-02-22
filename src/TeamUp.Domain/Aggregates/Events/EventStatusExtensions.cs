@@ -1,11 +1,6 @@
-﻿namespace TeamUp.Domain.Aggregates.Events;
+﻿using TeamUp.Contracts.Events;
 
-public enum EventStatus
-{
-	Open = 0,
-	Closed = 1,
-	Canceled = 2,
-}
+namespace TeamUp.Domain.Aggregates.Events;
 
 public static class EventStatusExtensions
 {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.RemoveTeamMember;
-using TeamUp.Domain.Aggregates.Teams;
+using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Api.Endpoints.Teams;
 

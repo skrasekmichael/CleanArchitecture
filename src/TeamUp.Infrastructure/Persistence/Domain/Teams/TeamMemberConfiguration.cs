@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
 

@@ -1,4 +1,4 @@
-﻿namespace TeamUp.Domain.Aggregates.Users;
+﻿namespace TeamUp.Contracts.Users;
 
 public enum UserStatus
 {

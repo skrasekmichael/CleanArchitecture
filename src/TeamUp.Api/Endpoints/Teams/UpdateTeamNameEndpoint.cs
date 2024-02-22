@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.SetTeamName;
 using TeamUp.Contracts.Teams;
-using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Api.Endpoints.Teams;
 

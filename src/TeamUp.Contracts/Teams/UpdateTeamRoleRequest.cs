@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-using TeamUp.Domain.Aggregates.Teams;
+using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Teams;
 

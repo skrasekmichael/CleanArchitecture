@@ -1,4 +1,6 @@
-﻿namespace TeamUp.Domain.Abstractions;
+﻿using TeamUp.Contracts.Abstractions;
+
+namespace TeamUp.Domain.Abstractions;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent where TId : TypedId<TId>, new()
 {

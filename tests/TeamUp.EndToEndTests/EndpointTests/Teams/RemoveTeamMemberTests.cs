@@ -1,4 +1,6 @@
-﻿namespace TeamUp.EndToEndTests.EndpointTests.Teams;
+﻿using TeamUp.Contracts.Teams;
+
+namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 
 public sealed class RemoveTeamMemberTests : BaseTeamTests
 {

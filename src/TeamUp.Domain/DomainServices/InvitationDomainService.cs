@@ -1,4 +1,7 @@
 ﻿using TeamUp.Common;
+using TeamUp.Contracts.Invitations;
+using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Invitations.IntegrationEvents;

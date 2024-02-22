@@ -1,12 +1,11 @@
 ﻿using TeamUp.Common;
 using TeamUp.Common.Abstractions;
+using TeamUp.Contracts.Events;
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Events.DomainEvents;
-using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Domain.Aggregates.Events;
-
-public sealed record EventId : TypedId<EventId>;
 
 public sealed class Event : AggregateRoot<Event, EventId>
 {

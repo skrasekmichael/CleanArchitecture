@@ -13,12 +13,11 @@ public sealed class UserFactory
 
 	public async Task<Result<User>> CreateAndAddUserAsync(string name, string email, Password password, CancellationToken ct = default)
 	{
-		if (await _userRepository.ExistsUserWithConflictingEmailAsync(email, ct))
-			return UserErrors.ConflictingEmail;
-
-		var user = User.Create(name, email, password);
-		_userRepository.AddUser(user);
-
-		return user;
+		return await name
+			.Ensure(UserRules.UserNameMinSize, UserRules.UserNameMaxSize)
+			.ThenAsync(_ => _userRepository.ExistsUserWithConflictingEmailAsync(email, ct))
+			.Ensure(conflictingUserExists => conflictingUserExists == false, UserErrors.ConflictingEmail)
+			.Then(_ => User.Create(name, email, password))
+			.Tap(_userRepository.AddUser);
 	}
 }

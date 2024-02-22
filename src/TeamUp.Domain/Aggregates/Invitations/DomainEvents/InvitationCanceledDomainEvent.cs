@@ -1,4 +1,5 @@
-﻿using TeamUp.Domain.Abstractions;
+﻿using TeamUp.Contracts.Invitations;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Invitations.DomainEvents;
 

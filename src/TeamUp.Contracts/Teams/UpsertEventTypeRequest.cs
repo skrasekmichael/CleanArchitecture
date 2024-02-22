@@ -2,6 +2,8 @@
 
 using FluentValidation;
 
+using TeamUp.Contracts.Abstractions;
+
 namespace TeamUp.Contracts.Teams;
 
 public sealed class UpsertEventTypeRequest : IRequestBody

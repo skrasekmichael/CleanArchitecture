@@ -1,6 +1,6 @@
-﻿using TeamUp.Domain.Abstractions;
-using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.Aggregates.Users;
+﻿using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Invitations.IntegrationEvents;
 

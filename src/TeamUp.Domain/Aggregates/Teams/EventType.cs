@@ -1,8 +1,7 @@
-﻿using TeamUp.Domain.Abstractions;
+﻿using TeamUp.Contracts.Teams;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Teams;
-
-public sealed record EventTypeId : TypedId<EventTypeId>;
 
 public sealed class EventType : Entity<EventTypeId>
 {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 
-using TeamUp.Contracts;
+using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Api.Filters;
 

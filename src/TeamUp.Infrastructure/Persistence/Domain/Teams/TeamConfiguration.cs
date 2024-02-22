@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Teams;

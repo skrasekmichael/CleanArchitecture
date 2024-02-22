@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users;
 using TeamUp.Contracts.Users;
-using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Api.Endpoints.UserAccess;
 

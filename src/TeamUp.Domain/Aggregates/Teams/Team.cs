@@ -1,23 +1,17 @@
 ﻿using TeamUp.Common;
 using TeamUp.Common.Abstractions;
+using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
 
-using Rules = TeamUp.Domain.Aggregates.Teams.TeamRules;
 using Errors = TeamUp.Domain.Aggregates.Teams.TeamErrors;
+using Rules = TeamUp.Domain.Aggregates.Teams.TeamRules;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 
-public sealed record TeamId : TypedId<TeamId>;
-
 public sealed class Team : AggregateRoot<Team, TeamId>
 {
-	public const int NAME_MIN_SIZE = 3;
-	public const int NAME_MAX_SIZE = 30;
-
-	public const int NICKNAME_MIN_SIZE = 3;
-	public const int NICKNAME_MAX_SIZE = 30;
-
 	private readonly List<EventType> _eventTypes = [];
 	private readonly List<TeamMember> _members = [];
 

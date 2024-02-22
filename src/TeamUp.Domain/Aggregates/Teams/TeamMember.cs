@@ -1,9 +1,8 @@
-﻿using TeamUp.Domain.Abstractions;
-using TeamUp.Domain.Aggregates.Users;
+﻿using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Teams;
-
-public sealed record TeamMemberId : TypedId<TeamMemberId>;
 
 public sealed class TeamMember : Entity<TeamMemberId>
 {

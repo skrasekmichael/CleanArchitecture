@@ -1,4 +1,4 @@
-﻿namespace TeamUp.Domain.Aggregates.Events;
+﻿namespace TeamUp.Contracts.Events;
 
 public enum ReplyType
 {

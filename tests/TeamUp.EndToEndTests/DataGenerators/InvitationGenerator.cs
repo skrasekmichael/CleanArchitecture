@@ -1,4 +1,6 @@
 ﻿using TeamUp.Contracts.Invitations;
+using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 
 namespace TeamUp.EndToEndTests.DataGenerators;
 

@@ -1,4 +1,5 @@
-﻿using TeamUp.Contracts.Users;
+﻿using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 
 namespace TeamUp.EndToEndTests.DataGenerators;
 
@@ -54,7 +55,7 @@ public sealed class UserGenerator : BaseGenerator
 			this.Add(x => x.Name, new RegisterUserRequest
 			{
 				Email = F.Internet.Email(),
-				Name = F.Lorem.Random.AlphaNumeric(User.NAME_MAX_SIZE + 1),
+				Name = F.Lorem.Random.AlphaNumeric(TeamConstants.TEAM_NAME_MAX_SIZE + 1),
 				Password = GenerateValidPassword()
 			});
 

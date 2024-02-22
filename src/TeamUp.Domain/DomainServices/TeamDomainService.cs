@@ -1,6 +1,7 @@
 ﻿using TeamUp.Common;
+using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.DomainServices;
 
