@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using System.Text.Json;
 
 using Npgsql;
 
@@ -19,15 +18,11 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 	internal MailInbox Inbox { get; }
 	internal BackgroundCallback BackgroundCallback { get; }
 
-	protected JsonSerializerOptions JsonSerializerOptions { get; } = new()
-	{
-		PropertyNameCaseInsensitive = true
-	};
-
 	public BaseEndpointTests(TeamApiWebApplicationFactory appFactory)
 	{
 		AppFactory = appFactory;
 		Client = appFactory.CreateClient();
+		Client.BaseAddress = new Uri($"https://{Client.BaseAddress?.Host}:8080");
 
 		Inbox = appFactory.Services.GetRequiredService<MailInbox>();
 		BackgroundCallback = appFactory.Services.GetRequiredService<OutboxBackgroundCallback>();

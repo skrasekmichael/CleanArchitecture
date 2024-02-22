@@ -42,7 +42,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be201Created();
 
-		var invitationId = await response.Content.ReadFromJsonAsync<InvitationId>();
+		var invitationId = await response.ReadFromJsonAsync<InvitationId>();
 		invitationId.ShouldNotBeNull();
 
 		var invitation = await UseDbContextAsync(dbContext => dbContext.Invitations.FindAsync(invitationId));
@@ -89,7 +89,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be201Created();
 
-		var invitationId = await response.Content.ReadFromJsonAsync<InvitationId>();
+		var invitationId = await response.ReadFromJsonAsync<InvitationId>();
 		invitationId.ShouldNotBeNull();
 
 		await UseDbContextAsync(async dbContext =>
@@ -143,7 +143,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be400BadRequest();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotInviteUserThatIsTeamMember);
 	}
 
@@ -178,7 +178,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToInviteTeamMembers);
 	}
 
@@ -218,7 +218,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be409Conflict();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UserIsAlreadyInvited);
 	}
 
@@ -254,7 +254,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 
@@ -285,7 +285,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 
@@ -310,7 +310,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		//assert
 		response.Should().Be400BadRequest();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
 	}
 }

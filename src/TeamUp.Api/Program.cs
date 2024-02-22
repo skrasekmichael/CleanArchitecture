@@ -59,6 +59,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHealthChecks("/_health");
 app.MapEndpoints();
 
 app.Run();

@@ -18,7 +18,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		//assert
 		response.Should().Be201Created();
 
-		var userId = await response.Content.ReadFromJsonAsync<UserId>(JsonSerializerOptions);
+		var userId = await response.ReadFromJsonAsync<UserId>();
 		userId.ShouldNotBeNull();
 
 		var user = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(userId));
@@ -57,7 +57,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		//assert
 		response.Should().Be409Conflict();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(JsonSerializerOptions);
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.ConflictingEmail);
 	}
 
@@ -72,7 +72,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		//assert
 		response.Should().Be400BadRequest();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(JsonSerializerOptions);
+		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
 	}
 

@@ -27,7 +27,7 @@ public sealed class GetTeamTests : BaseTeamTests
 		//assert
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 
@@ -59,7 +59,7 @@ public sealed class GetTeamTests : BaseTeamTests
 		//assert
 		response.Should().Be200Ok();
 
-		var teamResponse = await response.Content.ReadFromJsonAsync<TeamResponse>();
+		var teamResponse = await response.ReadFromJsonAsync<TeamResponse>();
 		teamResponse.ShouldNotBeNull();
 		team.Should().BeEquivalentTo(teamResponse, options =>
 		{
@@ -94,7 +94,7 @@ public sealed class GetTeamTests : BaseTeamTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 }

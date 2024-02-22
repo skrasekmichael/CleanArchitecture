@@ -112,7 +112,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToUpdateTeamRoles);
 	}
 
@@ -152,7 +152,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		//assert
 		response.Should().Be400BadRequest();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotChangeTeamOwnersRole);
 	}
 
@@ -191,7 +191,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		//assert
 		response.Should().Be400BadRequest();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(nameof(UpdateTeamRoleRequest.Role));
 	}
 
@@ -225,7 +225,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		//assert
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MemberNotFound);
 	}
 
@@ -256,7 +256,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		//assert
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 
@@ -291,7 +291,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 }
