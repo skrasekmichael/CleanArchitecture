@@ -2,16 +2,16 @@
 
 namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
 
-public sealed class GetMyProfileTests : BaseUserAccessTests
+public sealed class GetUserDetailsTests : BaseUserAccessTests
 {
-	public GetMyProfileTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+	public GetUserDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	[Fact]
 	public async Task GetMyProfile_WhenUnauthenticated_Should_ResultInUnauthorized()
 	{
 		//arrange
 		//act
-		var response = await Client.GetAsync("/api/v1/users/my-profile");
+		var response = await Client.GetAsync("/api/v1/users");
 
 		//assert
 		response.Should().Be401Unauthorized();
@@ -32,7 +32,7 @@ public sealed class GetMyProfileTests : BaseUserAccessTests
 		Authenticate(user);
 
 		//act
-		var response = await Client.GetAsync("/api/v1/users/my-profile");
+		var response = await Client.GetAsync("/api/v1/users");
 
 		//assert
 		response.Should().Be200Ok();

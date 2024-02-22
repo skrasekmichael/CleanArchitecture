@@ -8,19 +8,19 @@ using TeamUp.Contracts.Users;
 
 namespace TeamUp.Api.Endpoints.UserAccess;
 
-public sealed class GetMyProfileEndpoint : IEndpointGroup
+public sealed class GetUserDetailsEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
-		group.MapGet("/my-profile", GetMyProfileAsync)
+		group.MapGet("/", GetUserDetailsAsync)
 			.Produces<UserResponse>(StatusCodes.Status200OK)
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
-			.WithName(nameof(GetMyProfileEndpoint))
+			.WithName(nameof(GetUserDetailsEndpoint))
 			.MapToApiVersion(1)
 			.RequireAuthorization();
 	}
 
-	private async Task<IResult> GetMyProfileAsync(
+	private async Task<IResult> GetUserDetailsAsync(
 		[FromServices] ISender sender,
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)

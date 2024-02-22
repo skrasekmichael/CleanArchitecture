@@ -19,12 +19,14 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 	public async Task<Result<List<TeamInvitationResponse>>> Handle(GetTeamInvitationsQuery request, CancellationToken ct)
 	{
 		var teamWithInitiator = await _appQueryContext.Teams
-			.Where(team => team.Id == request.TeamId)
 			.Select(team => new
 			{
-				Initiaotor = team.Members.FirstOrDefault(member => member.UserId == request.InitiatorId),
+				team.Id,
+				Initiaotor = team.Members
+					.Select(member => new { member.UserId, member.Role })
+					.FirstOrDefault(member => member.UserId == request.InitiatorId),
 			})
-			.FirstOrDefaultAsync(ct);
+			.FirstOrDefaultAsync(team => team.Id == request.TeamId, ct);
 
 		return await teamWithInitiator
 			.EnsureNotNull(TeamErrors.TeamNotFound)
@@ -33,10 +35,18 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 			.ThenAsync(team =>
 			{
 				return _appQueryContext.Invitations
+					.Select(invitation => new
+					{
+						invitation.TeamId,
+						invitation.CreatedUtc,
+						_appQueryContext.Users
+							.Select(user => new { user.Id, user.Email })
+							.First(user => user.Id == invitation.RecipientId).Email,
+					})
 					.Where(invitation => invitation.TeamId == request.TeamId)
 					.Select(invitation => new TeamInvitationResponse
 					{
-						Email = _appQueryContext.Users.First(user => user.Id == invitation.RecipientId).Email,
+						Email = invitation.Email,
 						CreatedUtc = invitation.CreatedUtc
 					})
 					.ToListAsync(ct);

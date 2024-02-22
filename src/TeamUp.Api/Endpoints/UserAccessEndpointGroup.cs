@@ -10,6 +10,6 @@ public sealed class UserAccessEndpointGroup : IEndpointGroup
 		group.MapEndpoint<RegisterUserEndpoint>()
 			.MapEndpoint<ActivateAccountEndpoint>()
 			.MapEndpoint<LoginUserEndpoint>()
-			.MapEndpoint<GetMyProfileEndpoint>();
+			.MapEndpoint<GetUserDetailsEndpoint>();
 	}
 }
