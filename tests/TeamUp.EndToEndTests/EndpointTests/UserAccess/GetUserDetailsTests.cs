@@ -37,7 +37,7 @@ public sealed class GetUserDetailsTests : BaseUserAccessTests
 		//assert
 		response.Should().Be200Ok();
 
-		var userResponse = await response.Content.ReadFromJsonAsync<UserResponse>(JsonSerializerOptions);
+		var userResponse = await response.ReadFromJsonAsync<UserResponse>();
 		user.Should().BeEquivalentTo(userResponse, o => o.ExcludingMissingMembers());
 	}
 }

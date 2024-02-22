@@ -39,7 +39,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		//assert
 		response.Should().Be200Ok();
 
-		var teamInvitations = await response.Content.ReadFromJsonAsync<List<TeamInvitationResponse>>();
+		var teamInvitations = await response.ReadFromJsonAsync<List<TeamInvitationResponse>>();
 		invitations.Should().BeEquivalentTo(teamInvitations, o => o.ExcludingMissingMembers());
 	}
 
@@ -69,7 +69,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToReadInvitationList);
 	}
 
@@ -100,7 +100,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 
@@ -125,7 +125,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		//assert
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 }

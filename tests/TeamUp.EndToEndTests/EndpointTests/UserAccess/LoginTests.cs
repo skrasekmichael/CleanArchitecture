@@ -37,7 +37,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		//assert
 		response.Should().Be200Ok();
 
-		var token = await response.Content.ReadFromJsonAsync<string>(JsonSerializerOptions);
+		var token = await response.ReadFromJsonAsync<string>();
 		token.Should().NotBeNullOrEmpty();
 
 		var handler = new JwtSecurityTokenHandler();
@@ -81,7 +81,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		//assert
 		response.Should().Be401Unauthorized();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.NotActivatedAccount);
 	}
 
@@ -102,7 +102,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		//assert
 		response.Should().Be401Unauthorized();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
 	}
 
@@ -133,7 +133,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		//assert
 		response.Should().Be401Unauthorized();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
 	}
 

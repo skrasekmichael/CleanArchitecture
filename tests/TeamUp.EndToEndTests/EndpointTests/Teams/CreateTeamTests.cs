@@ -32,7 +32,7 @@ public sealed class CreateTeamTests : BaseTeamTests
 		//assert
 		response.Should().Be201Created();
 
-		var teamId = await response.Content.ReadFromJsonAsync<TeamId>();
+		var teamId = await response.ReadFromJsonAsync<TeamId>();
 		teamId.ShouldNotBeNull();
 
 		var team = await UseDbContextAsync(dbContext =>

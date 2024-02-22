@@ -30,7 +30,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 
 		Authenticate(owner);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == targetUser.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
 
 		//assert
 		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId.Value);
@@ -89,7 +89,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 
 		Authenticate(initiatorUser);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == initiatorUser.Id)!.Id;
+		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
 
 		//assert
 		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId.Value);
@@ -97,7 +97,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		//act
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToChangeTeamOwnership);
 	}
 
@@ -127,7 +127,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		//act
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MemberNotFound);
 	}
 
@@ -151,7 +151,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 
 		Authenticate(initiatorUser);
 
-		var targetMemberId = team.Members.FirstOrDefault(member => member.UserId == targetUser.Id)!.Id.Value;
+		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id.Value;
 
 		//assert
 		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId);
@@ -159,7 +159,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		//act
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 
@@ -186,7 +186,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		//act
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 }

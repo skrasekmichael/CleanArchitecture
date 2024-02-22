@@ -70,6 +70,8 @@ public sealed class TeamApiWebApplicationFactory : WebApplicationFactory<Program
 			services.AddSingleton<OutboxBackgroundCallback>();
 			services.Replace<IProcessOutboxMessagesJob, ProcessOutboxMessagesWithCallbackJob>();
 		});
+
+		builder.UseSetting("https_port", "8080");
 	}
 
 	public new Task DisposeAsync() => _dbContainer.StopAsync();

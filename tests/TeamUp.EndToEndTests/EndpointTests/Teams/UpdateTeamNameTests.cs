@@ -73,7 +73,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToChangeTeamName);
 	}
 
@@ -103,7 +103,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		//assert
 		response.Should().Be404NotFound();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
 	}
 
@@ -137,7 +137,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		//assert
 		response.Should().Be403Forbidden();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
 	}
 
@@ -173,7 +173,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		//assert
 		response.Should().Be400BadRequest();
 
-		var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(nameof(UpdateTeamNameRequest.Name));
 	}
 }
