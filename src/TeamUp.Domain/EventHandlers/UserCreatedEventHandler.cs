@@ -1,4 +1,5 @@
-﻿using TeamUp.Domain.Abstractions;
+﻿using TeamUp.Contracts.Users;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Domain.Aggregates.Users.IntegrationEvents;
 

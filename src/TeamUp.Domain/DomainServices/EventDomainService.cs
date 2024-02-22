@@ -1,8 +1,9 @@
 ﻿using TeamUp.Common;
 using TeamUp.Common.Abstractions;
+using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.DomainServices;
 

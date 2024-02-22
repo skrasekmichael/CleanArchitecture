@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Infrastructure.Persistence.Domain.Teams;

@@ -2,7 +2,7 @@
 
 using FluentValidation;
 
-using TeamUp.Domain.Aggregates.Users;
+using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Users;
 
@@ -23,8 +23,8 @@ public sealed class RegisterUserRequest : IRequestBody
 		{
 			RuleFor(x => x.Name)
 				.NotEmpty()
-				.MinimumLength(User.NAME_MIN_SIZE)
-				.MaximumLength(User.NAME_MAX_SIZE);
+				.MinimumLength(UserConstants.USERNAME_MIN_SIZE)
+				.MaximumLength(UserConstants.USERNAME_MAX_SIZE);
 
 			RuleFor(x => x.Email)
 				.NotEmpty()

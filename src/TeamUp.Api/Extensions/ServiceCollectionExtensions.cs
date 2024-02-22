@@ -2,6 +2,8 @@
 
 using Microsoft.OpenApi.Models;
 
+using TeamUp.Contracts.Abstractions;
+
 namespace TeamUp.Api.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -41,7 +43,7 @@ public static class ServiceCollectionExtensions
 
 	public static IServiceCollection AddValidators(this IServiceCollection services)
 	{
-		services.AddValidatorsFromAssemblyContaining<Contracts.IRequestBody>(ServiceLifetime.Singleton);
+		services.AddValidatorsFromAssemblyContaining<IRequestBody>(ServiceLifetime.Singleton);
 
 		return services;
 	}

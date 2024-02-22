@@ -2,6 +2,7 @@
 using TeamUp.Application.Abstractions;
 using TeamUp.Common;
 using TeamUp.Common.Abstractions;
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;

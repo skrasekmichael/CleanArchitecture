@@ -2,6 +2,7 @@
 using System.Reflection;
 
 using TeamUp.Common;
+using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Domain.Abstractions;
 

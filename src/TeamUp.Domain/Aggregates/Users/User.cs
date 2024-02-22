@@ -1,14 +1,10 @@
-﻿using TeamUp.Domain.Abstractions;
+﻿using TeamUp.Contracts.Users;
+using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Users;
 
-public sealed record UserId : TypedId<UserId>;
-
 public sealed class User : AggregateRoot<User, UserId>
 {
-	public const int NAME_MAX_SIZE = 30;
-	public const int NAME_MIN_SIZE = 3;
-
 	public string Name { get; private set; }
 	public string Email { get; private set; }
 	public Password Password { get; private set; }

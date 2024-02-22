@@ -2,7 +2,8 @@
 
 using FluentValidation;
 
-using TeamUp.Domain.Aggregates.Teams;
+using TeamUp.Contracts.Abstractions;
+using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Contracts.Invitations;
 

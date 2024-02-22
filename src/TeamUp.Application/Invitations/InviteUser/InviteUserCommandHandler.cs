@@ -1,7 +1,7 @@
 ﻿using TeamUp.Application.Abstractions;
 using TeamUp.Common;
+using TeamUp.Contracts.Invitations;
 using TeamUp.Domain.Abstractions;
-using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.DomainServices;
 
 namespace TeamUp.Application.Invitations.InviteUser;

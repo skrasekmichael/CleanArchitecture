@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 
 using TeamUp.Common;
-using TeamUp.Domain.Aggregates.Users;
+using TeamUp.Contracts.Users;
 
 namespace TeamUp.Api.Extensions;
 

@@ -1,4 +1,6 @@
-﻿namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
+﻿using TeamUp.Contracts.Users;
+
+namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
 
 public sealed class ActivateAccountTests : BaseUserAccessTests
 {

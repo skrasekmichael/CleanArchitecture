@@ -1,4 +1,5 @@
 ﻿using TeamUp.Contracts.Invitations;
+using TeamUp.Contracts.Teams;
 
 namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
 

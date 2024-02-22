@@ -1,13 +1,14 @@
 ﻿using TeamUp.Common;
+using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 
 public static class TeamErrors
 {
-	public static readonly ValidationError TeamNameMinSize = ValidationError.New($"Name must be atleast {Team.NAME_MIN_SIZE} characters long.", "Teams.NameMinSize");
-	public static readonly ValidationError TeamNameMaxSize = ValidationError.New($"Name must be shorter than {Team.NAME_MAX_SIZE} characters.", "Teams.NameMaxSize");
-	public static readonly ValidationError NicknameMinSize = ValidationError.New($"Nickname must be atleast {Team.NICKNAME_MIN_SIZE} characters long.", "Teams.Members.NicknameMinSize");
-	public static readonly ValidationError NicknameMaxSize = ValidationError.New($"Nickname must be shorter than {Team.NICKNAME_MAX_SIZE} characters.", "Teams.Members.NicknameMaxSize");
+	public static readonly ValidationError TeamNameMinSize = ValidationError.New($"Name must be atleast {TeamConstants.TEAM_NAME_MIN_SIZE} characters long.", "Teams.NameMinSize");
+	public static readonly ValidationError TeamNameMaxSize = ValidationError.New($"Name must be shorter than {TeamConstants.TEAM_NAME_MAX_SIZE} characters.", "Teams.NameMaxSize");
+	public static readonly ValidationError NicknameMinSize = ValidationError.New($"Nickname must be atleast {TeamConstants.NICKNAME_MIN_SIZE} characters long.", "Teams.Members.NicknameMinSize");
+	public static readonly ValidationError NicknameMaxSize = ValidationError.New($"Nickname must be shorter than {TeamConstants.NICKNAME_MAX_SIZE} characters.", "Teams.Members.NicknameMaxSize");
 
 	public static readonly AuthorizationError NotMemberOfTeam = AuthorizationError.New("Not member of the team.", "Teams.NotMember");
 	public static readonly AuthorizationError UnauthorizedToChangeTeamName = AuthorizationError.New("Not allowed to change team name.", "Teams.NotAllowedToChangeName");

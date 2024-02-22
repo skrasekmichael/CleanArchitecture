@@ -1,6 +1,4 @@
-﻿using TeamUp.Domain.Aggregates.Users;
-
-namespace TeamUp.Contracts.Users;
+﻿namespace TeamUp.Contracts.Users;
 
 public sealed class UserResponse
 {

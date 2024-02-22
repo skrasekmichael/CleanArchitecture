@@ -1,14 +1,15 @@
 ﻿using TeamUp.Common;
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.Aggregates.Teams;
 
 public static class TeamRules
 {
-	static readonly Rule<string> TeamNameMinSizeRule = name => name.Length >= Team.NAME_MIN_SIZE;
-	static readonly Rule<string> TeamNameMaxSizeRule = name => name.Length <= Team.NAME_MAX_SIZE;
-	static readonly Rule<string> NicknameMinSizeRule = nickname => nickname.Length >= Team.NICKNAME_MIN_SIZE;
-	static readonly Rule<string> NicknameMaxSizeRule = nickname => nickname.Length <= Team.NICKNAME_MAX_SIZE;
+	static readonly Rule<string> TeamNameMinSizeRule = name => name.Length >= TeamConstants.TEAM_NAME_MIN_SIZE;
+	static readonly Rule<string> TeamNameMaxSizeRule = name => name.Length <= TeamConstants.TEAM_NAME_MAX_SIZE;
+	static readonly Rule<string> NicknameMinSizeRule = nickname => nickname.Length >= TeamConstants.NICKNAME_MIN_SIZE;
+	static readonly Rule<string> NicknameMaxSizeRule = nickname => nickname.Length <= TeamConstants.NICKNAME_MAX_SIZE;
 
 	public static readonly Rule<TeamRole> RoleIsNotOwner = role => !role.IsOwner();
 	public static readonly Rule<TeamMember> MemberIsNotTeamOwner = member => !member.Role.IsOwner();

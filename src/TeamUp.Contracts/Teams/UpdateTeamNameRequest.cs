@@ -2,7 +2,7 @@
 
 using FluentValidation;
 
-using TeamUp.Domain.Aggregates.Teams;
+using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Teams;
 
@@ -17,8 +17,8 @@ public sealed class UpdateTeamNameRequest : IRequestBody
 		{
 			RuleFor(x => x.Name)
 				.NotEmpty()
-				.MinimumLength(Team.NAME_MIN_SIZE)
-				.MaximumLength(Team.NAME_MAX_SIZE);
+				.MinimumLength(TeamConstants.TEAM_NAME_MIN_SIZE)
+				.MaximumLength(TeamConstants.TEAM_NAME_MAX_SIZE);
 		}
 	}
 }

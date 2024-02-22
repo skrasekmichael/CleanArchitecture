@@ -2,7 +2,7 @@
 
 using FluentValidation;
 
-using TeamUp.Domain.Aggregates.Teams;
+using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Teams;
 
@@ -17,8 +17,8 @@ public sealed class ChangeNicknameRequest : IRequestBody
 		{
 			RuleFor(x => x.Nickname)
 				.NotEmpty()
-				.MinimumLength(Team.NICKNAME_MIN_SIZE)
-				.MaximumLength(Team.NICKNAME_MAX_SIZE);
+				.MinimumLength(TeamConstants.NICKNAME_MIN_SIZE)
+				.MaximumLength(TeamConstants.NICKNAME_MAX_SIZE);
 		}
 	}
 }

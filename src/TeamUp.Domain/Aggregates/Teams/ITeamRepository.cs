@@ -1,4 +1,6 @@
-﻿namespace TeamUp.Domain.Aggregates.Teams;
+﻿using TeamUp.Contracts.Teams;
+
+namespace TeamUp.Domain.Aggregates.Teams;
 
 public interface ITeamRepository
 {
