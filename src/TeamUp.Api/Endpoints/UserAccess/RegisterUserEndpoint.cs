@@ -14,6 +14,7 @@ public sealed class RegisterUserEndpoint : IEndpointGroup
 	{
 		group.MapPost("/register", RegisterUserAsync)
 			.Produces<UserId>(StatusCodes.Status201Created)
+			.ProducesProblem(StatusCodes.Status409Conflict)
 			.ProducesValidationProblem()
 			.WithName(nameof(RegisterUserEndpoint))
 			.MapToApiVersion(1);

@@ -14,9 +14,9 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 	{
 		group.MapPost("/{teamId:guid}/event-types", CreateEventTypeAsync)
 			.Produces<EventTypeId>(StatusCodes.Status201Created)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status403Forbidden)
-			.Produces(StatusCodes.Status404NotFound)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound)
 			.ProducesValidationProblem()
 			.WithName(nameof(CreateEventTypeEndpoint))
 			.MapToApiVersion(1);

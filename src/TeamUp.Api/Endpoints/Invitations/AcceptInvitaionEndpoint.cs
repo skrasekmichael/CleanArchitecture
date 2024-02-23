@@ -18,8 +18,8 @@ public sealed class AcceptInvitationEndpoint : IEndpointGroup
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound)
-			.MapToApiVersion(1)
-			.WithName(nameof(AcceptInvitationEndpoint));
+			.WithName(nameof(AcceptInvitationEndpoint))
+			.MapToApiVersion(1);
 	}
 
 	private async Task<IResult> AcceptInvitationAsync(

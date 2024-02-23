@@ -14,12 +14,12 @@ public sealed class InviteUserEndpoint : IEndpointGroup
 	{
 		group.MapPost("/", InviteUserAsync)
 			.Produces<InvitationId>(StatusCodes.Status201Created)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status403Forbidden)
-			.Produces(StatusCodes.Status404NotFound)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound)
 			.ProducesValidationProblem()
-			.MapToApiVersion(1)
-			.WithName(nameof(InviteUserEndpoint));
+			.WithName(nameof(InviteUserEndpoint))
+			.MapToApiVersion(1);
 	}
 
 	private async Task<IResult> InviteUserAsync(
