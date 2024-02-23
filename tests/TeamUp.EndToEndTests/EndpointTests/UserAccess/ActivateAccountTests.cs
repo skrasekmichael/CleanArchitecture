@@ -6,6 +6,9 @@ public sealed class ActivateAccountTests : BaseUserAccessTests
 {
 	public ActivateAccountTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(UserId userId) => GetUrl(userId.Value);
+	public static string GetUrl(Guid userId) => $"/api/v1/users/{userId}/activate";
+
 	[Fact]
 	public async Task ActivateAccount_Should_SetUserStatusAsActivatedInDatabase()
 	{
@@ -19,7 +22,7 @@ public sealed class ActivateAccountTests : BaseUserAccessTests
 		});
 
 		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/users/{user.Id.Value}/activate", EmptyObject);
+		var response = await Client.PostAsJsonAsync(GetUrl(user.Id), EmptyObject);
 
 		//assert
 		response.Should().Be200Ok();

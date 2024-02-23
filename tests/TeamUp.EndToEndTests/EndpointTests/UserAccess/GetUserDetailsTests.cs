@@ -6,12 +6,14 @@ public sealed class GetUserDetailsTests : BaseUserAccessTests
 {
 	public GetUserDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public const string URL = "/api/v1/users";
+
 	[Fact]
 	public async Task GetMyProfile_WhenUnauthenticated_Should_ResultInUnauthorized()
 	{
 		//arrange
 		//act
-		var response = await Client.GetAsync("/api/v1/users");
+		var response = await Client.GetAsync(URL);
 
 		//assert
 		response.Should().Be401Unauthorized();
@@ -32,7 +34,7 @@ public sealed class GetUserDetailsTests : BaseUserAccessTests
 		Authenticate(user);
 
 		//act
-		var response = await Client.GetAsync("/api/v1/users");
+		var response = await Client.GetAsync(URL);
 
 		//assert
 		response.Should().Be200Ok();

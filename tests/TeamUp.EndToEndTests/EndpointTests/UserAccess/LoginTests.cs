@@ -10,6 +10,8 @@ public sealed class LoginTests : BaseUserAccessTests
 {
 	public LoginTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public const string URL = "/api/v1/users/login";
+
 	[Fact]
 	public async Task Login_AsActivatedUser_Should_GenerateValidJwtToken()
 	{
@@ -32,7 +34,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be200Ok();
@@ -76,7 +78,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be401Unauthorized();
@@ -97,7 +99,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be401Unauthorized();
@@ -128,7 +130,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/login", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be401Unauthorized();
@@ -136,5 +138,4 @@ public sealed class LoginTests : BaseUserAccessTests
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
 	}
-
 }

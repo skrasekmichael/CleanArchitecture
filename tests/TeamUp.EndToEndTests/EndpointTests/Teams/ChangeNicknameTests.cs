@@ -111,7 +111,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
 		response.Should().Be404NotFound();
