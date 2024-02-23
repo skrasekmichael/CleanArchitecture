@@ -27,7 +27,7 @@ public sealed class DeleteTeamEndpoint : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var command = new DeleteTeamCommand(httpContextAccessor.GetLoggedUserId(), TeamId.FromGuid(teamId));
+		var command = new DeleteTeamCommand(httpContextAccessor.GetCurrentUserId(), TeamId.FromGuid(teamId));
 		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}

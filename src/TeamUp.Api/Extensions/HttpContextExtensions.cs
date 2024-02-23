@@ -7,7 +7,7 @@ namespace TeamUp.Api.Extensions;
 
 public static class HttpContextExtensions
 {
-	public static UserId GetLoggedUserId(this IHttpContextAccessor contextAccessor) =>
+	public static UserId GetCurrentUserId(this IHttpContextAccessor contextAccessor) =>
 		UserId.FromGuid(contextAccessor.ParseClaim(ClaimTypes.NameIdentifier, Guid.Parse));
 
 	public static TOut ParseClaim<TOut>(this IHttpContextAccessor contextAccessor, string type, Func<string, TOut> parse)

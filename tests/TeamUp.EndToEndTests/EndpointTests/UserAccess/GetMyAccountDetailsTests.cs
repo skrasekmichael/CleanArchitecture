@@ -2,9 +2,9 @@
 
 namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
 
-public sealed class GetUserDetailsTests : BaseUserAccessTests
+public sealed class GetMyAccountDetailsTests : BaseUserAccessTests
 {
-	public GetUserDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+	public GetMyAccountDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	public const string URL = "/api/v1/users";
 
@@ -39,7 +39,7 @@ public sealed class GetUserDetailsTests : BaseUserAccessTests
 		//assert
 		response.Should().Be200Ok();
 
-		var userResponse = await response.ReadFromJsonAsync<UserResponse>();
+		var userResponse = await response.ReadFromJsonAsync<AccountResponse>();
 		user.Should().BeEquivalentTo(userResponse, o => o.ExcludingMissingMembers());
 	}
 }

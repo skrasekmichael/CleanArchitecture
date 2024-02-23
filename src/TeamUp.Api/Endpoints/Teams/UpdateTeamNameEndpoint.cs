@@ -30,7 +30,7 @@ public sealed class UpdateTeamNameEndpoint : IEndpointGroup
 		CancellationToken ct)
 	{
 		var command = new SetTeamNameCommand(
-			httpContextAccessor.GetLoggedUserId(),
+			httpContextAccessor.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			request.Name
 		);

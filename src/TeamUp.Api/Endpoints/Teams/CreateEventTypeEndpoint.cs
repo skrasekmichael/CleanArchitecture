@@ -31,7 +31,7 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 		CancellationToken ct)
 	{
 		var command = new CreateEventTypeCommand(
-			httpContextAccessor.GetLoggedUserId(),
+			httpContextAccessor.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			request.Name,
 			request.Description

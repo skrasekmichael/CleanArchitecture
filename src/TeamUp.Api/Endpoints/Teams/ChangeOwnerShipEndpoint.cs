@@ -29,7 +29,7 @@ public class ChangeOwnershipEndpoint : IEndpointGroup
 		CancellationToken ct)
 	{
 		var command = new ChangeOwnershipCommand(
-			httpContextAccessor.GetLoggedUserId(),
+			httpContextAccessor.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);

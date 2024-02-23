@@ -5,22 +5,22 @@ using TeamUp.Common;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Users;
 
-namespace TeamUp.Application.Users.GetUserDetail;
+namespace TeamUp.Application.Users.GetAccountDetails;
 
-internal sealed class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQuery, Result<UserResponse>>
+internal sealed class GetAccountDetailsQueryHandler : IQueryHandler<GetAccountDetailsQuery, Result<AccountResponse>>
 {
 	private readonly IAppQueryContext _queryContext;
 
-	public GetUserDetailsQueryHandler(IAppQueryContext queryContext)
+	public GetAccountDetailsQueryHandler(IAppQueryContext queryContext)
 	{
 		_queryContext = queryContext;
 	}
 
-	public async Task<Result<UserResponse>> Handle(GetUserDetailsQuery request, CancellationToken ct)
+	public async Task<Result<AccountResponse>> Handle(GetAccountDetailsQuery request, CancellationToken ct)
 	{
 		var user = await _queryContext.Users
 			.Where(user => user.Id == request.UserId)
-			.Select(user => new UserResponse
+			.Select(user => new AccountResponse
 			{
 				Email = user.Email,
 				Name = user.Name,

@@ -28,7 +28,7 @@ public sealed class GetTeamInvitationsEndpoint : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new GetTeamInvitationsQuery(httpContextAccessor.GetLoggedUserId(), TeamId.FromGuid(teamId));
+		var query = new GetTeamInvitationsQuery(httpContextAccessor.GetCurrentUserId(), TeamId.FromGuid(teamId));
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
 	}

@@ -12,7 +12,7 @@ public sealed class RemoveTeamMemberEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
-		group.MapDelete("/{teamId:guid}/{teamMemberId:guid}", RemoveTeamMemberAsync)
+		group.MapDelete("/{teamId:guid}/members/{teamMemberId:guid}", RemoveTeamMemberAsync)
 			.Produces(StatusCodes.Status200OK)
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
@@ -30,7 +30,7 @@ public sealed class RemoveTeamMemberEndpoint : IEndpointGroup
 		CancellationToken ct)
 	{
 		var command = new RemoveTeamMemberCommand(
-			httpContextAccessor.GetLoggedUserId(),
+			httpContextAccessor.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);

@@ -28,7 +28,7 @@ public sealed class AcceptInvitationEndpoint : IEndpointGroup
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var command = new AcceptInvitationCommand(httpContextAccessor.GetLoggedUserId(), InvitationId.FromGuid(invitationId));
+		var command = new AcceptInvitationCommand(httpContextAccessor.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
 		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}

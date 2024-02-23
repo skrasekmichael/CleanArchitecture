@@ -29,7 +29,7 @@ public sealed class InviteUserEndpoint : IEndpointGroup
 		[FromServices] LinkGenerator linkGenerator,
 		CancellationToken ct)
 	{
-		var command = new InviteUserCommand(httpContextAccessor.GetLoggedUserId(), request.TeamId, request.Email);
+		var command = new InviteUserCommand(httpContextAccessor.GetCurrentUserId(), request.TeamId, request.Email);
 
 		var result = await sender.Send(command, ct);
 		return result.Match(invitationId => TypedResults.Created(

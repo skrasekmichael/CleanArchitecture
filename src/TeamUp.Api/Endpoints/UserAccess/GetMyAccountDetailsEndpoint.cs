@@ -3,29 +3,29 @@
 using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Extensions;
-using TeamUp.Application.Users.GetUserDetail;
+using TeamUp.Application.Users.GetAccountDetails;
 using TeamUp.Contracts.Users;
 
 namespace TeamUp.Api.Endpoints.UserAccess;
 
-public sealed class GetUserDetailsEndpoint : IEndpointGroup
+public sealed class GetMyAccountDetailsEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
-		group.MapGet("/", GetUserDetailsAsync)
-			.Produces<UserResponse>(StatusCodes.Status200OK)
+		group.MapGet("/", GetAccountDetailsAsync)
+			.Produces<AccountResponse>(StatusCodes.Status200OK)
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
-			.WithName(nameof(GetUserDetailsEndpoint))
+			.WithName(nameof(GetMyAccountDetailsEndpoint))
 			.MapToApiVersion(1)
 			.RequireAuthorization();
 	}
 
-	private async Task<IResult> GetUserDetailsAsync(
+	private async Task<IResult> GetAccountDetailsAsync(
 		[FromServices] ISender sender,
 		[FromServices] IHttpContextAccessor httpContextAccessor,
 		CancellationToken ct)
 	{
-		var query = new GetUserDetailsQuery(httpContextAccessor.GetLoggedUserId());
+		var query = new GetAccountDetailsQuery(httpContextAccessor.GetCurrentUserId());
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
 	}

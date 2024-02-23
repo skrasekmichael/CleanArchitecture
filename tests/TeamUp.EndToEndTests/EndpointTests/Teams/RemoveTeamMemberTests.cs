@@ -7,7 +7,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 	public RemoveTeamMemberTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
 	public static string GetUrl(TeamId teamId, TeamMemberId memberId) => GetUrl(teamId.Value, memberId.Value);
-	public static string GetUrl(Guid teamId, Guid memberId) => $"/api/v1/teams/{teamId}/{memberId}";
+	public static string GetUrl(Guid teamId, Guid memberId) => $"/api/v1/teams/{teamId}/members/{memberId}";
 
 	[Theory]
 	[InlineData(TeamRole.Admin, TeamRole.Member)]
