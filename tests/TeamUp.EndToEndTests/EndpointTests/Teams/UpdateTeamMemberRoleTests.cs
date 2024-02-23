@@ -8,6 +8,10 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 {
 	public UpdateTeamMemberRoleTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId, TeamMemberId memberId) => GetUrl(teamId.Value, memberId.Value);
+	public static string GetUrl(Guid teamId, Guid memberId) => $"/api/v1/teams/{teamId}/{memberId}/role";
+
+
 	[Theory]
 	[InlineData(TeamRole.Admin, TeamRole.Member, TeamRole.Admin)]
 	[InlineData(TeamRole.Admin, TeamRole.Member, TeamRole.Coordinator)]
@@ -46,7 +50,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
 		response.Should().Be200Ok();
@@ -107,7 +111,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -147,7 +151,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -186,7 +190,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -220,7 +224,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetMemberId), request);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -251,7 +255,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{teamId}/{targetMemberId}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetMemberId), request);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -286,7 +290,7 @@ public sealed class UpdateTeamMemberRoleTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}/role", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
 		response.Should().Be403Forbidden();

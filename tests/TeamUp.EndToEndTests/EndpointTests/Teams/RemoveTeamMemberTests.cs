@@ -6,6 +6,9 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 {
 	public RemoveTeamMemberTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId, TeamMemberId memberId) => GetUrl(teamId.Value, memberId.Value);
+	public static string GetUrl(Guid teamId, Guid memberId) => $"/api/v1/teams/{teamId}/{memberId}";
+
 	[Theory]
 	[InlineData(TeamRole.Admin, TeamRole.Member)]
 	[InlineData(TeamRole.Admin, TeamRole.Coordinator)]
@@ -34,7 +37,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
 		response.Should().Be200Ok();
@@ -74,7 +77,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
 		response.Should().Be200Ok();
@@ -115,7 +118,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -145,7 +148,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -176,7 +179,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -206,7 +209,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id.Value, targetMemberId));
 
 		//assert
 		response.Should().Be404NotFound();
@@ -229,11 +232,10 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 			dbContext.Users.Add(user);
 			return dbContext.SaveChangesAsync();
 		});
-
 		Authenticate(user);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{teamId}/{targetMemberId}");
+		var response = await Client.DeleteAsync(GetUrl(teamId, targetMemberId));
 
 		//assert
 		response.Should().Be404NotFound();
@@ -264,7 +266,7 @@ public sealed class RemoveTeamMemberTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}/{targetMemberId.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
 		response.Should().Be403Forbidden();

@@ -8,6 +8,9 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 {
 	public ChangeOwnershipTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}/owner";
+
 	[Theory]
 	[InlineData(TeamRole.Member)]
 	[InlineData(TeamRole.Coordinator)]
@@ -33,7 +36,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
 
 		//assert
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId.Value);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value);
 
 		//act
 		response.Should().Be200Ok();
@@ -46,11 +49,11 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 				.ToListAsync();
 		});
 
-		var originalOwner = teamMembers.FirstOrDefault(member => member.UserId == owner.Id);
+		var originalOwner = teamMembers.SingleOrDefault(member => member.UserId == owner.Id);
 		originalOwner.ShouldNotBeNull();
 		originalOwner.Role.Should().Be(TeamRole.Admin);
 
-		var newOwner = teamMembers.FirstOrDefault(member => member.UserId == targetUser.Id);
+		var newOwner = teamMembers.SingleOrDefault(member => member.UserId == targetUser.Id);
 		newOwner.ShouldNotBeNull();
 		newOwner.Role.Should().Be(TeamRole.Owner);
 
@@ -92,7 +95,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
 
 		//assert
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId.Value);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value);
 
 		//act
 		response.Should().Be403Forbidden();
@@ -122,7 +125,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		var targetMemberId = F.Random.Guid();
 
 		//assert
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId);
 
 		//act
 		response.Should().Be404NotFound();
@@ -154,7 +157,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id.Value;
 
 		//assert
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/owner", targetMemberId);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId);
 
 		//act
 		response.Should().Be403Forbidden();
@@ -181,7 +184,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 		var targetMemberId = F.Random.Guid();
 
 		//assert
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{teamId}/owner", targetMemberId);
+		var response = await Client.PutAsJsonAsync(GetUrl(teamId), targetMemberId);
 
 		//act
 		response.Should().Be404NotFound();

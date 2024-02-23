@@ -6,6 +6,9 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 {
 	public UpdateTeamNameTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}";
+
 	[Fact]
 	public async Task UpdateTeamName_AsOwner_Should_UpdateTeamNameInDatabase()
 	{
@@ -30,7 +33,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync($"/api/v1/teams/{team.Id.Value}", request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be200Ok();
@@ -68,7 +71,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync($"/api/v1/teams/{team.Id.Value}", request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -98,7 +101,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync($"/api/v1/teams/{teamId}", request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -132,7 +135,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync($"/api/v1/teams/{team.Id.Value}", request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -168,7 +171,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync($"/api/v1/teams/{team.Id.Value}", request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be400BadRequest();

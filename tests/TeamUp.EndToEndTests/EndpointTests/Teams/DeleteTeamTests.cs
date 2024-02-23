@@ -8,6 +8,9 @@ public sealed class DeleteTeamTests : BaseTeamTests
 {
 	public DeleteTeamTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}";
+
 	[Fact]
 	public async Task DeleteTeam_AsOwner_Should_DeleteTeamInDatabase()
 	{
@@ -27,7 +30,7 @@ public sealed class DeleteTeamTests : BaseTeamTests
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be200Ok();
@@ -74,7 +77,7 @@ public sealed class DeleteTeamTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -95,11 +98,10 @@ public sealed class DeleteTeamTests : BaseTeamTests
 			dbContext.Users.Add(user);
 			return dbContext.SaveChangesAsync();
 		});
-
 		Authenticate(user);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{teamId}");
+		var response = await Client.DeleteAsync(GetUrl(teamId));
 
 		//assert
 		response.Should().Be404NotFound();
@@ -128,7 +130,7 @@ public sealed class DeleteTeamTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync($"/api/v1/teams/{team.Id.Value}");
+		var response = await Client.DeleteAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be403Forbidden();

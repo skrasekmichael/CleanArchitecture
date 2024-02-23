@@ -8,6 +8,9 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 {
 	public ChangeNicknameTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}/nickname";
+
 	[Theory]
 	[InlineData(TeamRole.Member)]
 	[InlineData(TeamRole.Coordinator)]
@@ -37,7 +40,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/nickname", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be200Ok();
@@ -78,7 +81,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/nickname", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -108,7 +111,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{teamId}/nickname", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -146,7 +149,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync($"/api/v1/teams/{team.Id.Value}/nickname", request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be400BadRequest();

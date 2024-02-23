@@ -6,6 +6,9 @@ public sealed class GetTeamTests : BaseTeamTests
 {
 	public GetTeamTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}";
+
 	[Fact]
 	public async Task GetTeam_ThatDoesNotExist_Should_ResultInNotFound()
 	{
@@ -18,11 +21,10 @@ public sealed class GetTeamTests : BaseTeamTests
 			dbContext.Users.Add(user);
 			return dbContext.SaveChangesAsync();
 		});
-
 		Authenticate(user);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/teams/{teamId}");
+		var response = await Client.GetAsync(GetUrl(teamId));
 
 		//assert
 		response.Should().Be404NotFound();
@@ -54,7 +56,7 @@ public sealed class GetTeamTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/teams/{team.Id.Value}");
+		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be200Ok();
@@ -89,7 +91,7 @@ public sealed class GetTeamTests : BaseTeamTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/teams/{team.Id.Value}");
+		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be403Forbidden();

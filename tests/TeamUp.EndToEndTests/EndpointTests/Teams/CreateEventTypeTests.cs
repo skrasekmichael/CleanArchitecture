@@ -6,6 +6,9 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 {
 	public CreateEventTypeTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}/event-types";
+
 	[Theory]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
@@ -30,7 +33,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/teams/{team.Id.Value}/event-types", request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be201Created();
@@ -72,7 +75,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/teams/{team.Id.Value}/event-types", request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -103,7 +106,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/teams/{team.Id.Value}/event-types", request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -130,7 +133,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/teams/{teamId}/event-types", request);
+		var response = await Client.PostAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -159,7 +162,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 		Authenticate(owner);
 
 		//act
-		var response = await Client.PostAsJsonAsync($"/api/v1/teams/{team.Id.Value}/event-types", request.Request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request.Request);
 
 		//assert
 		response.Should().Be400BadRequest();
