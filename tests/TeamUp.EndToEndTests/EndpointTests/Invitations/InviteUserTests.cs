@@ -8,6 +8,8 @@ public sealed class InviteUserTests : BaseInvitationTests
 {
 	public InviteUserTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public const string URL = "/api/v1/invitations";
+
 	[Theory]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
@@ -37,7 +39,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be201Created();
@@ -84,7 +86,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be201Created();
@@ -138,7 +140,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -173,7 +175,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -213,7 +215,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be409Conflict();
@@ -249,7 +251,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -280,7 +282,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -305,7 +307,7 @@ public sealed class InviteUserTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/invitations", request.Request);
+		var response = await Client.PostAsJsonAsync(URL, request.Request);
 
 		//assert
 		response.Should().Be400BadRequest();
