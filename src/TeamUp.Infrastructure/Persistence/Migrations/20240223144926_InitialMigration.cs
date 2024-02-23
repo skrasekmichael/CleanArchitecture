@@ -12,7 +12,23 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Team",
+                name: "OutboxMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
+                    Data = table.Column<string>(type: "text", nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Error = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teams",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -20,7 +36,7 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Team", x => x.Id);
+                    table.PrimaryKey("PK_Teams", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,9 +67,9 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_EventType", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EventType_Team_TeamId",
+                        name: "FK_EventType_Teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -64,15 +80,16 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     RecipientId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TeamId = table.Column<Guid>(type: "uuid", nullable: false)
+                    TeamId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invitations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invitations_Team_TeamId",
+                        name: "FK_Invitations_Teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -84,7 +101,7 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeamMembers",
+                name: "TeamMember",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -95,15 +112,15 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TeamMembers", x => x.Id);
+                    table.PrimaryKey("PK_TeamMember", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TeamMembers_Team_TeamId",
+                        name: "FK_TeamMember_Teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeamMembers_Users_UserId",
+                        name: "FK_TeamMember_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -134,9 +151,9 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Events_Team_TeamId",
+                        name: "FK_Events_Teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -161,9 +178,9 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EventResponse_TeamMembers_TeamMemberId",
+                        name: "FK_EventResponse_TeamMember_TeamMemberId",
                         column: x => x.TeamMemberId,
-                        principalTable: "TeamMembers",
+                        principalTable: "TeamMember",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -204,13 +221,13 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeamMembers_TeamId",
-                table: "TeamMembers",
+                name: "IX_TeamMember_TeamId",
+                table: "TeamMember",
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeamMembers_UserId",
-                table: "TeamMembers",
+                name: "IX_TeamMember_UserId",
+                table: "TeamMember",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -230,10 +247,13 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 name: "Invitations");
 
             migrationBuilder.DropTable(
+                name: "OutboxMessages");
+
+            migrationBuilder.DropTable(
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "TeamMembers");
+                name: "TeamMember");
 
             migrationBuilder.DropTable(
                 name: "EventType");
@@ -242,7 +262,7 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Team");
+                name: "Teams");
         }
     }
 }

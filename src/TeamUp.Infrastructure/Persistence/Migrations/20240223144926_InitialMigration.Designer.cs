@@ -13,8 +13,8 @@ using TeamUp.Infrastructure.Persistence;
 namespace TeamUp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240210120343_TeamFix")]
-    partial class TeamFix
+    [Migration("20240223144926_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,9 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("RecipientId")
                         .HasColumnType("uuid");
