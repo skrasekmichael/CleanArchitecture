@@ -30,16 +30,16 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 		AddDomainEvent(new InvitationCreatedDomainEvent(this));
 	}
 
-	public bool HasExpired(IDateTimeProvider dateTimeProvider)
-		=> dateTimeProvider.UtcNow - CreatedUtc >= TimeSpan.FromDays(InvitationDTL);
+	public bool HasExpired(DateTime utcNow) => utcNow - CreatedUtc >= TimeSpan.FromDays(InvitationDTL);
 
-	public Result Accept(IDateTimeProvider dateTimeProvider)
+	public Result Accept(UserId initiatorId, IDateTimeProvider dateTimeProvider)
 	{
-		if (HasExpired(dateTimeProvider))
-			return DomainError.New("Invitation has expired.", "Invitations.Expired");
-
-		AddDomainEvent(new InvitationAcceptedDomainEvent(this));
-		return Result.Success;
+		return initiatorId
+			.Ensure(id => id == RecipientId, InvitationErrors.UnauthorizedToAcceptInvitation)
+			.Then(_ => dateTimeProvider.UtcNow)
+			.Ensure(utcNow => !HasExpired(utcNow), InvitationErrors.InvitationExpired)
+			.Tap(_ => AddDomainEvent(new InvitationAcceptedDomainEvent(this)))
+			.ToResult();
 	}
 
 	public void Cancel()
