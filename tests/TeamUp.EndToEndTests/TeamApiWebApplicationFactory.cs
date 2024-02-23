@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 using Npgsql;
 
@@ -71,6 +72,7 @@ public sealed class TeamApiWebApplicationFactory : WebApplicationFactory<Program
 			services.Replace<IProcessOutboxMessagesJob, ProcessOutboxMessagesWithCallbackJob>();
 		});
 
+		builder.UseEnvironment(Environments.Production);
 		builder.UseSetting("https_port", "8080");
 	}
 
