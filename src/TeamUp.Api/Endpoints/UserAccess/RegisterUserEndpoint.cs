@@ -14,6 +14,7 @@ public sealed class RegisterUserEndpoint : IEndpointGroup
 	{
 		group.MapPost("/register", RegisterUserAsync)
 			.Produces<UserId>(StatusCodes.Status201Created)
+			.ProducesProblem(StatusCodes.Status409Conflict)
 			.ProducesValidationProblem()
 			.WithName(nameof(RegisterUserEndpoint))
 			.MapToApiVersion(1);
@@ -29,7 +30,7 @@ public sealed class RegisterUserEndpoint : IEndpointGroup
 		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
 		return result.Match(
-			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetUserDetailsEndpoint)), userId)
+			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetMyAccountDetailsEndpoint)), userId)
 		);
 	}
 }

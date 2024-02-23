@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TeamUp.Contracts.Invitations;
 using TeamUp.Contracts.Teams;
 
 namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
@@ -7,6 +8,9 @@ namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
 public sealed class AcceptInvitationTests : BaseInvitationTests
 {
 	public AcceptInvitationTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+
+	public static string GetUrl(InvitationId invitationId) => GetUrl(invitationId.Value);
+	public static string GetUrl(Guid invitationId) => $"/api/v1/invitations/{invitationId}/accept";
 
 	[Fact]
 	public async Task AcceptInvitation_ThatIsValid_AsRecipient_Should_RemoveInvitationFromDatabase_And_AddUserAsMemberToTeamInDatabase()
@@ -30,7 +34,7 @@ public sealed class AcceptInvitationTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync($"/api/v1/invitations/{invitation.Id.Value}/accept", null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
 		response.Should().Be200Ok();
@@ -75,7 +79,7 @@ public sealed class AcceptInvitationTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync($"/api/v1/invitations/{invitation.Id.Value}/accept", null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -101,11 +105,10 @@ public sealed class AcceptInvitationTests : BaseInvitationTests
 			dbContext.Teams.Add(team);
 			return dbContext.SaveChangesAsync();
 		});
-
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync($"/api/v1/invitations/{invitationId}/accept", null);
+		var response = await Client.PostAsync(GetUrl(invitationId), null);
 
 		//assert
 		response.Should().Be404NotFound();
@@ -137,7 +140,7 @@ public sealed class AcceptInvitationTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync($"/api/v1/invitations/{invitation.Id.Value}/accept", null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
 		response.Should().Be403Forbidden();

@@ -2,16 +2,18 @@
 
 namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
 
-public sealed class GetUserDetailsTests : BaseUserAccessTests
+public sealed class GetMyAccountDetailsTests : BaseUserAccessTests
 {
-	public GetUserDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+	public GetMyAccountDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
+
+	public const string URL = "/api/v1/users";
 
 	[Fact]
 	public async Task GetMyProfile_WhenUnauthenticated_Should_ResultInUnauthorized()
 	{
 		//arrange
 		//act
-		var response = await Client.GetAsync("/api/v1/users");
+		var response = await Client.GetAsync(URL);
 
 		//assert
 		response.Should().Be401Unauthorized();
@@ -32,12 +34,12 @@ public sealed class GetUserDetailsTests : BaseUserAccessTests
 		Authenticate(user);
 
 		//act
-		var response = await Client.GetAsync("/api/v1/users");
+		var response = await Client.GetAsync(URL);
 
 		//assert
 		response.Should().Be200Ok();
 
-		var userResponse = await response.ReadFromJsonAsync<UserResponse>();
+		var userResponse = await response.ReadFromJsonAsync<AccountResponse>();
 		user.Should().BeEquivalentTo(userResponse, o => o.ExcludingMissingMembers());
 	}
 }

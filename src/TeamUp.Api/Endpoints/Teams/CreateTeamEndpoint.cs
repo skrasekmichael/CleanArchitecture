@@ -26,7 +26,7 @@ public sealed class CreateTeamEndpoint : IEndpointGroup
 		[FromServices] LinkGenerator linkGenerator,
 		CancellationToken ct)
 	{
-		var command = new CreateTeamCommand(httpContextAccessor.GetLoggedUserId(), request.Name);
+		var command = new CreateTeamCommand(httpContextAccessor.GetCurrentUserId(), request.Name);
 		var result = await sender.Send(command, ct);
 		return result.Match(teamId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(nameof(GetTeamEndpoint), teamId.Value),

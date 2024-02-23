@@ -6,6 +6,8 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 {
 	public RegisterUserTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public const string URL = "/api/v1/users/register";
+
 	[Fact]
 	public async Task RegisterUser_Should_CreateNewUserInDatabase_And_SendActivationEmail()
 	{
@@ -13,7 +15,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		var request = UserGenerator.ValidRegisterUserRequest.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be201Created();
@@ -52,7 +54,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request);
+		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
 		response.Should().Be409Conflict();
@@ -67,7 +69,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 	{
 		//arrange
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/users/register", request.Request);
+		var response = await Client.PostAsJsonAsync(URL, request.Request);
 
 		//assert
 		response.Should().Be400BadRequest();
@@ -75,5 +77,4 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
 	}
-
 }

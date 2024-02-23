@@ -12,7 +12,7 @@ public sealed class UpdateTeamMemberRoleEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
-		group.MapPut("/{teamId:guid}/{teamMemberId:guid}/role", UpdateTeamRoleAsync)
+		group.MapPut("/{teamId:guid}/members/{teamMemberId:guid}/role", UpdateTeamRoleAsync)
 			.Produces(StatusCodes.Status200OK)
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
@@ -32,7 +32,7 @@ public sealed class UpdateTeamMemberRoleEndpoint : IEndpointGroup
 		CancellationToken ct)
 	{
 		var command = new SetMemberRoleCommand(
-			httpContextAccessor.GetLoggedUserId(),
+			httpContextAccessor.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId),
 			request.Role

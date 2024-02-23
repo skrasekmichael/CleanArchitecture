@@ -7,6 +7,9 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 {
 	public GetTeamInvitationsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
+	public static string GetUrl(Guid teamId) => $"/api/v1/invitations/teams/{teamId}";
+
 	[Theory]
 	[InlineData(TeamRole.Coordinator)]
 	[InlineData(TeamRole.Admin)]
@@ -34,7 +37,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/invitations/teams/{team.Id.Value}");
+		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be200Ok();
@@ -64,7 +67,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/invitations/teams/{team.Id.Value}");
+		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -95,7 +98,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/invitations/teams/{team.Id.Value}");
+		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
 		response.Should().Be403Forbidden();
@@ -120,7 +123,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync($"/api/v1/invitations/teams/{teamId}");
+		var response = await Client.GetAsync(GetUrl(teamId));
 
 		//assert
 		response.Should().Be404NotFound();

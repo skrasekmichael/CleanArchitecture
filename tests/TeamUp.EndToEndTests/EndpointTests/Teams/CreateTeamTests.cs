@@ -8,6 +8,8 @@ public sealed class CreateTeamTests : BaseTeamTests
 {
 	public CreateTeamTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
 
+	public const string URL = "/api/v1/teams";
+
 	[Fact]
 	public async Task CreateTeam_Should_CreateNewTeamInDatabase_WithOneTeamOwner()
 	{
@@ -27,7 +29,7 @@ public sealed class CreateTeamTests : BaseTeamTests
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync("/api/v1/teams", createTeamRequest);
+		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
 
 		//assert
 		response.Should().Be201Created();

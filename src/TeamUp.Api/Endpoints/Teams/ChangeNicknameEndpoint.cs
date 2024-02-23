@@ -30,7 +30,7 @@ public sealed class ChangeNicknameEndpoint : IEndpointGroup
 		CancellationToken ct)
 	{
 		var command = new ChangeNicknameCommand(
-			httpContextAccessor.GetLoggedUserId(),
+			httpContextAccessor.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			request.Nickname
 		);
