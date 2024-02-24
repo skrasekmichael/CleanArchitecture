@@ -25,10 +25,10 @@ public sealed class GetTeamInvitationsEndpoint : IEndpointGroup
 	private async Task<IResult> GetTeamInvitationsAsync(
 		[FromRoute] Guid teamId,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var query = new GetTeamInvitationsQuery(httpContextAccessor.GetCurrentUserId(), TeamId.FromGuid(teamId));
+		var query = new GetTeamInvitationsQuery(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId));
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
 	}

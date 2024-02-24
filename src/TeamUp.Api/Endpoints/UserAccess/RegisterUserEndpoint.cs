@@ -25,12 +25,14 @@ public sealed class RegisterUserEndpoint : IEndpointGroup
 		[FromServices] ISender sender,
 		[FromServices] LinkGenerator linkGenerator,
 		[FromServices] UserMapper mapper,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
-		return result.Match(
-			userId => TypedResults.Created(linkGenerator.GetPathByName(nameof(GetMyAccountDetailsEndpoint)), userId)
-		);
+		return result.Match(userId => TypedResults.Created(
+			uri: linkGenerator.GetPathByName(httpContext, nameof(GetMyAccountDetailsEndpoint)),
+			value: userId
+		));
 	}
 }

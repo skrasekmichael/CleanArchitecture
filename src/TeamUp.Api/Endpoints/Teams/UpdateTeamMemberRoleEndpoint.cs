@@ -28,11 +28,11 @@ public sealed class UpdateTeamMemberRoleEndpoint : IEndpointGroup
 		[FromRoute] Guid teamMemberId,
 		[FromBody] UpdateTeamRoleRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new SetMemberRoleCommand(
-			httpContextAccessor.GetCurrentUserId(),
+			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId),
 			request.Role

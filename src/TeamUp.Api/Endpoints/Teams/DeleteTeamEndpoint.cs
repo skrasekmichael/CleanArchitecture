@@ -24,10 +24,10 @@ public sealed class DeleteTeamEndpoint : IEndpointGroup
 	private async Task<IResult> DeleteTeamAsync(
 		[FromRoute] Guid teamId,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var command = new DeleteTeamCommand(httpContextAccessor.GetCurrentUserId(), TeamId.FromGuid(teamId));
+		var command = new DeleteTeamCommand(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId));
 		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}

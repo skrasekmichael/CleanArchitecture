@@ -26,11 +26,11 @@ public sealed class RemoveTeamMemberEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromRoute] Guid teamMemberId,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new RemoveTeamMemberCommand(
-			httpContextAccessor.GetCurrentUserId(),
+			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);
