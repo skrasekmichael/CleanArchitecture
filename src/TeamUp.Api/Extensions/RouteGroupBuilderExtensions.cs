@@ -8,11 +8,13 @@ public static class RouteGroupBuilderExtensions
 {
 	public static RouteGroupBuilder MapEndpointGroup<TGroup>(this RouteGroupBuilder apiGroup, [StringSyntax("Route")] string prefix, Action<RouteGroupBuilder>? configureGroup = null) where TGroup : IEndpointGroup, new()
 	{
-		var group = apiGroup.MapGroup(prefix);
-
 		var groupEndpoints = new TGroup();
-		groupEndpoints.MapEndpoints(group);
 
+		var group = apiGroup
+			.MapGroup(prefix)
+			.WithTags(groupEndpoints.GetType().Name);
+
+		groupEndpoints.MapEndpoints(group);
 		configureGroup?.Invoke(group);
 
 		return apiGroup;
