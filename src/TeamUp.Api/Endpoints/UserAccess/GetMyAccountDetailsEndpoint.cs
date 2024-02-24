@@ -22,10 +22,10 @@ public sealed class GetMyAccountDetailsEndpoint : IEndpointGroup
 
 	private async Task<IResult> GetAccountDetailsAsync(
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var query = new GetAccountDetailsQuery(httpContextAccessor.GetCurrentUserId());
+		var query = new GetAccountDetailsQuery(httpContext.GetCurrentUserId());
 		var result = await sender.Send(query, ct);
 		return result.Match(TypedResults.Ok);
 	}

@@ -22,14 +22,14 @@ public sealed class CreateTeamEndpoint : IEndpointGroup
 	private async Task<IResult> CreateTeamAsync(
 		[FromBody] CreateTeamRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
 		[FromServices] LinkGenerator linkGenerator,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var command = new CreateTeamCommand(httpContextAccessor.GetCurrentUserId(), request.Name);
+		var command = new CreateTeamCommand(httpContext.GetCurrentUserId(), request.Name);
 		var result = await sender.Send(command, ct);
 		return result.Match(teamId => TypedResults.Created(
-			uri: linkGenerator.GetPathByName(nameof(GetTeamEndpoint), teamId.Value),
+			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamEndpoint), teamId.Value),
 			value: teamId
 		));
 	}

@@ -26,11 +26,11 @@ public sealed class UpdateTeamNameEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromBody] UpdateTeamNameRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new SetTeamNameCommand(
-			httpContextAccessor.GetCurrentUserId(),
+			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			request.Name
 		);

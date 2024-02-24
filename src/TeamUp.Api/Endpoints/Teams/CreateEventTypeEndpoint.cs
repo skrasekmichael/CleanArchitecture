@@ -26,12 +26,12 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromBody] UpsertEventTypeRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
 		[FromServices] LinkGenerator linkGenerator,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new CreateEventTypeCommand(
-			httpContextAccessor.GetCurrentUserId(),
+			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			request.Name,
 			request.Description
@@ -39,7 +39,7 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 
 		var result = await sender.Send(command, ct);
 		return result.Match(eventTypeId => TypedResults.Created(
-			uri: linkGenerator.GetPathByName(nameof(GetTeamEndpoint)),
+			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamEndpoint), teamId),
 			value: eventTypeId
 		));
 	}

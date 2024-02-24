@@ -25,15 +25,15 @@ public sealed class InviteUserEndpoint : IEndpointGroup
 	private async Task<IResult> InviteUserAsync(
 		[FromBody] InviteUserRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
 		[FromServices] LinkGenerator linkGenerator,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var command = new InviteUserCommand(httpContextAccessor.GetCurrentUserId(), request.TeamId, request.Email);
+		var command = new InviteUserCommand(httpContext.GetCurrentUserId(), request.TeamId, request.Email);
 
 		var result = await sender.Send(command, ct);
 		return result.Match(invitationId => TypedResults.Created(
-			uri: linkGenerator.GetPathByName(nameof(GetTeamInvitationsEndpoint), request.TeamId.Value),
+			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamInvitationsEndpoint), request.TeamId.Value),
 			value: invitationId
 		));
 	}

@@ -26,11 +26,11 @@ public sealed class ChangeNicknameEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromBody] ChangeNicknameRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new ChangeNicknameCommand(
-			httpContextAccessor.GetCurrentUserId(),
+			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			request.Nickname
 		);

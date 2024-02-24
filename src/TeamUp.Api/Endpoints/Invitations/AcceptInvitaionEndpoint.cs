@@ -25,10 +25,10 @@ public sealed class AcceptInvitationEndpoint : IEndpointGroup
 	private async Task<IResult> AcceptInvitationAsync(
 		[FromRoute] Guid invitationId,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var command = new AcceptInvitationCommand(httpContextAccessor.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
+		var command = new AcceptInvitationCommand(httpContext.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
 		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}

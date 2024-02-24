@@ -25,11 +25,11 @@ public class ChangeOwnershipEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromBody] Guid teamMemberId,
 		[FromServices] ISender sender,
-		[FromServices] IHttpContextAccessor httpContextAccessor,
+		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new ChangeOwnershipCommand(
-			httpContextAccessor.GetCurrentUserId(),
+			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);
