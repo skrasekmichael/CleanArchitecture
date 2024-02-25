@@ -10,6 +10,7 @@ public sealed class InvitationsEndpointGroup : IEndpointGroup
 		group.RequireAuthorization()
 			.MapEndpoint<InviteUserEndpoint>()
 			.MapEndpoint<GetTeamInvitationsEndpoint>()
-			.MapEndpoint<AcceptInvitationEndpoint>();
+			.MapEndpoint<AcceptInvitationEndpoint>()
+			.MapEndpoint<GetMyInvitationsEndpoint>();
 	}
 }
