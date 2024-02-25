@@ -24,12 +24,23 @@ public sealed class InvitationGenerator : BaseGenerator
 			.Generate();
 	}
 
-	public static List<Invitation> GenerateInvitations(TeamId teamId, DateTime createdUtc, List<User> users)
+	public static List<Invitation> GenerateTeamInvitations(TeamId teamId, DateTime createdUtc, List<User> users)
 	{
 		return users.Select(user =>
 			EmptyInvitation
 				.RuleForBackingField(i => i.RecipientId, user.Id)
 				.RuleForBackingField(i => i.TeamId, teamId)
+				.RuleFor(i => i.CreatedUtc, createdUtc)
+				.Generate()
+		).ToList();
+	}
+
+	public static List<Invitation> GenerateUserInvitations(UserId userId, DateTime createdUtc, List<Team> teams)
+	{
+		return teams.Select(team =>
+			EmptyInvitation
+				.RuleForBackingField(i => i.RecipientId, userId)
+				.RuleForBackingField(i => i.TeamId, team.Id)
 				.RuleFor(i => i.CreatedUtc, createdUtc)
 				.Generate()
 		).ToList();

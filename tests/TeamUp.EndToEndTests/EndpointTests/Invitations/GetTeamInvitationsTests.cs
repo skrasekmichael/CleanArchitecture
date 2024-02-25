@@ -21,9 +21,9 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		var members = UserGenerator.ActivatedUser.Generate(19);
 		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
 
-		//need to remove milliseconds as when saving to database, there is slight shift
+		//need to remove milliseconds as there is slight shift when saving to database
 		var utcNow = new DateTime(DateTime.UtcNow.Ticks / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond, DateTimeKind.Utc);
-		var invitations = InvitationGenerator.GenerateInvitations(team.Id, utcNow, members);
+		var invitations = InvitationGenerator.GenerateTeamInvitations(team.Id, utcNow, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -53,7 +53,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
 		var team = TeamGenerator.GenerateTeamWith(initiatorUser, TeamRole.Member, members);
-		var invitations = InvitationGenerator.GenerateInvitations(team.Id, DateTime.UtcNow, members);
+		var invitations = InvitationGenerator.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -84,7 +84,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 		var initiatorUser = UserGenerator.ActivatedUser.Generate();
 		var members = UserGenerator.ActivatedUser.Generate(19);
 		var team = TeamGenerator.GenerateTeamWith(owner, members);
-		var invitations = InvitationGenerator.GenerateInvitations(team.Id, DateTime.UtcNow, members);
+		var invitations = InvitationGenerator.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
 		await UseDbContextAsync(dbContext =>
 		{

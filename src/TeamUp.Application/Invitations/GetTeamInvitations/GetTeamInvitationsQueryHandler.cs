@@ -35,18 +35,13 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 			.ThenAsync(team =>
 			{
 				return _appQueryContext.Invitations
-					.Select(invitation => new
-					{
-						invitation.TeamId,
-						invitation.CreatedUtc,
-						_appQueryContext.Users
-							.Select(user => new { user.Id, user.Email })
-							.First(user => user.Id == invitation.RecipientId).Email,
-					})
 					.Where(invitation => invitation.TeamId == request.TeamId)
 					.Select(invitation => new TeamInvitationResponse
 					{
-						Email = invitation.Email,
+						Id = invitation.Id,
+						Email = _appQueryContext.Users
+							.Select(user => new { user.Id, user.Email })
+							.First(user => user.Id == invitation.RecipientId).Email,
 						CreatedUtc = invitation.CreatedUtc
 					})
 					.ToListAsync(ct);
