@@ -9,12 +9,14 @@ using TeamUp.Application.Abstractions;
 using TeamUp.Application.Users;
 using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Abstractions;
+using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Infrastructure.Core;
 using TeamUp.Infrastructure.Options;
 using TeamUp.Infrastructure.Persistence;
+using TeamUp.Infrastructure.Persistence.Domain.Events;
 using TeamUp.Infrastructure.Persistence.Domain.Invitations;
 using TeamUp.Infrastructure.Persistence.Domain.Teams;
 using TeamUp.Infrastructure.Persistence.Domain.Users;
@@ -60,6 +62,7 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IUserRepository, UserRepository>()
 			.AddScoped<ITeamRepository, TeamRepository>()
 			.AddScoped<IInvitationRepository, InvitationRepository>()
+			.AddScoped<IEventRepository, EventRepository>()
 			.AddScoped<IAppQueryContext, ApplicationDbContextQueryFacade>();
 
 		//db context

@@ -13,7 +13,7 @@ public sealed class ActivateAccountTests : BaseUserAccessTests
 	public async Task ActivateAccount_Should_SetUserStatusAsActivatedInDatabase()
 	{
 		//arrange
-		var user = UserGenerator.NotActivatedUser.Generate();
+		var user = UserGenerators.NotActivatedUser.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

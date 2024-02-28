@@ -18,10 +18,10 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 	public async Task ChangeOwnership_ToAdminOrLower_AsOwner_Should_ChangeTeamOwnerInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var targetUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (targetUser, teamRole));
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var targetUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(18);
+		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, teamRole)).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -76,11 +76,11 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 	public async Task ChangeOwnership_ToAdminOrLower_AsAdminOrLower_Should_ResultInForbidden(TeamRole initiatorTeamRole, TeamRole targetTeamRole)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var targetUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(17);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (targetUser, targetTeamRole), (initiatorUser, initiatorTeamRole));
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var targetUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(17);
+		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, targetTeamRole), (initiatorUser, initiatorTeamRole)).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -108,9 +108,9 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 	public async Task ChangeOwnership_ToUnExistingMember_AsOwner_Should_ResultInNotFound()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -138,11 +138,11 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 	public async Task ChangeOwnership_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var targetUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (targetUser, TeamRole.Member));
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var targetUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(18);
+		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, TeamRole.Member)).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -170,7 +170,7 @@ public sealed class ChangeOwnershipTests : BaseTeamTests
 	public async Task ChangeOwnership_OfUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

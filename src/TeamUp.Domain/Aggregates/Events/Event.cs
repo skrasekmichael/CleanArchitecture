@@ -14,8 +14,8 @@ public sealed class Event : AggregateRoot<Event, EventId>
 	public EventTypeId EventTypeId { get; private set; }
 	public TeamId TeamId { get; }
 
-	public DateTimeOffset From { get; private set; }
-	public DateTimeOffset To { get; private set; }
+	public DateTime FromUtc { get; private set; }
+	public DateTime ToUtc { get; private set; }
 	public string Description { get; private set; }
 	public EventStatus Status { get; private set; }
 	public TimeSpan MeetTime { get; private set; }
@@ -30,8 +30,8 @@ public sealed class Event : AggregateRoot<Event, EventId>
 		EventId id,
 		EventTypeId eventTypeId,
 		TeamId teamId,
-		DateTimeOffset from,
-		DateTimeOffset to,
+		DateTime fromUtc,
+		DateTime toUtc,
 		string description,
 		EventStatus status,
 		TimeSpan meetTime,
@@ -39,8 +39,8 @@ public sealed class Event : AggregateRoot<Event, EventId>
 	{
 		EventTypeId = eventTypeId;
 		TeamId = teamId;
-		From = from;
-		To = to;
+		FromUtc = fromUtc;
+		ToUtc = toUtc;
 		Description = description;
 		Status = status;
 		MeetTime = meetTime;
@@ -54,7 +54,7 @@ public sealed class Event : AggregateRoot<Event, EventId>
 		return Status
 			.Ensure(status => status.IsOpenForResponses(), EventErrors.NotOpenForResponses)
 			.Then(_ => GetResponseCloseTime())
-			.Ensure(responseCloseTime => IsNotClosed(dateTimeProvider, responseCloseTime), EventErrors.ClosedForResponses)
+			.Ensure(responseCloseTime => IsNotClosed(dateTimeProvider, responseCloseTime), EventErrors.NotOpenForResponses)
 			.Then(_ => _eventResponses.Find(er => er.TeamMemberId == memberId))
 			.Tap(response =>
 			{
@@ -85,8 +85,8 @@ public sealed class Event : AggregateRoot<Event, EventId>
 	{
 		var propertyUpdated = false
 			| UpdateProperty(x => x.EventTypeId, eventTypeId)
-			| UpdateProperty(x => x.From, from)
-			| UpdateProperty(x => x.To, to)
+			| UpdateProperty(x => x.FromUtc, from)
+			| UpdateProperty(x => x.ToUtc, to)
 			| UpdateProperty(x => x.Description, description)
 			| UpdateProperty(x => x.MeetTime, meetTime)
 			| UpdateProperty(x => x.ReplyClosingTimeBeforeMeetTime, replyCloseBeforeMeetTime);
@@ -95,27 +95,27 @@ public sealed class Event : AggregateRoot<Event, EventId>
 			AddDomainEvent(new EventUpdatedDomainEvent(this));
 	}
 
-	private DateTimeOffset GetResponseCloseTime() => From - MeetTime - ReplyClosingTimeBeforeMeetTime;
+	private DateTime GetResponseCloseTime() => FromUtc - MeetTime - ReplyClosingTimeBeforeMeetTime;
 
 	public static Result<Event> Create(
 		EventTypeId eventTypeId,
 		TeamId teamId,
-		DateTimeOffset from,
-		DateTimeOffset to,
+		DateTime fromUtc,
+		DateTime toUtc,
 		string description,
 		TimeSpan meetTime,
 		TimeSpan replyClosingTimeBeforeMeetTime,
 		IDateTimeProvider dateTimeProvider)
 	{
-		return from
-			.Ensure(from => from < to, EventErrors.CannotEndBeforeStart)
+		return fromUtc
+			.Ensure(from => from < toUtc, EventErrors.CannotEndBeforeStart)
 			.Ensure(from => from > dateTimeProvider.DateTimeOffsetUtcNow, EventErrors.CannotStartInPast)
 			.Then(_ => new Event(
 				EventId.New(),
 				eventTypeId,
 				teamId,
-				from,
-				to,
+				fromUtc,
+				toUtc,
 				description,
 				EventStatus.Open,
 				meetTime,

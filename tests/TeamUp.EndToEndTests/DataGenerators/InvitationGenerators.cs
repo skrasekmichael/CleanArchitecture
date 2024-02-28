@@ -1,23 +1,25 @@
-﻿using TeamUp.Contracts.Invitations;
+﻿global using InvitationGenerator = Bogus.Faker<TeamUp.Domain.Aggregates.Invitations.Invitation>;
+
+using TeamUp.Contracts.Invitations;
 using TeamUp.Contracts.Teams;
 using TeamUp.Contracts.Users;
 
 namespace TeamUp.EndToEndTests.DataGenerators;
 
-public sealed class InvitationGenerator : BaseGenerator
+public sealed class InvitationGenerators : BaseGenerator
 {
 	private static readonly PrivateBinder InvitationBinder = new(
-		nameof(Invitation.RecipientId).GetBackingField(),
-		nameof(Invitation.TeamId).GetBackingField()
+		nameof(Domain.Aggregates.Invitations.Invitation.RecipientId).GetBackingField(),
+		nameof(Domain.Aggregates.Invitations.Invitation.TeamId).GetBackingField()
 	);
 
-	public static readonly Faker<Invitation> EmptyInvitation = new Faker<Invitation>(binder: InvitationBinder)
+	public static readonly InvitationGenerator Invitation = new InvitationGenerator(binder: InvitationBinder)
 		.UsePrivateConstructor()
 		.RuleFor(i => i.Id, f => InvitationId.FromGuid(f.Random.Guid()));
 
 	public static Invitation GenerateInvitation(UserId userId, TeamId teamId, DateTime createdUtc)
 	{
-		return EmptyInvitation
+		return Invitation
 			.RuleForBackingField(i => i.RecipientId, userId)
 			.RuleForBackingField(i => i.TeamId, teamId)
 			.RuleFor(i => i.CreatedUtc, createdUtc)
@@ -27,7 +29,7 @@ public sealed class InvitationGenerator : BaseGenerator
 	public static List<Invitation> GenerateTeamInvitations(TeamId teamId, DateTime createdUtc, List<User> users)
 	{
 		return users.Select(user =>
-			EmptyInvitation
+			Invitation
 				.RuleForBackingField(i => i.RecipientId, user.Id)
 				.RuleForBackingField(i => i.TeamId, teamId)
 				.RuleFor(i => i.CreatedUtc, createdUtc)
@@ -38,7 +40,7 @@ public sealed class InvitationGenerator : BaseGenerator
 	public static List<Invitation> GenerateUserInvitations(UserId userId, DateTime createdUtc, List<Team> teams)
 	{
 		return teams.Select(team =>
-			EmptyInvitation
+			Invitation
 				.RuleForBackingField(i => i.RecipientId, userId)
 				.RuleForBackingField(i => i.TeamId, team.Id)
 				.RuleFor(i => i.CreatedUtc, createdUtc)

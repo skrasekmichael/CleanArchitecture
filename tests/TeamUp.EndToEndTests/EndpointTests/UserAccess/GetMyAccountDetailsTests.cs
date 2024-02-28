@@ -23,7 +23,7 @@ public sealed class GetMyAccountDetailsTests : BaseUserAccessTests
 	public async Task GetMyProfile_AsExistingUser_Should_ReturnUserDetails()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

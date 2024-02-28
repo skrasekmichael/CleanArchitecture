@@ -19,9 +19,9 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 	public async Task ChangeNickname_ToValidNickname_AsTeamMember_Should_UpdateNicknameInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -36,7 +36,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
 		var request = new ChangeNicknameRequest
 		{
-			Nickname = TeamGenerator.GenerateValidNickname()
+			Nickname = TeamGenerators.GenerateValidNickname()
 		};
 
 		//act
@@ -60,10 +60,10 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 	public async Task ChangeNickname_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -77,7 +77,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 
 		var request = new ChangeNicknameRequest
 		{
-			Nickname = TeamGenerator.GenerateValidNickname()
+			Nickname = TeamGenerators.GenerateValidNickname()
 		};
 
 		//act
@@ -94,7 +94,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 	public async Task ChangeNickname_InTeamThatDoesNotExist_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -107,7 +107,7 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 		var teamId = F.Random.Guid();
 		var request = new ChangeNicknameRequest
 		{
-			Nickname = TeamGenerator.GenerateValidNickname()
+			Nickname = TeamGenerators.GenerateValidNickname()
 		};
 
 		//act
@@ -127,10 +127,10 @@ public sealed class ChangeNicknameTests : BaseTeamTests
 	public async Task ChangeNickname_ToInvalidName_Should_ResultInBadRequest_ValidationErrors(string invalidName)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, TeamRole.Member));
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(18);
+		var team = TeamGenerators.Team.WithMembers(owner, members, (initiatorUser, TeamRole.Member)).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

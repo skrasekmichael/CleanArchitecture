@@ -16,9 +16,9 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 	public async Task CreateEventType_AsCoordinatorOrHigher_Should_AddNewEventTypeToTeamInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -30,7 +30,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 
 		Authenticate(initiatorUser);
 
-		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
+		var request = TeamGenerators.ValidUpsertEventTypeRequest.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
@@ -57,10 +57,10 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 	public async Task CreateEventType_AsMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members, (initiatorUser, TeamRole.Member));
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(18);
+		var team = TeamGenerators.Team.WithMembers(owner, members, (initiatorUser, TeamRole.Member)).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -72,7 +72,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 
 		Authenticate(initiatorUser);
 
-		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
+		var request = TeamGenerators.ValidUpsertEventTypeRequest.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
@@ -88,10 +88,10 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 	public async Task CreateEventType_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(18);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(18);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -103,7 +103,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 
 		Authenticate(initiatorUser);
 
-		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
+		var request = TeamGenerators.ValidUpsertEventTypeRequest.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
@@ -119,7 +119,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 	public async Task CreateEventType_InUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -130,7 +130,7 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 		Authenticate(user);
 
 		var teamId = F.Random.Guid();
-		var request = TeamGenerator.ValidUpsertEventTypeRequest.Generate();
+		var request = TeamGenerators.ValidUpsertEventTypeRequest.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync(GetUrl(teamId), request);
@@ -143,13 +143,13 @@ public sealed class CreateEventTypeTests : BaseTeamTests
 	}
 
 	[Theory]
-	[ClassData(typeof(TeamGenerator.InvalidUpsertEventTypeRequest))]
+	[ClassData(typeof(TeamGenerators.InvalidUpsertEventTypeRequest))]
 	public async Task CreateEventType_WithInvalidParameters_AsOwner_Should_ResultInBadRequest_ValidationErrors(InvalidRequest<UpsertEventTypeRequest> request)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

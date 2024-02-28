@@ -16,6 +16,7 @@ public sealed class TeamsEndpointGroup : IEndpointGroup
 			.MapEndpoint<UpdateTeamMemberRoleEndpoint>()
 			.MapEndpoint<UpdateTeamNameEndpoint>()
 			.MapEndpoint<ChangeNicknameEndpoint>()
-			.MapEndpoint<CreateEventTypeEndpoint>();
+			.MapEndpoint<CreateEventTypeEndpoint>()
+			.MapEndpointGroup<EventsEndpointGroup>("{teamId:guid}/events");
 	}
 }

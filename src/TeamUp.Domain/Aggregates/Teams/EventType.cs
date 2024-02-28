@@ -8,7 +8,6 @@ public sealed class EventType : Entity<EventTypeId>
 	public string Name { get; private set; }
 	public string Description { get; private set; }
 	public TeamId TeamId { get; }
-	public Team Team { get; }
 
 #pragma warning disable CS8618 // EF Core constructor
 	private EventType() : base() { }
@@ -19,7 +18,6 @@ public sealed class EventType : Entity<EventTypeId>
 		Name = name;
 		Description = description;
 		TeamId = team.Id;
-		Team = team;
 	}
 
 	public static EventType Create(string name, string description, Team team)

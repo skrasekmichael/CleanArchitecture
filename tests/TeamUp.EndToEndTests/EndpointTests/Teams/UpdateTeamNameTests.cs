@@ -13,9 +13,9 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	public async Task UpdateTeamName_AsOwner_Should_UpdateTeamNameInDatabase()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -29,7 +29,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 
 		var request = new UpdateTeamNameRequest
 		{
-			Name = TeamGenerator.GenerateValidTeamName()
+			Name = TeamGenerators.GenerateValidTeamName()
 		};
 
 		//act
@@ -51,9 +51,9 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	public async Task UpdateTeamName_AsAdminOrLower_Should_ResultInForbidden(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -67,7 +67,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 
 		var request = new UpdateTeamNameRequest
 		{
-			Name = TeamGenerator.GenerateValidTeamName()
+			Name = TeamGenerators.GenerateValidTeamName()
 		};
 
 		//act
@@ -84,7 +84,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	public async Task UpdateTeamName_OfUnExistingTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 		var teamId = F.Random.Guid();
 
 		await UseDbContextAsync(dbContext =>
@@ -97,7 +97,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 
 		var request = new UpdateTeamNameRequest
 		{
-			Name = TeamGenerator.GenerateValidTeamName()
+			Name = TeamGenerators.GenerateValidTeamName()
 		};
 
 		//act
@@ -114,10 +114,10 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	public async Task UpdateTeamName_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -131,7 +131,7 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 
 		var request = new UpdateTeamNameRequest
 		{
-			Name = TeamGenerator.GenerateValidTeamName()
+			Name = TeamGenerators.GenerateValidTeamName()
 		};
 
 		//act
@@ -151,9 +151,9 @@ public sealed class UpdateTeamNameTests : BaseTeamTests
 	public async Task UpdateTeamName_WithInvalidTeamName_AsOwner_Should_ResultInBadRequest_ValidationErrors(string name)
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
