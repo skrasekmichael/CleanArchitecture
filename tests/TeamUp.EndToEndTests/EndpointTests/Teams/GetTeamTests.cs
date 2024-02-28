@@ -13,7 +13,7 @@ public sealed class GetTeamTests : BaseTeamTests
 	public async Task GetTeam_ThatDoesNotExist_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 		var teamId = F.Random.Guid();
 
 		await UseDbContextAsync(dbContext =>
@@ -41,9 +41,9 @@ public sealed class GetTeamTests : BaseTeamTests
 	public async Task GetTeam_AsTeamMember_Should_ReturnTeam(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, initiatorRole, members);
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -75,10 +75,10 @@ public sealed class GetTeamTests : BaseTeamTests
 	public async Task GetTeam_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

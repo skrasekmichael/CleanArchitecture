@@ -25,7 +25,7 @@ internal sealed class TeamConfiguration : BaseEntityConfiguration<Team, TeamId>
 
 		teamEntityTypeBuilder
 			.HasMany(team => team.EventTypes)
-			.WithOne(eventType => eventType.Team)
+			.WithOne()
 			.HasForeignKey(eventType => eventType.TeamId)
 			.OnDelete(DeleteBehavior.Cascade);
 

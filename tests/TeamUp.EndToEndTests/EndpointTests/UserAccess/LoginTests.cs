@@ -18,8 +18,8 @@ public sealed class LoginTests : BaseUserAccessTests
 		//arrange
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
-		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
+		var rawPassword = UserGenerators.GenerateValidPassword();
+		var user = UserGenerators.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -62,8 +62,8 @@ public sealed class LoginTests : BaseUserAccessTests
 		//arrange
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
-		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.NotActivated);
+		var rawPassword = UserGenerators.GenerateValidPassword();
+		var user = UserGenerators.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.NotActivated);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -95,7 +95,7 @@ public sealed class LoginTests : BaseUserAccessTests
 		var request = new LoginRequest
 		{
 			Email = F.Internet.Email(),
-			Password = UserGenerator.GenerateValidPassword()
+			Password = UserGenerators.GenerateValidPassword()
 		};
 
 		//act
@@ -114,8 +114,8 @@ public sealed class LoginTests : BaseUserAccessTests
 		//arrange
 		var passwordService = AppFactory.Services.GetRequiredService<IPasswordService>();
 
-		var rawPassword = UserGenerator.GenerateValidPassword();
-		var user = UserGenerator.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
+		var rawPassword = UserGenerators.GenerateValidPassword();
+		var user = UserGenerators.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
 
 		await UseDbContextAsync(dbContext =>
 		{

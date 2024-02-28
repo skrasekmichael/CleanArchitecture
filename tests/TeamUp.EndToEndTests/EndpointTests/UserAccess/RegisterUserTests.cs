@@ -12,7 +12,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 	public async Task RegisterUser_Should_CreateNewUserInDatabase_And_SendActivationEmail()
 	{
 		//arrange
-		var request = UserGenerator.ValidRegisterUserRequest.Generate();
+		var request = UserGenerators.ValidRegisterUserRequest.Generate();
 
 		//act
 		var response = await Client.PostAsJsonAsync(URL, request);
@@ -38,7 +38,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 	public async Task RegisterUser_WithAlreadyUsedEmail_Should_ResultInConflict()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -50,7 +50,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 		{
 			Email = user.Email,
 			Name = F.Internet.UserName(),
-			Password = UserGenerator.GenerateValidPassword(),
+			Password = UserGenerators.GenerateValidPassword(),
 		};
 
 		//act
@@ -64,7 +64,7 @@ public sealed class RegisterUserTests : BaseUserAccessTests
 	}
 
 	[Theory]
-	[ClassData(typeof(UserGenerator.InvalidRegisterUserRequests))]
+	[ClassData(typeof(UserGenerators.InvalidRegisterUserRequests))]
 	public async Task RegisterUser_WithInvalidProperties_Should_ResultInValidationErrors_BadRequest(InvalidRequest<RegisterUserRequest> request)
 	{
 		//arrange

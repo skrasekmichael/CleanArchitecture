@@ -17,13 +17,10 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 	public async Task GetTeamInvitations_AsCoordinatorOrHigher_Should_ReturnListOfInvitations(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, teamRole, members);
-
-		//need to remove milliseconds as there is slight shift when saving to database
-		var utcNow = new DateTime(DateTime.UtcNow.Ticks / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond, DateTimeKind.Utc);
-		var invitations = InvitationGenerator.GenerateTeamInvitations(team.Id, utcNow, members);
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
+		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow.DropMicroSeconds(), members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -50,10 +47,10 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 	public async Task GetTeamInvitations_AsMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(initiatorUser, TeamRole.Member, members);
-		var invitations = InvitationGenerator.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, TeamRole.Member, members).Generate();
+		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -80,11 +77,11 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 	public async Task GetTeamInvitations_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var team = TeamGenerator.GenerateTeamWith(owner, members);
-		var invitations = InvitationGenerator.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
+		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -111,7 +108,7 @@ public sealed class GetTeamInvitationsTests : BaseInvitationTests
 	public async Task GetTeamInvitations_OfUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
 		var teamId = F.Random.Guid();
 
 		await UseDbContextAsync(dbContext =>

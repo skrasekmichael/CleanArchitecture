@@ -14,7 +14,7 @@ public sealed class CreateTeamTests : BaseTeamTests
 	public async Task CreateTeam_Should_CreateNewTeamInDatabase_WithOneTeamOwner()
 	{
 		//arrange
-		var user = UserGenerator.ActivatedUser.Generate();
+		var user = UserGenerators.ActivatedUser.Generate();
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
@@ -25,7 +25,7 @@ public sealed class CreateTeamTests : BaseTeamTests
 
 		var createTeamRequest = new CreateTeamRequest
 		{
-			Name = TeamGenerator.GenerateValidTeamName()
+			Name = TeamGenerators.GenerateValidTeamName()
 		};
 
 		//act

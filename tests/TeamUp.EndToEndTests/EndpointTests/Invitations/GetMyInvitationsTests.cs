@@ -12,19 +12,11 @@ public sealed class GetMyInvitationsTests : BaseInvitationTests
 	public async Task GetMyInvitations_Should_ReturnListOfInvitations()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var teams = new List<Team>
-		{
-			TeamGenerator.GenerateTeamWith(owner, members),
-			TeamGenerator.GenerateTeamWith(owner, members),
-			TeamGenerator.GenerateTeamWith(owner, members)
-		};
-
-		//need to remove milliseconds as there is slight shift when saving to database
-		var utcNow = new DateTime(DateTime.UtcNow.Ticks / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond, DateTimeKind.Utc);
-		var invitations = InvitationGenerator.GenerateUserInvitations(initiatorUser.Id, utcNow, teams);
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var teams = TeamGenerators.Team.WithMembers(owner, members).Generate(3);
+		var invitations = InvitationGenerators.GenerateUserInvitations(initiatorUser.Id, DateTime.UtcNow.DropMicroSeconds(), teams);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -51,15 +43,10 @@ public sealed class GetMyInvitationsTests : BaseInvitationTests
 	public async Task GetMyInvitations_WhenNotInvited_Should_ReturnEmptyList()
 	{
 		//arrange
-		var owner = UserGenerator.ActivatedUser.Generate();
-		var initiatorUser = UserGenerator.ActivatedUser.Generate();
-		var members = UserGenerator.ActivatedUser.Generate(19);
-		var teams = new List<Team>
-		{
-			TeamGenerator.GenerateTeamWith(owner, members),
-			TeamGenerator.GenerateTeamWith(owner, members),
-			TeamGenerator.GenerateTeamWith(owner, members)
-		};
+		var owner = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var members = UserGenerators.ActivatedUser.Generate(19);
+		var teams = TeamGenerators.Team.WithMembers(owner, members).Generate(3);
 
 		await UseDbContextAsync(dbContext =>
 		{

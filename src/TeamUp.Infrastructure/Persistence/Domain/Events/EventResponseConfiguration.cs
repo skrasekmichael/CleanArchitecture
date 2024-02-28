@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using TeamUp.Contracts.Events;
-using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Teams;
+
+using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
 
 namespace TeamUp.Infrastructure.Persistence.Domain.Events;
 
