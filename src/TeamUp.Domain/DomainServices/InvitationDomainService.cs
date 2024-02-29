@@ -58,4 +58,25 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 			.Tap(_invitationRepository.AddInvitation)
 			.Then(invitation => invitation.Id);
 	}
+
+	public async Task<Result> RemoveInvitationAsync(UserId initiatorId, InvitationId invitationId, CancellationToken ct = default)
+	{
+		var invitation = await _invitationRepository.GetInvitationByIdAsync(invitationId, ct);
+		return await invitation
+			.EnsureNotNull(InvitationErrors.InvitationNotFound)
+			.ThenAsync(async invitation =>
+			{
+				if (invitation.RecipientId == initiatorId)
+					return invitation;
+
+				var team = await _teamRepository.GetTeamByIdAsync(invitation.TeamId, ct);
+				return team
+					.EnsureNotNull(TeamErrors.NotMemberOfTeam)
+					.Then(team => team.GetTeamMemberByUserId(initiatorId))
+					.Ensure(member => member.Role.CanInviteTeamMembers(), TeamErrors.UnauthorizedToCancelInvitations)
+					.Then(_ => invitation);
+			})
+			.Tap(invitation => _invitationRepository.RemoveInvitation(invitation))
+			.ToResultAsync();
+	}
 }

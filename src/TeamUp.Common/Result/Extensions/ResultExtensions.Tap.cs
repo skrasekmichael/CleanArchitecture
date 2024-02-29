@@ -52,6 +52,16 @@ public static partial class ResultExtensions
 		return self;
 	}
 
+	public static async Task<Result<TValue>> Tap<TValue>(this Task<Result<Result<TValue>>> selfTask, Action<TValue> func)
+	{
+		var self = await selfTask;
+		if (self.IsFailure)
+			return self.Error;
+
+		self.Value.Tap(func);
+		return self.Value;
+	}
+
 	public static Result<(TFirst, TSecond)> Tap<TFirst, TSecond>(this Result<(TFirst, TSecond)> self, Action<TFirst, TSecond> func)
 	{
 		if (self.IsFailure)

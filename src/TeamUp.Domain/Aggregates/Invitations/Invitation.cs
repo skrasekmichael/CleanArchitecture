@@ -41,9 +41,4 @@ public sealed class Invitation : AggregateRoot<Invitation, InvitationId>
 			.Tap(_ => AddDomainEvent(new InvitationAcceptedDomainEvent(this)))
 			.ToResult();
 	}
-
-	public void Cancel()
-	{
-		AddDomainEvent(new InvitationCanceledDomainEvent(Id));
-	}
 }

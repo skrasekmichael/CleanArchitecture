@@ -11,6 +11,7 @@ public sealed class InvitationsEndpointGroup : IEndpointGroup
 			.MapEndpoint<InviteUserEndpoint>()
 			.MapEndpoint<GetTeamInvitationsEndpoint>()
 			.MapEndpoint<AcceptInvitationEndpoint>()
-			.MapEndpoint<GetMyInvitationsEndpoint>();
+			.MapEndpoint<GetMyInvitationsEndpoint>()
+			.MapEndpoint<RemoveInvitationEndpoint>();
 	}
 }
