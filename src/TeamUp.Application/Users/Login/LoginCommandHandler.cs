@@ -18,12 +18,12 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, Result
 		_tokenService = tokenService;
 	}
 
-	public async Task<Result<string>> Handle(LoginCommand request, CancellationToken ct)
+	public async Task<Result<string>> Handle(LoginCommand command, CancellationToken ct)
 	{
-		var user = await _userRepository.GetUserByEmailAsync(request.Email, ct);
+		var user = await _userRepository.GetUserByEmailAsync(command.Email, ct);
 		return user
 			.EnsureNotNull(AuthenticationErrors.InvalidCredentials)
-			.Ensure(user => _passwordService.VerifyPassword(request.Password, user.Password), AuthenticationErrors.InvalidCredentials)
+			.Ensure(user => _passwordService.VerifyPassword(command.Password, user.Password), AuthenticationErrors.InvalidCredentials)
 			.Ensure(user => user.Status == UserStatus.Activated, AuthenticationErrors.NotActivatedAccount)
 			.Then(user => _tokenService.GenerateToken(user));
 	}

@@ -16,7 +16,7 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<List<TeamInvitationResponse>>> Handle(GetTeamInvitationsQuery request, CancellationToken ct)
+	public async Task<Result<List<TeamInvitationResponse>>> Handle(GetTeamInvitationsQuery query, CancellationToken ct)
 	{
 		var teamWithInitiator = await _appQueryContext.Teams
 			.Select(team => new
@@ -24,9 +24,9 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 				team.Id,
 				Initiaotor = team.Members
 					.Select(member => new { member.UserId, member.Role })
-					.FirstOrDefault(member => member.UserId == request.InitiatorId),
+					.FirstOrDefault(member => member.UserId == query.InitiatorId),
 			})
-			.FirstOrDefaultAsync(team => team.Id == request.TeamId, ct);
+			.FirstOrDefaultAsync(team => team.Id == query.TeamId, ct);
 
 		return await teamWithInitiator
 			.EnsureNotNull(TeamErrors.TeamNotFound)
@@ -35,7 +35,7 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 			.ThenAsync(team =>
 			{
 				return _appQueryContext.Invitations
-					.Where(invitation => invitation.TeamId == request.TeamId)
+					.Where(invitation => invitation.TeamId == query.TeamId)
 					.Select(invitation => new TeamInvitationResponse
 					{
 						Id = invitation.Id,

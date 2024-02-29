@@ -16,12 +16,12 @@ internal sealed class ChangeNicknameCommandHandler : ICommandHandler<ChangeNickn
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(ChangeNicknameCommand request, CancellationToken ct)
+	public async Task<Result> Handle(ChangeNicknameCommand command, CancellationToken ct)
 	{
-		var team = await _teamRepository.GetTeamByIdAsync(request.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
-			.Then(team => team.ChangeNickname(request.InitiatorId, request.Nickname))
+			.Then(team => team.ChangeNickname(command.InitiatorId, command.Nickname))
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

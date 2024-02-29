@@ -19,12 +19,12 @@ internal sealed class AcceptInvitationCommandHandler : ICommandHandler<AcceptInv
 		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public async Task<Result> Handle(AcceptInvitationCommand request, CancellationToken ct)
+	public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken ct)
 	{
-		var invitation = await _invitationRepository.GetInvitationByIdAsync(request.InvitationId, ct);
+		var invitation = await _invitationRepository.GetInvitationByIdAsync(command.InvitationId, ct);
 		return await invitation
 			.EnsureNotNull(InvitationErrors.InvitationNotFound)
-			.Then(invitation => invitation.Accept(request.InitiatorId, _dateTimeProvider))
+			.Then(invitation => invitation.Accept(command.InitiatorId, _dateTimeProvider))
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

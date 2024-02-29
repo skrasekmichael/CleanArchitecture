@@ -13,10 +13,10 @@ internal sealed class UserRegisteredEventHandler : IIntegrationEventHandler<User
 		_emailSender = emailSender;
 	}
 
-	public Task Handle(UserRegisteredEvent notification, CancellationToken ct)
+	public Task Handle(UserRegisteredEvent integrationEvent, CancellationToken ct)
 	{
 		return _emailSender.SendEmailAsync(
-			email: notification.Email,
+			email: integrationEvent.Email,
 			subject: "Successful registration",
 			message: "You need to activate your account to finalize your registration.", ct);
 	}

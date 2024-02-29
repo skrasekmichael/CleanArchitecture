@@ -19,10 +19,10 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<UserId>> Handle(RegisterUserCommand request, CancellationToken ct)
+	public async Task<Result<UserId>> Handle(RegisterUserCommand command, CancellationToken ct)
 	{
-		var password = _passwordService.HashPassword(request.Password);
-		var user = await _userFactory.CreateAndAddUserAsync(request.Name, request.Email, password, ct);
+		var password = _passwordService.HashPassword(command.Password);
+		var user = await _userFactory.CreateAndAddUserAsync(command.Name, command.Email, password, ct);
 
 		return await user
 			.Then(user => user.Id)

@@ -24,12 +24,12 @@ internal sealed class CreateTeamCommandHandler : ICommandHandler<CreateTeamComma
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<TeamId>> Handle(CreateTeamCommand request, CancellationToken ct)
+	public async Task<Result<TeamId>> Handle(CreateTeamCommand command, CancellationToken ct)
 	{
-		var user = await _userRepository.GetUserByIdAsync(request.OwnerId, ct);
+		var user = await _userRepository.GetUserByIdAsync(command.OwnerId, ct);
 		return await user
 			.EnsureNotNull(UserErrors.AccountNotFound)
-			.Then(user => Team.Create(request.Name, user, _dateTimeProvider))
+			.Then(user => Team.Create(command.Name, user, _dateTimeProvider))
 			.Tap(_teamRepository.AddTeam)
 			.Then(team => team.Id)
 			.TapAsync(_ => _unitOfWork.SaveChangesAsync(ct));
