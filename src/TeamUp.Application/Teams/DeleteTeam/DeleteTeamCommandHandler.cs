@@ -16,10 +16,10 @@ internal sealed class DeleteTeamCommandHandler : ICommandHandler<DeleteTeamComma
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(DeleteTeamCommand request, CancellationToken ct)
+	public async Task<Result> Handle(DeleteTeamCommand command, CancellationToken ct)
 	{
 		return await _teamDomainService
-			.DeleteTeamAsync(request.InitiatorId, request.TeamId, ct)
+			.DeleteTeamAsync(command.InitiatorId, command.TeamId, ct)
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

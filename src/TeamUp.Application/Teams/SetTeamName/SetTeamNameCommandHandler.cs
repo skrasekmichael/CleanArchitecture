@@ -16,12 +16,12 @@ internal sealed class SetTeamNameCommandHandler : ICommandHandler<SetTeamNameCom
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(SetTeamNameCommand request, CancellationToken ct)
+	public async Task<Result> Handle(SetTeamNameCommand command, CancellationToken ct)
 	{
-		var team = await _teamRepository.GetTeamByIdAsync(request.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
-			.Then(team => team.ChangeTeamName(request.InitiatorId, request.Name))
+			.Then(team => team.ChangeTeamName(command.InitiatorId, command.Name))
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

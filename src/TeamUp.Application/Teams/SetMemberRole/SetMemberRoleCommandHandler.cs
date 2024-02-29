@@ -16,12 +16,12 @@ internal sealed class SetMemberRoleCommandHandler : ICommandHandler<SetMemberRol
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(SetMemberRoleCommand request, CancellationToken ct)
+	public async Task<Result> Handle(SetMemberRoleCommand command, CancellationToken ct)
 	{
-		var team = await _teamRepository.GetTeamByIdAsync(request.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
-			.Then(team => team.SetMemberRole(request.InitiatorId, request.MemberId, request.Role))
+			.Then(team => team.SetMemberRole(command.InitiatorId, command.MemberId, command.Role))
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

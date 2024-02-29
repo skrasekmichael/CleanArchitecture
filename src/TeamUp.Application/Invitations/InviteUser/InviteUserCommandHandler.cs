@@ -17,10 +17,10 @@ internal sealed class InviteUserCommandHandler : ICommandHandler<InviteUserComma
 		_unitOfWork = unitOfWork;
 	}
 
-	public Task<Result<InvitationId>> Handle(InviteUserCommand request, CancellationToken ct)
+	public Task<Result<InvitationId>> Handle(InviteUserCommand command, CancellationToken ct)
 	{
 		return _invitationDomainService
-			.InviteUserAsync(request.InitiatorId, request.TeamId, request.Email, ct)
+			.InviteUserAsync(command.InitiatorId, command.TeamId, command.Email, ct)
 			.TapAsync(_ => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

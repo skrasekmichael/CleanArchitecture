@@ -15,10 +15,10 @@ internal sealed class GetMyInvitationsQueryHandler : IQueryHandler<GetMyInvitati
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<List<InvitationResponse>>> Handle(GetMyInvitationsQuery request, CancellationToken ct)
+	public async Task<Result<List<InvitationResponse>>> Handle(GetMyInvitationsQuery query, CancellationToken ct)
 	{
 		return await _appQueryContext.Invitations
-			.Where(invitation => invitation.RecipientId == request.InitiatorId)
+			.Where(invitation => invitation.RecipientId == query.InitiatorId)
 			.Select(invitation => new InvitationResponse
 			{
 				Id = invitation.Id,

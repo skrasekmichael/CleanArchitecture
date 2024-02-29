@@ -17,12 +17,12 @@ internal sealed class CreateEventTypeCommandHandler : ICommandHandler<CreateEven
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<EventTypeId>> Handle(CreateEventTypeCommand request, CancellationToken ct)
+	public async Task<Result<EventTypeId>> Handle(CreateEventTypeCommand command, CancellationToken ct)
 	{
-		var team = await _teamRepository.GetTeamByIdAsync(request.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
-			.Then(team => team.CreateEventType(request.InitiatorId, request.Name, request.Description))
+			.Then(team => team.CreateEventType(command.InitiatorId, command.Name, command.Description))
 			.TapAsync(_ => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

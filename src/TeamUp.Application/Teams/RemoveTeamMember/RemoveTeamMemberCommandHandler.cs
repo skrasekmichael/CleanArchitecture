@@ -16,12 +16,12 @@ internal sealed class RemoveTeamMemberCommandHandler : ICommandHandler<RemoveTea
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(RemoveTeamMemberCommand request, CancellationToken ct)
+	public async Task<Result> Handle(RemoveTeamMemberCommand command, CancellationToken ct)
 	{
-		var team = await _teamRepository.GetTeamByIdAsync(request.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
-			.Then(team => team.RemoveTeamMember(request.InitiatorId, request.MemberId))
+			.Then(team => team.RemoveTeamMember(command.InitiatorId, command.MemberId))
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

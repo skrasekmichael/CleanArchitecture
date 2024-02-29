@@ -16,12 +16,12 @@ internal sealed class ChangeOwnershipCommandHandler : ICommandHandler<ChangeOwne
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(ChangeOwnershipCommand request, CancellationToken ct)
+	public async Task<Result> Handle(ChangeOwnershipCommand command, CancellationToken ct)
 	{
-		var team = await _teamRepository.GetTeamByIdAsync(request.TeamId, ct);
+		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
-			.Then(team => team.ChangeOwnership(request.InitiatorId, request.NewOwnerId))
+			.Then(team => team.ChangeOwnership(command.InitiatorId, command.NewOwnerId))
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }
