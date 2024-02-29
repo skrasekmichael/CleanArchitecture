@@ -1,6 +1,4 @@
-﻿using TeamUp.Contracts.Teams;
-
-namespace TeamUp.Contracts.Invitations;
+﻿namespace TeamUp.Contracts.Invitations;
 
 public sealed class InvitationResponse
 {
