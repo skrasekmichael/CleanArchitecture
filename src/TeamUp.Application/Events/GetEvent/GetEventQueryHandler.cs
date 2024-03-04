@@ -40,11 +40,11 @@ internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, Result
 						Status = e.Status,
 						EventResponses = e.EventResponses.Select(er => new EventResponseResponse
 						{
-							Message = er.Reply.Message,
+							Message = er.Message,
 							TeamMemberId = er.TeamMemberId,
 							TeamMemberNickname = team.Members.First(member => member.Id == er.TeamMemberId).Nickname,
 							TimeStampUtc = er.TimeStampUtc,
-							Type = er.Reply.Type
+							Type = er.ReplyType
 						}).ToList()
 					})
 					.FirstOrDefault(),

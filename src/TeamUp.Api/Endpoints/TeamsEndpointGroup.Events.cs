@@ -8,6 +8,7 @@ public sealed class EventsEndpointGroup : IEndpointGroup
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
 		group.MapEndpoint<CreateEventEndpoint>()
-			.MapEndpoint<GetEventEndpoint>();
+			.MapEndpoint<GetEventEndpoint>()
+			.MapEndpoint<GetEventsEndpoint>();
 	}
 }
