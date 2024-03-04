@@ -11,7 +11,8 @@ public sealed class EventResponse : Entity<EventResponseId>
 	public TeamMemberId TeamMemberId { get; }
 
 	public EventId EventId { get; }
-	public EventReply Reply { get; private set; }
+	public ReplyType ReplyType { get; private set; }
+	public string Message { get; private set; }
 	public DateTime TimeStampUtc { get; private set; }
 
 #pragma warning disable CS8618 // EF Core constructor
@@ -22,7 +23,8 @@ public sealed class EventResponse : Entity<EventResponseId>
 	{
 		TeamMemberId = teamMemberId;
 		EventId = eventId;
-		Reply = reply;
+		ReplyType = reply.Type;
+		Message = reply.Message;
 		TimeStampUtc = timeStampUtc;
 
 		AddDomainEvent(new EventResponseCreatedDomainEvent(this));
@@ -30,7 +32,8 @@ public sealed class EventResponse : Entity<EventResponseId>
 
 	internal void UpdateReply(IDateTimeProvider dateTimeProvider, EventReply reply)
 	{
-		Reply = reply;
+		ReplyType = reply.Type;
+		Message = reply.Message;
 		TimeStampUtc = dateTimeProvider.UtcNow;
 
 		AddDomainEvent(new EventResponseUpdatedDomainEvent(this));

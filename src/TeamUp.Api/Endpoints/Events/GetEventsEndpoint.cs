@@ -3,38 +3,37 @@
 using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Extensions;
-using TeamUp.Application.Events.GetEvent;
+using TeamUp.Application.Events.GetEvents;
 using TeamUp.Contracts.Events;
 using TeamUp.Contracts.Teams;
 
-using EventId = TeamUp.Contracts.Events.EventId;
-
 namespace TeamUp.Api.Endpoints.Events;
 
-public sealed class GetEventEndpoint : IEndpointGroup
+public sealed class GetEventsEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
-		group.MapGet("/{eventId:guid}", GetEventAsync)
-			.Produces<EventResponse>(StatusCodes.Status200OK)
+		group.MapGet("/", GetEventsAsync)
+			.Produces<List<EventSlimResponse>>(StatusCodes.Status200OK)
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound)
-			.WithName(nameof(GetEventEndpoint))
+			.ProducesValidationProblem()
+			.WithName(nameof(GetEventsEndpoint))
 			.MapToApiVersion(1);
 	}
 
-	public async Task<IResult> GetEventAsync(
+	public async Task<IResult> GetEventsAsync(
 		[FromRoute] Guid teamId,
-		[FromRoute] Guid eventId,
+		[FromQuery] DateTime? fromUtc,
 		[FromServices] ISender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var query = new GetEventQuery(
+		var query = new GetEventsQuery(
 			httpContext.GetCurrentUserId(),
 			TeamId.FromGuid(teamId),
-			EventId.FromGuid(eventId)
+			fromUtc
 		);
 		var response = await sender.Send(query, ct);
 		return response.Match(TypedResults.Ok);

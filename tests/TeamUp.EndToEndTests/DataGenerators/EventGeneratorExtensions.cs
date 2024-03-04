@@ -17,16 +17,11 @@ public static class EventGeneratorExtensions
 					.RuleForBackingField(er => er.EventId, e.Id)
 					.RuleForBackingField(er => er.TeamMemberId, member.Id)
 					.RuleFor(er => er.TimeStampUtc, f => f.Date
-						.Between(DateTime.UtcNow.AddDays(-1), e.FromUtc - e.MeetTime - e.ReplyClosingTimeBeforeMeetTime)
+						.Between(DateTime.UtcNow.AddDays(-2), e.FromUtc - e.MeetTime - e.ReplyClosingTimeBeforeMeetTime)
 						.DropMicroSeconds()
 						.AsUtc())
-					.RuleFor(er => er.Reply, f => f.Random.ArrayElement(
-					[
-						EventReply.Yes(),
-						EventReply.Maybe(f.Random.AlphaNumeric(30)),
-						EventReply.Delay(f.Random.AlphaNumeric(30)),
-						EventReply.No(f.Random.AlphaNumeric(30))
-					]))
+					.RuleFor(er => er.ReplyType, f => f.Random.ArrayElement([ReplyType.Yes, ReplyType.No, ReplyType.Maybe, ReplyType.Delay]))
+					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.AlphaNumeric(30))
 					.Generate())
 				.ToList());
 	}
@@ -39,17 +34,11 @@ public static class EventGeneratorExtensions
 					.RuleForBackingField(er => er.EventId, e.Id)
 					.RuleForBackingField(er => er.TeamMemberId, response.Member.Id)
 					.RuleFor(er => er.TimeStampUtc, f => f.Date
-						.Between(DateTime.UtcNow.AddDays(-1), e.FromUtc - e.MeetTime - e.ReplyClosingTimeBeforeMeetTime)
+						.Between(DateTime.UtcNow.AddDays(-2), e.FromUtc - e.MeetTime - e.ReplyClosingTimeBeforeMeetTime)
 						.DropMicroSeconds()
 						.AsUtc())
-					.RuleFor(er => er.Reply, f => response.Type switch
-					{
-						ReplyType.Yes => EventReply.Yes(),
-						ReplyType.Maybe => EventReply.Maybe(f.Random.AlphaNumeric(30)),
-						ReplyType.Delay => EventReply.Delay(f.Random.AlphaNumeric(30)),
-						ReplyType.No => EventReply.No(f.Random.AlphaNumeric(30)),
-						_ => throw new NotImplementedException()
-					})
+					.RuleFor(er => er.ReplyType, response.Type)
+					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.AlphaNumeric(30))
 					.Generate())
 				.ToList());
 	}
