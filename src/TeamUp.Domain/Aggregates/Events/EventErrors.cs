@@ -8,6 +8,7 @@ public static class EventErrors
 	public static readonly ValidationError CannotStartInPast = ValidationError.New("Cannot create event in the past.", "Events.CannotStartInPast");
 
 	public static readonly DomainError NotOpenForResponses = DomainError.New("Event is not open for responses.", "Events.NotOpenForResponses");
+	public static readonly DomainError TimeForResponsesExpired = DomainError.New("Time for responses expired.", "Events.TimeForResponsesExpired");
 
 	public static readonly NotFoundError EventNotFound = NotFoundError.New("Event not found.", "Events.NotFound");
 }

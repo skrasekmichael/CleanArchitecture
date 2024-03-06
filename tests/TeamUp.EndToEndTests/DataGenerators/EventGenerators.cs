@@ -27,7 +27,7 @@ public sealed class EventGenerators : BaseGenerator
 		.RuleFor(e => e.Description, f => f.Random.AlphaNumeric(20))
 		.RuleFor(e => e.MeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
 		.RuleFor(e => e.ReplyClosingTimeBeforeMeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
-		.RuleFor(e => e.FromUtc, f => f.Date.Soon(7, DateTime.Now.AddDays(1)).DropMicroSeconds().AsUtc())
+		.RuleFor(e => e.FromUtc, f => f.Date.Between(DateTime.UtcNow.AddDays(3), DateTime.UtcNow.AddMonths(6)).DropMicroSeconds().AsUtc())
 		.RuleFor(e => e.ToUtc, (f, e) => e.FromUtc.AddHours(f.Random.Int(1, 5)).AsUtc())
 		.RuleFor(e => e.Status, EventStatus.Open);
 
@@ -40,10 +40,21 @@ public sealed class EventGenerators : BaseGenerator
 		.RuleFor(x => x.MeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
 		.RuleFor(x => x.ReplyClosingTimeBeforeMeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds());
 
+	public static readonly Faker<UpsertEventReplyRequest> ValidUpsertEventReplyRequest = new Faker<UpsertEventReplyRequest>()
+		.RuleFor(r => r.ReplyType, f => f.PickRandom(ReplyType.Yes, ReplyType.No, ReplyType.Maybe, ReplyType.Delay))
+		.RuleFor(r => r.Message, (f, r) => r.ReplyType switch
+		{
+			ReplyType.Yes => string.Empty,
+			ReplyType.Maybe => f.Random.Text(1, 80),
+			ReplyType.Delay => f.Random.Text(0, 80),
+			ReplyType.No or _ => f.Random.Text(1, 80),
+		});
+
 	public sealed class InvalidCreateEventRequest : TheoryData<InvalidRequest<CreateEventRequest>>
 	{
 		public InvalidCreateEventRequest()
 		{
+			//short description
 			this.Add(x => x.Description, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -54,6 +65,7 @@ public sealed class EventGenerators : BaseGenerator
 				ToUtc = DateTime.UtcNow.AddHours(25),
 			});
 
+			//negative meet time
 			this.Add(x => x.MeetTime, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -64,6 +76,7 @@ public sealed class EventGenerators : BaseGenerator
 				ToUtc = DateTime.UtcNow.AddHours(25),
 			});
 
+			//negative reply close time
 			this.Add(x => x.ReplyClosingTimeBeforeMeetTime, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -74,6 +87,7 @@ public sealed class EventGenerators : BaseGenerator
 				ToUtc = DateTime.UtcNow.AddHours(25),
 			});
 
+			//event starts (and ends) in past
 			this.Add(x => x.FromUtc, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -84,6 +98,7 @@ public sealed class EventGenerators : BaseGenerator
 				ToUtc = DateTime.UtcNow.AddHours(-23),
 			});
 
+			//event starts in past
 			this.Add(x => x.FromUtc, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -94,6 +109,7 @@ public sealed class EventGenerators : BaseGenerator
 				ToUtc = DateTime.UtcNow.AddHours(2),
 			});
 
+			//from > to
 			this.Add(x => x.ToUtc, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -102,6 +118,61 @@ public sealed class EventGenerators : BaseGenerator
 				ReplyClosingTimeBeforeMeetTime = TimeSpan.FromMinutes(15),
 				FromUtc = DateTime.UtcNow.AddHours(8),
 				ToUtc = DateTime.UtcNow.AddHours(7),
+			});
+		}
+	}
+
+	public sealed class InvalidUpsertEventReplyRequest : TheoryData<InvalidRequest<UpsertEventReplyRequest>>
+	{
+		public InvalidUpsertEventReplyRequest()
+		{
+			//wrong type
+			this.Add(x => x.ReplyType, new UpsertEventReplyRequest
+			{
+				ReplyType = (ReplyType)100,
+				Message = "xxx"
+			});
+
+			//long message
+			this.Add(x => x.Message, new UpsertEventReplyRequest
+			{
+				ReplyType = ReplyType.Yes,
+				Message = "x"
+			});
+
+			//short message
+			this.Add(x => x.Message, new UpsertEventReplyRequest
+			{
+				ReplyType = ReplyType.No,
+				Message = ""
+			});
+
+			//short message
+			this.Add(x => x.Message, new UpsertEventReplyRequest
+			{
+				ReplyType = ReplyType.Maybe,
+				Message = ""
+			});
+
+			//long message
+			this.Add(x => x.Message, new UpsertEventReplyRequest
+			{
+				ReplyType = ReplyType.Maybe,
+				Message = F.Random.AlphaNumeric(100)
+			});
+
+			//long message
+			this.Add(x => x.Message, new UpsertEventReplyRequest
+			{
+				ReplyType = ReplyType.No,
+				Message = F.Random.AlphaNumeric(100)
+			});
+
+			//long message
+			this.Add(x => x.Message, new UpsertEventReplyRequest
+			{
+				ReplyType = ReplyType.Delay,
+				Message = F.Random.AlphaNumeric(100)
 			});
 		}
 	}

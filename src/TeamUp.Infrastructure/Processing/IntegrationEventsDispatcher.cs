@@ -63,6 +63,7 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 		var messages = await _dbContext
 			.Set<OutboxMessage>()
 			.Where(msg => msg.ProcessedUtc == null)
+			.OrderBy(msg => msg.CreatedUtc)
 			.Take(20)
 			.ToListAsync(ct);
 

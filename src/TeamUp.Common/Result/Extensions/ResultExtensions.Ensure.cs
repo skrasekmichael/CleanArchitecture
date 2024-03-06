@@ -114,4 +114,38 @@ public static partial class ResultExtensions
 		var self = await selfTask;
 		return self.Ensure(rule);
 	}
+
+	public static Result<(TFirst, TSecond)> EnsureNotNull<TFirst, TSecond, TProperty, TError>(this Result<(TFirst, TSecond)> self, Func<TFirst, TSecond, TProperty?> selector, TError error) where TError : ErrorBase
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		if (selector(self.Value.Item1, self.Value.Item2) is null)
+			return error;
+
+		return self.Value;
+	}
+
+	public static Result<(TFirst, TSecond)> EnsureSecondNotNull<TFirst, TSecond, TError>(this Result<(TFirst, TSecond?)> self, TError error) where TError : ErrorBase
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		if (self.Value.Item2 is null)
+			return error;
+
+		return self.Value!;
+	}
+
+	public static async Task<Result<(TFirst, TSecond)>> EnsureNotNull<TFirst, TSecond, TProperty, TError>(this Task<Result<(TFirst, TSecond)>> selfTask, Func<TFirst, TSecond, TProperty?> selector, TError error) where TError : ErrorBase
+	{
+		var self = await selfTask;
+		return self.EnsureNotNull(selector, error);
+	}
+
+	public static async Task<Result<(TFirst, TSecond)>> EnsureSecondNotNull<TFirst, TSecond, TError>(this Task<Result<(TFirst, TSecond?)>> selfTask, TError error) where TError : ErrorBase
+	{
+		var self = await selfTask;
+		return self.EnsureSecondNotNull(error);
+	}
 }

@@ -67,6 +67,9 @@ public sealed class TeamApiWebApplicationFactory : WebApplicationFactory<Program
 			services.Replace<IEmailSender, EmailSenderMock>();
 			services.AddSingleton<MailInbox>();
 
+			//date time provider
+			services.Replace<IDateTimeProvider, SkewDateTimeProvider>();
+
 			//background services
 			services.AddSingleton<OutboxBackgroundCallback>();
 			services.Replace<IProcessOutboxMessagesJob, ProcessOutboxMessagesWithCallbackJob>();

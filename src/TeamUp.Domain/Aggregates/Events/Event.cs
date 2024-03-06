@@ -49,12 +49,12 @@ public sealed class Event : AggregateRoot<Event, EventId>
 
 	public Result SetMemberResponse(IDateTimeProvider dateTimeProvider, TeamMemberId memberId, EventReply reply)
 	{
-		static bool IsNotClosed(IDateTimeProvider dateTimeProvider, DateTimeOffset responseCloseTime) => dateTimeProvider.DateTimeOffsetUtcNow < responseCloseTime;
+		static bool TimeForResponsesHasNotExpired(IDateTimeProvider dateTimeProvider, DateTime responseCloseTime) => dateTimeProvider.UtcNow < responseCloseTime;
 
 		return Status
 			.Ensure(status => status.IsOpenForResponses(), EventErrors.NotOpenForResponses)
 			.Then(_ => GetResponseCloseTime())
-			.Ensure(responseCloseTime => IsNotClosed(dateTimeProvider, responseCloseTime), EventErrors.NotOpenForResponses)
+			.Ensure(responseCloseTime => TimeForResponsesHasNotExpired(dateTimeProvider, responseCloseTime), EventErrors.TimeForResponsesExpired)
 			.Then(_ => _eventResponses.Find(er => er.TeamMemberId == memberId))
 			.Tap(response =>
 			{
