@@ -43,7 +43,9 @@ public sealed class CreateEventRequest : IRequestBody
 				.Must((model, to) => model.FromUtc < to)
 				.WithMessage("Event cannot end before it starts.");
 
-			RuleFor(x => x.Description).NotEmpty();
+			RuleFor(x => x.Description)
+				.NotEmpty()
+				.MaximumLength(EventConstants.EVENT_DESCRIPTION_MAX_SIZE);
 
 			RuleFor(x => x.MeetTime).GreaterThan(TimeSpan.Zero);
 

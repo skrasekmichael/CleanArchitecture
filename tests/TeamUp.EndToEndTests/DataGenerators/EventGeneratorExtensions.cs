@@ -21,7 +21,7 @@ public static class EventGeneratorExtensions
 						.DropMicroSeconds()
 						.AsUtc())
 					.RuleFor(er => er.ReplyType, f => f.Random.ArrayElement([ReplyType.Yes, ReplyType.No, ReplyType.Maybe, ReplyType.Delay]))
-					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.AlphaNumeric(30))
+					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE))
 					.Generate())
 				.ToList());
 	}
@@ -38,7 +38,7 @@ public static class EventGeneratorExtensions
 						.DropMicroSeconds()
 						.AsUtc())
 					.RuleFor(er => er.ReplyType, response.Type)
-					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.AlphaNumeric(30))
+					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE))
 					.Generate())
 				.ToList());
 	}

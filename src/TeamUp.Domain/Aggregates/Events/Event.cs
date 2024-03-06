@@ -110,6 +110,7 @@ public sealed class Event : AggregateRoot<Event, EventId>
 		return fromUtc
 			.Ensure(from => from < toUtc, EventErrors.CannotEndBeforeStart)
 			.Ensure(from => from > dateTimeProvider.DateTimeOffsetUtcNow, EventErrors.CannotStartInPast)
+			.ThenEnsure(_ => description.Length, len => len <= EventConstants.EVENT_DESCRIPTION_MAX_SIZE, EventErrors.EventDescriptionMaxSize)
 			.Then(_ => new Event(
 				EventId.New(),
 				eventTypeId,

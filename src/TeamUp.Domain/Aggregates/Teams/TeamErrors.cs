@@ -9,6 +9,9 @@ public static class TeamErrors
 	public static readonly ValidationError TeamNameMaxSize = ValidationError.New($"Name must be shorter than {TeamConstants.TEAM_NAME_MAX_SIZE} characters.", "Teams.NameMaxSize");
 	public static readonly ValidationError NicknameMinSize = ValidationError.New($"Nickname must be atleast {TeamConstants.NICKNAME_MIN_SIZE} characters long.", "Teams.Members.NicknameMinSize");
 	public static readonly ValidationError NicknameMaxSize = ValidationError.New($"Nickname must be shorter than {TeamConstants.NICKNAME_MAX_SIZE} characters.", "Teams.Members.NicknameMaxSize");
+	public static readonly ValidationError EventTypeNameMinSize = ValidationError.New($"EventType's name must be atleast {TeamConstants.EVENTTYPE_NAME_MIN_SIZE} characters long.", "Teams.EventTypes.NameMinSize");
+	public static readonly ValidationError EventTypeNameMaxSize = ValidationError.New($"EventType's name must be shorter than {TeamConstants.EVENTTYPE_NAME_MAX_SIZE} characters.", "Teams.EventTypes.NameMaxSize");
+	public static readonly ValidationError EventTypeDescriptionMaxSize = ValidationError.New($"EventType's description must be shorter than {TeamConstants.EVENTTYPE_NAME_MAX_SIZE} characters.", "Teams.EventTypes.DescriptionMaxSize");
 
 	public static readonly AuthorizationError NotMemberOfTeam = AuthorizationError.New("Not member of the team.", "Teams.NotMember");
 	public static readonly AuthorizationError UnauthorizedToChangeTeamName = AuthorizationError.New("Not allowed to change team name.", "Teams.NotAllowedToChangeName");

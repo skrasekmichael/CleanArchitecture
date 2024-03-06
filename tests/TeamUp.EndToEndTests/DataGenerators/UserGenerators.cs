@@ -55,7 +55,7 @@ public sealed class UserGenerators : BaseGenerator
 			this.Add(x => x.Name, new RegisterUserRequest
 			{
 				Email = F.Internet.Email(),
-				Name = F.Lorem.Random.AlphaNumeric(TeamConstants.TEAM_NAME_MAX_SIZE + 1),
+				Name = F.Random.AlphaNumeric(TeamConstants.TEAM_NAME_MAX_SIZE + 1),
 				Password = GenerateValidPassword()
 			});
 

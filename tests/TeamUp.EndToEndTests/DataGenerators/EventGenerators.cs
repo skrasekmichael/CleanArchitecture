@@ -24,7 +24,7 @@ public sealed class EventGenerators : BaseGenerator
 	public static readonly EventGenerator Event = new EventGenerator(binder: EventBinder)
 		.UsePrivateConstructor()
 		.RuleFor(e => e.Id, f => EventId.FromGuid(f.Random.Guid()))
-		.RuleFor(e => e.Description, f => f.Random.AlphaNumeric(20))
+		.RuleFor(e => e.Description, f => f.Random.Text(1, EventConstants.EVENT_DESCRIPTION_MAX_SIZE))
 		.RuleFor(e => e.MeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
 		.RuleFor(e => e.ReplyClosingTimeBeforeMeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
 		.RuleFor(e => e.FromUtc, f => f.Date.Between(DateTime.UtcNow.AddDays(3), DateTime.UtcNow.AddMonths(6)).DropMicroSeconds().AsUtc())
@@ -36,7 +36,7 @@ public sealed class EventGenerators : BaseGenerator
 		.RuleFor(er => er.Id, f => EventResponseId.FromGuid(f.Random.Guid()));
 
 	public static readonly Faker<CreateEventRequest> ValidCreateEventRequest = new Faker<CreateEventRequest>()
-		.RuleFor(x => x.Description, f => f.Random.AlphaNumeric(20))
+		.RuleFor(x => x.Description, f => f.Random.Text(1, EventConstants.EVENT_DESCRIPTION_MAX_SIZE))
 		.RuleFor(x => x.MeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
 		.RuleFor(x => x.ReplyClosingTimeBeforeMeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds());
 
@@ -45,16 +45,15 @@ public sealed class EventGenerators : BaseGenerator
 		.RuleFor(r => r.Message, (f, r) => r.ReplyType switch
 		{
 			ReplyType.Yes => string.Empty,
-			ReplyType.Maybe => f.Random.Text(1, 80),
-			ReplyType.Delay => f.Random.Text(0, 80),
-			ReplyType.No or _ => f.Random.Text(1, 80),
+			ReplyType.Delay => f.Random.Text(0, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE),
+			ReplyType.Maybe or ReplyType.No or _ => f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE),
 		});
 
 	public sealed class InvalidCreateEventRequest : TheoryData<InvalidRequest<CreateEventRequest>>
 	{
 		public InvalidCreateEventRequest()
 		{
-			//short description
+			//empty description
 			this.Add(x => x.Description, new CreateEventRequest
 			{
 				EventTypeId = EventTypeId.FromGuid(default),
@@ -158,21 +157,21 @@ public sealed class EventGenerators : BaseGenerator
 			this.Add(x => x.Message, new UpsertEventReplyRequest
 			{
 				ReplyType = ReplyType.Maybe,
-				Message = F.Random.AlphaNumeric(100)
+				Message = F.Random.AlphaNumeric(EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE + 1)
 			});
 
 			//long message
 			this.Add(x => x.Message, new UpsertEventReplyRequest
 			{
 				ReplyType = ReplyType.No,
-				Message = F.Random.AlphaNumeric(100)
+				Message = F.Random.AlphaNumeric(EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE + 1)
 			});
 
 			//long message
 			this.Add(x => x.Message, new UpsertEventReplyRequest
 			{
 				ReplyType = ReplyType.Delay,
-				Message = F.Random.AlphaNumeric(100)
+				Message = F.Random.AlphaNumeric(EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE + 1)
 			});
 		}
 	}
