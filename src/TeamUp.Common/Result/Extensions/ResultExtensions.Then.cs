@@ -56,7 +56,35 @@ public static partial class ResultExtensions
 		return mapper(self.Value.Item1, self.Value.Item2);
 	}
 
+	public static Result<TOut> Then<TFirst, TSecond, TThird, TOut>(this Result<(TFirst, TSecond, TThird)> self, Func<TFirst, TSecond, TThird, TOut> mapper)
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		return mapper(self.Value.Item1, self.Value.Item2, self.Value.Item3);
+	}
+
+	public static Result Then<TFirst, TSecond, TThird>(this Result<(TFirst, TSecond, TThird)> self, Func<TFirst, TSecond, TThird, Result> mapper)
+	{
+		if (self.IsFailure)
+			return self.Error;
+
+		return mapper(self.Value.Item1, self.Value.Item2, self.Value.Item3);
+	}
+
 	public static async Task<Result<TOut>> Then<TFirst, TSecond, TOut>(this Task<Result<(TFirst, TSecond)>> selfTask, Func<TFirst, TSecond, TOut> mapper)
+	{
+		var self = await selfTask;
+		return self.Then(mapper);
+	}
+
+	public static async Task<Result<TOut>> Then<TFirst, TSecond, TThird, TOut>(this Task<Result<(TFirst, TSecond, TThird)>> selfTask, Func<TFirst, TSecond, TThird, TOut> mapper)
+	{
+		var self = await selfTask;
+		return self.Then(mapper);
+	}
+
+	public static async Task<Result> Then<TFirst, TSecond, TThird>(this Task<Result<(TFirst, TSecond, TThird)>> selfTask, Func<TFirst, TSecond, TThird, Result> mapper)
 	{
 		var self = await selfTask;
 		return self.Then(mapper);

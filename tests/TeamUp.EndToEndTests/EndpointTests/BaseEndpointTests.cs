@@ -3,6 +3,7 @@
 using Npgsql;
 
 using TeamUp.Application.Users;
+using TeamUp.Common.Abstractions;
 using TeamUp.EndToEndTests.Mocks;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
@@ -17,6 +18,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 	protected HttpClient Client { get; }
 	internal MailInbox Inbox { get; }
 	internal BackgroundCallback BackgroundCallback { get; }
+	internal SkewDateTimeProvider DateTimeProvider { get; }
 
 	public BaseEndpointTests(TeamApiWebApplicationFactory appFactory)
 	{
@@ -26,6 +28,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 
 		Inbox = appFactory.Services.GetRequiredService<MailInbox>();
 		BackgroundCallback = appFactory.Services.GetRequiredService<OutboxBackgroundCallback>();
+		DateTimeProvider = (SkewDateTimeProvider)appFactory.Services.GetRequiredService<IDateTimeProvider>();
 	}
 
 	public async Task InitializeAsync()
@@ -35,6 +38,8 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		await AppFactory.Respawner.ResetAsync(connection);
 
 		Inbox.Clear();
+		DateTimeProvider.Skew = TimeSpan.Zero;
+		DateTimeProvider.ExactTime = null;
 	}
 
 	public void Authenticate(User user)
