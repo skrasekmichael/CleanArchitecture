@@ -7,4 +7,9 @@ public static class TeamConstants
 
 	public const int NICKNAME_MIN_SIZE = 3;
 	public const int NICKNAME_MAX_SIZE = 30;
+
+	public const int EVENTTYPE_NAME_MIN_SIZE = 3;
+	public const int EVENTTYPE_NAME_MAX_SIZE = 30;
+
+	public const int EVENTTYPE_DESCRIPTION_MAX_SIZE = 30;
 }

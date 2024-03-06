@@ -35,15 +35,15 @@ public sealed class TeamGenerators : BaseGenerator
 	public static readonly Faker<EventType> EventType = new Faker<EventType>(binder: EventTypeBinder)
 		.UsePrivateConstructor()
 		.RuleFor(et => et.Id, f => EventTypeId.FromGuid(f.Random.Guid()))
-		.RuleFor(et => et.Name, f => f.Random.AlphaNumeric(10))
-		.RuleFor(et => et.Description, f => f.Random.AlphaNumeric(30));
+		.RuleFor(et => et.Name, f => f.Random.Text(TeamConstants.EVENTTYPE_NAME_MIN_SIZE, TeamConstants.EVENTTYPE_NAME_MAX_SIZE))
+		.RuleFor(et => et.Description, f => f.Random.Text(0, TeamConstants.EVENTTYPE_DESCRIPTION_MAX_SIZE));
 
 	public static readonly Faker<UpsertEventTypeRequest> ValidUpsertEventTypeRequest = new Faker<UpsertEventTypeRequest>()
-		.RuleFor(r => r.Name, f => f.Random.AlphaNumeric(10))
-		.RuleFor(r => r.Description, f => f.Random.AlphaNumeric(40));
+		.RuleFor(r => r.Name, f => f.Random.Text(TeamConstants.EVENTTYPE_NAME_MIN_SIZE, TeamConstants.EVENTTYPE_NAME_MAX_SIZE))
+		.RuleFor(r => r.Description, f => f.Random.Text(0, TeamConstants.EVENTTYPE_DESCRIPTION_MAX_SIZE));
 
-	public static string GenerateValidTeamName() => F.Random.AlphaNumeric(10);
-	public static string GenerateValidNickname() => F.Random.AlphaNumeric(10);
+	public static string GenerateValidTeamName() => F.Random.Text(TeamConstants.TEAM_NAME_MIN_SIZE, TeamConstants.TEAM_NAME_MAX_SIZE);
+	public static string GenerateValidNickname() => F.Random.Text(TeamConstants.NICKNAME_MIN_SIZE, TeamConstants.NICKNAME_MAX_SIZE);
 
 	public sealed class InvalidUpsertEventTypeRequest : TheoryData<InvalidRequest<UpsertEventTypeRequest>>
 	{

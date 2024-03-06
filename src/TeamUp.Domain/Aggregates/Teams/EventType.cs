@@ -1,4 +1,5 @@
-﻿using TeamUp.Contracts.Teams;
+﻿using TeamUp.Common;
+using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Abstractions;
 
 namespace TeamUp.Domain.Aggregates.Teams;
@@ -20,9 +21,12 @@ public sealed class EventType : Entity<EventTypeId>
 		TeamId = team.Id;
 	}
 
-	public static EventType Create(string name, string description, Team team)
+	public static Result<EventType> Create(string name, string description, Team team)
 	{
-		return new(EventTypeId.New(), name, description, team);
+		return name
+			.Ensure(TeamRules.EventTypeNameMinSize, TeamRules.EventTypeNameMaxSize)
+			.ThenEnsure(_ => description, TeamRules.EventTypeDescriptionMaxSize)
+			.Then(_ => new EventType(EventTypeId.New(), name, description, team));
 	}
 
 	internal void UpdateName(string name)

@@ -1,4 +1,6 @@
-﻿using TeamUp.Common;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using TeamUp.Common;
 
 namespace TeamUp.Api.Extensions;
 
@@ -22,10 +24,11 @@ public static class ResultExtensions
 
 	public static IResult ToResponse(this ErrorBase error)
 	{
-		return TypedResults.Problem(
-			title: error.GetType().Name,
-			detail: error.Message,
-			statusCode: error switch
+		return TypedResults.Problem(new ProblemDetails
+		{
+			Title = error.GetType().Name,
+			Detail = error.Message,
+			Status = error switch
 			{
 				AuthenticationError => StatusCodes.Status401Unauthorized,
 				AuthorizationError => StatusCodes.Status403Forbidden,
@@ -37,6 +40,6 @@ public static class ResultExtensions
 				InternalError => StatusCodes.Status500InternalServerError,
 				_ => StatusCodes.Status500InternalServerError
 			}
-		);
+		});
 	}
 }

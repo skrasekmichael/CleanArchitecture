@@ -10,6 +10,9 @@ public static class TeamRules
 	static readonly Rule<string> TeamNameMaxSizeRule = name => name.Length <= TeamConstants.TEAM_NAME_MAX_SIZE;
 	static readonly Rule<string> NicknameMinSizeRule = nickname => nickname.Length >= TeamConstants.NICKNAME_MIN_SIZE;
 	static readonly Rule<string> NicknameMaxSizeRule = nickname => nickname.Length <= TeamConstants.NICKNAME_MAX_SIZE;
+	static readonly Rule<string> EventTypeNameMinSizeRule = eventTypeName => eventTypeName.Length >= TeamConstants.EVENTTYPE_NAME_MIN_SIZE;
+	static readonly Rule<string> EventTypeNameMaxSizeRule = eventTypeName => eventTypeName.Length <= TeamConstants.EVENTTYPE_NAME_MAX_SIZE;
+	static readonly Rule<string> EventTypeDescriptionMaxRule = eventTypeDescription => eventTypeDescription.Length <= TeamConstants.EVENTTYPE_DESCRIPTION_MAX_SIZE;
 
 	public static readonly Rule<TeamRole> RoleIsNotOwner = role => !role.IsOwner();
 	public static readonly Rule<TeamMember> MemberIsNotTeamOwner = member => !member.Role.IsOwner();
@@ -22,6 +25,11 @@ public static class TeamRules
 
 	public static readonly RuleWithError<string> NicknameMinSize = new(NicknameMinSizeRule, TeamErrors.NicknameMinSize);
 	public static readonly RuleWithError<string> NicknameMaxSize = new(NicknameMaxSizeRule, TeamErrors.NicknameMaxSize);
+
+	public static readonly RuleWithError<string> EventTypeNameMinSize = new(EventTypeNameMinSizeRule, TeamErrors.EventTypeNameMinSize);
+	public static readonly RuleWithError<string> EventTypeNameMaxSize = new(EventTypeNameMaxSizeRule, TeamErrors.EventTypeNameMaxSize);
+
+	public static readonly RuleWithError<string> EventTypeDescriptionMaxSize = new(EventTypeDescriptionMaxRule, TeamErrors.EventTypeDescriptionMaxSize);
 
 	public static readonly RuleWithError<TeamMember> MemberCanUpdateTeamRoles = new(MemberCanUpdateTeamRolesRule, TeamErrors.UnauthorizedToUpdateTeamRoles);
 	public static readonly RuleWithError<TeamMember> MemberCanChangeOwnership = new(MemberIsOwner, TeamErrors.UnauthorizedToChangeTeamOwnership);
