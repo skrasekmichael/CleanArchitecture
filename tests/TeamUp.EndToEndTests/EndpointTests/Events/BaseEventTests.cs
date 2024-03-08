@@ -1,6 +1,4 @@
-﻿using TeamUp.Contracts.Events;
-
-namespace TeamUp.EndToEndTests.EndpointTests.Events;
+﻿namespace TeamUp.EndToEndTests.EndpointTests.Events;
 
 public abstract class BaseEventTests : BaseEndpointTests
 {

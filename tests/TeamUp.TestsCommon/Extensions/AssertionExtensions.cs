@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 
-namespace TeamUp.TestsCommon;
+namespace TeamUp.TestsCommon.Extensions;
 
 public static class AssertionExtensions
 {

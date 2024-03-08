@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace TeamUp.EndToEndTests.DataGenerators;
+namespace TeamUp.TestsCommon.DataGenerators;
 
 public sealed class InvalidRequest<TRequest>
 {

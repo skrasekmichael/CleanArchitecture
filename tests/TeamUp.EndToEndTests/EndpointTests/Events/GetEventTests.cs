@@ -1,7 +1,4 @@
-﻿using TeamUp.Contracts.Events;
-using TeamUp.Contracts.Teams;
-
-using EventResponse = TeamUp.Contracts.Events.EventResponse;
+﻿using EventResponse = TeamUp.Contracts.Events.EventResponse;
 
 namespace TeamUp.EndToEndTests.EndpointTests.Events;
 

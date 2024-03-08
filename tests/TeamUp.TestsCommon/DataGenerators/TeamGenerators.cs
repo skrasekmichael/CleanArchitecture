@@ -1,8 +1,6 @@
 ﻿global using TeamGenerator = Bogus.Faker<TeamUp.Domain.Aggregates.Teams.Team>;
 
-using TeamUp.Contracts.Teams;
-
-namespace TeamUp.EndToEndTests.DataGenerators;
+namespace TeamUp.TestsCommon.DataGenerators;
 
 public sealed class TeamGenerators : BaseGenerator
 {

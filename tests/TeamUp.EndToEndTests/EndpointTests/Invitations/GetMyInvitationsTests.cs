@@ -1,6 +1,4 @@
-﻿using TeamUp.Contracts.Invitations;
-
-namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
+﻿namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
 
 public sealed class GetMyInvitationsTests : BaseInvitationTests
 {
