@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using TeamUp.Contracts.Invitations;
-using TeamUp.Contracts.Teams;
-
 namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
 
 public sealed class AcceptInvitationTests : BaseInvitationTests

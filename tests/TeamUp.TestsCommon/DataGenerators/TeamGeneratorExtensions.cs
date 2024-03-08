@@ -1,6 +1,6 @@
-﻿using TeamUp.Contracts.Teams;
+﻿using TeamUp.Common;
 
-namespace TeamUp.EndToEndTests.DataGenerators;
+namespace TeamUp.TestsCommon.DataGenerators;
 
 public static class TeamGeneratorExtensions
 {
@@ -34,6 +34,24 @@ public static class TeamGeneratorExtensions
 		userMembersWithOwner[0] = (owner, TeamRole.Owner);
 		userMembers.CopyTo(userMembersWithOwner, 1);
 		return teamGenerator.GetTeamGeneratorWithMembers(members, userMembersWithOwner);
+	}
+
+	public static TeamGenerator WithRandomMembers(this TeamGenerator teamGenerator, int count, List<User> pot)
+	{
+		count.Should().BeGreaterThan(0);
+		pot.Should().HaveCountGreaterThanOrEqualTo(1);
+
+		return teamGenerator
+			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => f
+				.Make(count, index => f.PickRandom(pot)
+					.Map(user => TeamGenerators.TeamMember
+						.RuleForBackingField(tm => tm.TeamId, t.Id)
+						.RuleForBackingField(tm => tm.UserId, user.Id)
+						.RuleFor(tm => tm.Nickname, user.Name)
+						.RuleFor(tm => tm.Role, index == 0 ? TeamRole.Owner : TeamRole.Member)
+						.Generate()))
+				.ToHashSet()
+				.ToList());
 	}
 
 	public static TeamGenerator WithMembers(this TeamGenerator teamGenerator, List<User> members, params (User User, TeamRole Role)[] userMembers)

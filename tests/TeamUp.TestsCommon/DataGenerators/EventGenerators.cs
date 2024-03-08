@@ -3,10 +3,7 @@ global using EventResponseGenerator = Bogus.Faker<TeamUp.Domain.Aggregates.Event
 
 using FluentAssertions.Extensions;
 
-using TeamUp.Contracts.Events;
-using TeamUp.Contracts.Teams;
-
-namespace TeamUp.EndToEndTests.DataGenerators;
+namespace TeamUp.TestsCommon.DataGenerators;
 
 public sealed class EventGenerators : BaseGenerator
 {

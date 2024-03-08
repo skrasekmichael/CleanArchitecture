@@ -11,8 +11,6 @@ namespace TeamUp.EndToEndTests.EndpointTests;
 [Collection(nameof(AppCollectionFixture))]
 public sealed class HttpsRedirectionTests : IAsyncLifetime
 {
-	private static Faker F => FExt.F;
-
 	private readonly TeamApiWebApplicationFactory _appFactory;
 	private readonly HttpClient _client;
 
@@ -44,7 +42,7 @@ public sealed class HttpsRedirectionTests : IAsyncLifetime
 	public async Task HttpRequest_ToHealthCheckEndpoint_Should_RedirectToHttps()
 	{
 		//arrange
-		var expectedLocation = $"https://{_client.BaseAddress?.Host}:8080/_health";
+		var expectedLocation = $"https://{_client.BaseAddress?.Host}:{TeamApiWebApplicationFactory.HTTPS_PORT}/_health";
 
 		//act
 		var response = await _client.GetAsync("/_health");

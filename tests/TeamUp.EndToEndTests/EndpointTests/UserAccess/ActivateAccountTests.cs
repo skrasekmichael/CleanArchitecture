@@ -1,6 +1,4 @@
-﻿using TeamUp.Contracts.Users;
-
-namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
+﻿namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
 
 public sealed class ActivateAccountTests : BaseUserAccessTests
 {
@@ -22,7 +20,7 @@ public sealed class ActivateAccountTests : BaseUserAccessTests
 		});
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(user.Id), EmptyObject);
+		var response = await Client.PostAsync(GetUrl(user.Id), null);
 
 		//assert
 		response.Should().Be200Ok();

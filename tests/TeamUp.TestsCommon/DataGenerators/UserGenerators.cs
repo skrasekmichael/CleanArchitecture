@@ -1,7 +1,4 @@
-﻿using TeamUp.Contracts.Teams;
-using TeamUp.Contracts.Users;
-
-namespace TeamUp.EndToEndTests.DataGenerators;
+﻿namespace TeamUp.TestsCommon.DataGenerators;
 
 public sealed class UserGenerators : BaseGenerator
 {

@@ -1,8 +1,4 @@
-﻿using TeamUp.Contracts.Invitations;
-using TeamUp.Contracts.Teams;
-using TeamUp.Contracts.Users;
-
-namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
+﻿namespace TeamUp.EndToEndTests.EndpointTests.Invitations;
 
 public sealed class InviteUserTests : BaseInvitationTests
 {
