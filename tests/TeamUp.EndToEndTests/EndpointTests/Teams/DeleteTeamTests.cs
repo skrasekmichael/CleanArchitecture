@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using TeamUp.Contracts.Teams;
+using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
 
 namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 

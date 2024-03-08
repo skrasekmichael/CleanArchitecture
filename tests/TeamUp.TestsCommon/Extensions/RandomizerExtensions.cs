@@ -1,6 +1,4 @@
-﻿using Bogus;
-
-namespace TeamUp.TestsCommon;
+﻿namespace TeamUp.TestsCommon.Extensions;
 
 public static class RandomizerExtensions
 {

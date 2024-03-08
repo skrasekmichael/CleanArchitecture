@@ -1,9 +1,6 @@
 ﻿using FluentAssertions.Extensions;
 
-using TeamUp.Contracts.Events;
-using TeamUp.Contracts.Teams;
-
-namespace TeamUp.EndToEndTests.DataGenerators;
+namespace TeamUp.TestsCommon.DataGenerators;
 
 public static class EventGeneratorExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace TeamUp.EndToEndTests.Extensions;
+﻿namespace TeamUp.TestsCommon.Extensions;
 
 public static class TimeExtensions
 {

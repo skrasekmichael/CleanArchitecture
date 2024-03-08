@@ -1,5 +1,4 @@
-﻿
-namespace TeamUp.EndToEndTests.Mocks;
+﻿namespace TeamUp.EndToEndTests.Mocks;
 
 internal abstract class BackgroundCallback
 {

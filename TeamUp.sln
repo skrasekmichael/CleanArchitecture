@@ -30,6 +30,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.ArchitectureTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.EndToEndTests", "tests\TeamUp.EndToEndTests\TeamUp.EndToEndTests.csproj", "{63C1F34E-C706-43AC-A98B-E9530F875FFA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.PerformanceTests", "tests\TeamUp.PerformanceTests\TeamUp.PerformanceTests.csproj", "{B80B3E02-0B98-4ABA-92A9-74AEEEF76423}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamUp.TestsCommon", "tests\TeamUp.TestsCommon\TeamUp.TestsCommon.csproj", "{A3D136DD-571F-4B1C-83E2-9B538F85C575}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{F77B386C-FDBC-4BB4-AF07-0CF054DBDB7E}"
@@ -79,6 +81,10 @@ Global
 		{A3D136DD-571F-4B1C-83E2-9B538F85C575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3D136DD-571F-4B1C-83E2-9B538F85C575}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3D136DD-571F-4B1C-83E2-9B538F85C575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B80B3E02-0B98-4ABA-92A9-74AEEEF76423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B80B3E02-0B98-4ABA-92A9-74AEEEF76423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B80B3E02-0B98-4ABA-92A9-74AEEEF76423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B80B3E02-0B98-4ABA-92A9-74AEEEF76423}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{BFC0159D-37D8-494F-90A6-DA3EA05CFDEF} = {B78B958B-7250-4FEC-96F4-4FE0DE49D916}
 		{63C1F34E-C706-43AC-A98B-E9530F875FFA} = {B78B958B-7250-4FEC-96F4-4FE0DE49D916}
 		{A3D136DD-571F-4B1C-83E2-9B538F85C575} = {B78B958B-7250-4FEC-96F4-4FE0DE49D916}
+		{B80B3E02-0B98-4ABA-92A9-74AEEEF76423} = {B78B958B-7250-4FEC-96F4-4FE0DE49D916}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E9D991D-377D-45D8-9599-801391683CEA}

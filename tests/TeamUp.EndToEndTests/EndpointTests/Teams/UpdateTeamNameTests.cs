@@ -1,6 +1,4 @@
-﻿using TeamUp.Contracts.Teams;
-
-namespace TeamUp.EndToEndTests.EndpointTests.Teams;
+﻿namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 
 public sealed class UpdateTeamNameTests : BaseTeamTests
 {

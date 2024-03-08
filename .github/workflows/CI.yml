@@ -30,7 +30,7 @@ jobs:
         run: dotnet restore ${{ env.SOLUTION }}
 
       - name: Build
-        run: dotnet build ${{ env.SOLUTION }} --no-restore
+        run: dotnet build ${{ env.SOLUTION }} -c Release --no-restore
 
       - name: Test
-        run: dotnet test ${{env.SOLUTION }} --no-build --verbosity normal
+        run: dotnet test ${{env.SOLUTION }} -c Release --no-build --verbosity normal

@@ -1,13 +1,17 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-using Bogus;
-
-namespace TeamUp.TestsCommon;
+namespace TeamUp.TestsCommon.Extensions;
 
 public static class FakerExtensions
 {
 	public static readonly Faker F = new();
+
+	public static T PickRandomFromReadOnlyList<T>(this Faker faker, IReadOnlyList<T> list) where T : class
+	{
+		var index = faker.Random.Int(0, list.Count - 1);
+		return list[index];
+	}
 
 	public static Faker<T> UsePrivateConstructor<T>(this Faker<T> faker) where T : class
 		=> faker.CustomInstantiator(f => (Activator.CreateInstance(typeof(T), nonPublic: true) as T)!);

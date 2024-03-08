@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace TeamUp.EndToEndTests.Extensions;
+namespace TeamUp.TestsCommon.Extensions;
 
 public static class TheoryDataExtensions
 {

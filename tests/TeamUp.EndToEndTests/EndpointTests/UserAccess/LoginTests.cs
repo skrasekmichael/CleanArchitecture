@@ -2,7 +2,6 @@
 using System.Security.Claims;
 
 using TeamUp.Application.Users;
-using TeamUp.Contracts.Users;
 
 namespace TeamUp.EndToEndTests.EndpointTests.UserAccess;
 

@@ -16,8 +16,6 @@ global using TeamUp.Domain.Aggregates.Events;
 global using TeamUp.Domain.Aggregates.Invitations;
 global using TeamUp.Domain.Aggregates.Teams;
 global using TeamUp.Domain.Aggregates.Users;
-global using TeamUp.EndToEndTests.Extensions;
-global using TeamUp.Infrastructure.Persistence;
 global using TeamUp.TestsCommon.DataGenerators;
 global using TeamUp.TestsCommon.Extensions;
 

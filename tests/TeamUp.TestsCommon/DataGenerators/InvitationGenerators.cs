@@ -1,10 +1,6 @@
 ﻿global using InvitationGenerator = Bogus.Faker<TeamUp.Domain.Aggregates.Invitations.Invitation>;
 
-using TeamUp.Contracts.Invitations;
-using TeamUp.Contracts.Teams;
-using TeamUp.Contracts.Users;
-
-namespace TeamUp.EndToEndTests.DataGenerators;
+namespace TeamUp.TestsCommon.DataGenerators;
 
 public sealed class InvitationGenerators : BaseGenerator
 {

@@ -1,33 +1,31 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 
 using Npgsql;
 
 using TeamUp.Application.Users;
-using TeamUp.Common.Abstractions;
-using TeamUp.EndToEndTests.Mocks;
+using TeamUp.Infrastructure.Persistence;
+
+using Xunit.Abstractions;
 
 namespace TeamUp.EndToEndTests.EndpointTests;
 
 [Collection(nameof(AppCollectionFixture))]
-public abstract class BaseEndpointTests : IAsyncLifetime
+public abstract class BasePerformanceTests : IAsyncLifetime
 {
 	protected static Faker F => FakerExtensions.F;
 
 	protected TeamApiWebApplicationFactory AppFactory { get; }
+	protected ITestOutputHelper Output { get; }
 	protected HttpClient Client { get; }
-	internal MailInbox Inbox { get; }
-	internal BackgroundCallback BackgroundCallback { get; }
-	internal SkewDateTimeProvider DateTimeProvider { get; }
 
-	public BaseEndpointTests(TeamApiWebApplicationFactory appFactory)
+	public BasePerformanceTests(TeamApiWebApplicationFactory appFactory, ITestOutputHelper output)
 	{
 		AppFactory = appFactory;
+		Output = output;
+
 		Client = appFactory.CreateClient();
 		Client.BaseAddress = new Uri($"https://{Client.BaseAddress?.Host}:{TeamApiWebApplicationFactory.HTTPS_PORT}");
-
-		Inbox = appFactory.Services.GetRequiredService<MailInbox>();
-		BackgroundCallback = appFactory.Services.GetRequiredService<OutboxBackgroundCallback>();
-		DateTimeProvider = (SkewDateTimeProvider)appFactory.Services.GetRequiredService<IDateTimeProvider>();
 	}
 
 	public async Task InitializeAsync()
@@ -35,10 +33,6 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		await using var connection = new NpgsqlConnection(AppFactory.ConnectionString);
 		await connection.OpenAsync();
 		await AppFactory.Respawner.ResetAsync(connection);
-
-		Inbox.Clear();
-		DateTimeProvider.Skew = TimeSpan.Zero;
-		DateTimeProvider.ExactTime = null;
 	}
 
 	public void Authenticate(User user)
@@ -81,11 +75,14 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		return result;
 	}
 
-	protected async Task WaitForIntegrationEventsAsync(int millisecondsTimeout = 10_000)
+	public async Task<TimeSpan> RunTestAsync(HttpRequestMessage message)
 	{
-		var waitTask = BackgroundCallback.WaitForCallbackAsync();
-		var completedTask = await Task.WhenAny(waitTask, Task.Delay(millisecondsTimeout));
-		completedTask.Should().Be(waitTask, "Background callback has to be called");
+		var timestamp = Stopwatch.GetTimestamp();
+		var response = await Client.SendAsync(message);
+		var elapsed = Stopwatch.GetElapsedTime(timestamp);
+
+		response.Should().Be200Ok();
+		return elapsed;
 	}
 
 	public Task DisposeAsync() => Task.CompletedTask;

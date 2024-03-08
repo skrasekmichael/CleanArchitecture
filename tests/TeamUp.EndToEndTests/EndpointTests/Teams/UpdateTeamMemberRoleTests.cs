@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using TeamUp.Contracts.Teams;
-
 namespace TeamUp.EndToEndTests.EndpointTests.Teams;
 
 public sealed class UpdateTeamMemberRoleTests : BaseTeamTests

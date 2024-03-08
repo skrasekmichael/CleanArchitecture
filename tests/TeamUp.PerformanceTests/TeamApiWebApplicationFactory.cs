@@ -8,9 +8,7 @@ using Npgsql;
 
 using Respawn;
 
-using TeamUp.Common.Abstractions;
-using TeamUp.EndToEndTests.Mocks;
-using TeamUp.Infrastructure.Processing.Outbox;
+using TeamUp.Infrastructure.Persistence;
 
 using Testcontainers.PostgreSql;
 
@@ -64,17 +62,6 @@ public sealed class TeamApiWebApplicationFactory : WebApplicationFactory<Program
 			{
 				options.UseNpgsql(ConnectionString);
 			});
-
-			//email
-			services.Replace<IEmailSender, EmailSenderMock>();
-			services.AddSingleton<MailInbox>();
-
-			//date time provider
-			services.Replace<IDateTimeProvider, SkewDateTimeProvider>();
-
-			//background services
-			services.AddSingleton<OutboxBackgroundCallback>();
-			services.Replace<IProcessOutboxMessagesJob, ProcessOutboxMessagesWithCallbackJob>();
 		});
 
 		builder.UseEnvironment(Environments.Production);
