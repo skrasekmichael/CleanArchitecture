@@ -4,10 +4,8 @@ using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
-public sealed class DeleteTeamTests : TeamTests
+public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 {
-	public DeleteTeamTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
 	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}";
 

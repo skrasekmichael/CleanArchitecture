@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.Events;
 
-public abstract class EventTests : BaseEndpointTests
+public abstract class EventTests(AppFixture app) : BaseEndpointTests(app)
 {
-	protected EventTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	protected static bool ResponseHasCorrectReply(EventResponseResponse err, Event @event)
 	{
 		var response = @event.EventResponses.Single(er => er.TeamMemberId == err.TeamMemberId);

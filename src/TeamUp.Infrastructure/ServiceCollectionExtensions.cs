@@ -78,7 +78,12 @@ public static class ServiceCollectionExtensions
 
 		//background jobs
 		services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
-		services.AddQuartzHostedService();
+		services.AddQuartzHostedService(options =>
+		{
+			options.WaitForJobsToComplete = true;
+			options.AwaitApplicationStarted = true;
+			options.StartDelay = TimeSpan.FromSeconds(2);
+		});
 		services.AddQuartz(configurator =>
 		{
 			var processOutboxJobKey = new JobKey(nameof(IProcessOutboxMessagesJob));
@@ -88,10 +93,7 @@ public static class ServiceCollectionExtensions
 					.ForJob(processOutboxJobKey)
 					.WithSimpleSchedule(schedule => schedule
 						.WithIntervalInSeconds(5)
-						.RepeatForever()
-					)
-				);
-
+						.RepeatForever()));
 		});
 
 		return services;

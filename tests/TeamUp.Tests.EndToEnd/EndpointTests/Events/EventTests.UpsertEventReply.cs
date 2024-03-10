@@ -4,10 +4,8 @@ using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Events;
 
-public sealed class UpsertEventReplyTests : EventTests
+public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 {
-	public UpsertEventReplyTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId, EventId eventId) => GetUrl(teamId.Value, eventId.Value);
 	public static string GetUrl(Guid teamId, Guid eventId) => $"/api/v1/teams/{teamId}/events/{eventId}";
 

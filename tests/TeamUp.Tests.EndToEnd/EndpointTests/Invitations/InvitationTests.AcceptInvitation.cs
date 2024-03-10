@@ -2,10 +2,8 @@
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
 
-public sealed class AcceptInvitationTests : InvitationTests
+public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 {
-	public AcceptInvitationTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(InvitationId invitationId) => GetUrl(invitationId.Value);
 	public static string GetUrl(Guid invitationId) => $"/api/v1/invitations/{invitationId}/accept";
 

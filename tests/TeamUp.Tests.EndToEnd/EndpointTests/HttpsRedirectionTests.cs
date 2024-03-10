@@ -2,50 +2,42 @@
 
 using Microsoft.AspNetCore.Mvc.Testing;
 
-using Npgsql;
-
 using TeamUp.Application.Users;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests;
 
 [Collection(nameof(AppCollectionFixture))]
-public sealed class HttpsRedirectionTests : IAsyncLifetime
+public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 {
-	private readonly TeamApiWebApplicationFactory _appFactory;
-	private readonly HttpClient _client;
+	private AppFixture App { get; } = app;
+	private HttpClient Client { get; set; } = null!;
 
-	public HttpsRedirectionTests(TeamApiWebApplicationFactory appFactory)
+	public Task InitializeAsync()
 	{
-		_appFactory = appFactory;
-		_client = appFactory.CreateClient(new WebApplicationFactoryClientOptions
+		Client = App.CreateClient(new WebApplicationFactoryClientOptions
 		{
 			AllowAutoRedirect = false
 		});
-	}
 
-	public async Task InitializeAsync()
-	{
-		await using var connection = new NpgsqlConnection(_appFactory.ConnectionString);
-		await connection.OpenAsync();
-		await _appFactory.Respawner.ResetAsync(connection);
+		return Task.CompletedTask;
 	}
 
 	private void Authenticate(User user)
 	{
-		var tokenService = _appFactory.Services.GetRequiredService<ITokenService>();
+		var tokenService = App.Services.GetRequiredService<ITokenService>();
 		var jwt = tokenService.GenerateToken(user);
 
-		_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
 	}
 
 	[Fact]
 	public async Task HttpRequest_ToHealthCheckEndpoint_Should_RedirectToHttps()
 	{
 		//arrange
-		var expectedLocation = $"https://{_client.BaseAddress?.Host}:{TeamApiWebApplicationFactory.HTTPS_PORT}/_health";
+		var expectedLocation = $"https://{Client.BaseAddress!.Host}:{App.HttpsPort}/_health";
 
 		//act
-		var response = await _client.GetAsync("/_health");
+		var response = await Client.GetAsync("/_health");
 
 		//assert
 		response.Should().Be307TemporaryRedirect();

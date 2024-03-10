@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
 
-public sealed partial class RegisterUserTests : UserAccessTests
+public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 {
-	public RegisterUserTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public const string URL = "/api/v1/users/register";
 
 	[Fact]

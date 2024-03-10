@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
 
-public sealed class InviteUserTests : InvitationTests
+public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 {
-	public InviteUserTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public const string URL = "/api/v1/invitations";
 
 	[Theory]

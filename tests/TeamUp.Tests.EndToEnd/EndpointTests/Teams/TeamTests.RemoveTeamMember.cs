@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
-public sealed class RemoveTeamMemberTests : TeamTests
+public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 {
-	public RemoveTeamMemberTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId, TeamMemberId memberId) => GetUrl(teamId.Value, memberId.Value);
 	public static string GetUrl(Guid teamId, Guid memberId) => $"/api/v1/teams/{teamId}/members/{memberId}";
 

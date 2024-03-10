@@ -27,6 +27,7 @@ internal sealed class GetEventsQueryHandlers : IQueryHandler<GetEventsQuery, Res
 			{
 				team.Id,
 				Events = _appQueryContext.Events
+					.AsSplitQuery()
 					.Where(e => e.TeamId == team.Id && e.ToUtc > from)
 					.Include(e => e.EventResponses)
 					.Select(e => new EventSlimResponse

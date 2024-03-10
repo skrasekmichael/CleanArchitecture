@@ -17,8 +17,10 @@ global using TeamUp.Domain.Aggregates.Invitations;
 global using TeamUp.Domain.Aggregates.Teams;
 global using TeamUp.Domain.Aggregates.Users;
 global using TeamUp.Infrastructure.Persistence;
-global using TeamUp.Tests.EndToEnd.Extensions;
 global using TeamUp.Tests.Common.DataGenerators;
 global using TeamUp.Tests.Common.Extensions;
+global using TeamUp.Tests.EndToEnd.Extensions;
 
 global using Xunit;
+
+global using AppFixture = TeamUp.Tests.Common.Fixtures.AppFixture<TeamUp.Tests.EndToEnd.AppFactory>;

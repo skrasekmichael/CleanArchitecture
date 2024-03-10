@@ -59,6 +59,8 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 
 	public async Task DispatchIntegrationEventsAsync(CancellationToken ct = default)
 	{
+		_logger.LogInformation("Retrieving outbox messages.");
+
 		//get unpublished integration events
 		var messages = await _dbContext
 			.Set<OutboxMessage>()
@@ -66,6 +68,8 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 			.OrderBy(msg => msg.CreatedUtc)
 			.Take(20)
 			.ToListAsync(ct);
+
+		_logger.LogInformation("Publishing outbox messages.");
 
 		//publish integration events
 		var tasks = messages.Select(msg => DispatchEventAsync(msg, ct));

@@ -2,10 +2,8 @@
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
-public sealed class ChangeNicknameTests : TeamTests
+public sealed class ChangeNicknameTests(AppFixture app) : TeamTests(app)
 {
-	public ChangeNicknameTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
 	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}/nickname";
 

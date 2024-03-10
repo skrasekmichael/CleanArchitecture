@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 
-using Npgsql;
-
 using TeamUp.Application.Users;
 using TeamUp.Infrastructure.Persistence;
 
@@ -15,29 +13,27 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 {
 	protected static Faker F => FakerExtensions.F;
 
-	protected TeamApiWebApplicationFactory AppFactory { get; }
+	protected AppFixture App { get; }
 	protected ITestOutputHelper Output { get; }
-	protected HttpClient Client { get; }
+	protected HttpClient Client { get; private set; } = null!;
 
-	public BasePerformanceTests(TeamApiWebApplicationFactory appFactory, ITestOutputHelper output)
+	public BasePerformanceTests(AppFixture app, ITestOutputHelper output)
 	{
-		AppFactory = appFactory;
+		App = app;
 		Output = output;
-
-		Client = appFactory.CreateClient();
-		Client.BaseAddress = new Uri($"https://{Client.BaseAddress?.Host}:{TeamApiWebApplicationFactory.HTTPS_PORT}");
 	}
 
 	public async Task InitializeAsync()
 	{
-		await using var connection = new NpgsqlConnection(AppFactory.ConnectionString);
-		await connection.OpenAsync();
-		await AppFactory.Respawner.ResetAsync(connection);
+		await App.ResetDatabaseAsync();
+
+		Client = App.CreateClient();
+		Client.BaseAddress = new Uri($"https://{Client.BaseAddress!.Host}:{App.HttpsPort}");
 	}
 
 	public void Authenticate(User user)
 	{
-		var tokenService = AppFactory.Services.GetRequiredService<ITokenService>();
+		var tokenService = App.Services.GetRequiredService<ITokenService>();
 		var jwt = tokenService.GenerateToken(user);
 
 		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
@@ -45,7 +41,7 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 
 	protected async Task UseDbContextAsync(Func<ApplicationDbContext, Task> apply)
 	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
+		await using var scope = App.Services.CreateAsyncScope();
 
 		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		await apply(dbContext);
@@ -55,7 +51,7 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 
 	protected async ValueTask<T> UseDbContextAsync<T>(Func<ApplicationDbContext, ValueTask<T>> apply)
 	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
+		await using var scope = App.Services.CreateAsyncScope();
 
 		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		var result = await apply(dbContext);
@@ -66,7 +62,7 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 
 	protected async Task<T> UseDbContextAsync<T>(Func<ApplicationDbContext, Task<T>> apply)
 	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
+		await using var scope = App.Services.CreateAsyncScope();
 
 		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		var result = await apply(dbContext);
@@ -85,5 +81,9 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 		return elapsed;
 	}
 
-	public Task DisposeAsync() => Task.CompletedTask;
+	public Task DisposeAsync()
+	{
+		Client.Dispose();
+		return Task.CompletedTask;
+	}
 }

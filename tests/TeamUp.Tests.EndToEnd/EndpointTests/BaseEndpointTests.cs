@@ -1,7 +1,5 @@
 ﻿using System.Net.Http.Headers;
 
-using Npgsql;
-
 using TeamUp.Application.Users;
 using TeamUp.Common.Abstractions;
 using TeamUp.Tests.EndToEnd.Mocks;
@@ -9,32 +7,27 @@ using TeamUp.Tests.EndToEnd.Mocks;
 namespace TeamUp.Tests.EndToEnd.EndpointTests;
 
 [Collection(nameof(AppCollectionFixture))]
-public abstract class BaseEndpointTests : IAsyncLifetime
+public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 {
 	protected static Faker F => FakerExtensions.F;
 
-	protected TeamApiWebApplicationFactory AppFactory { get; }
-	protected HttpClient Client { get; }
-	internal MailInbox Inbox { get; }
-	internal BackgroundCallback BackgroundCallback { get; }
-	internal SkewDateTimeProvider DateTimeProvider { get; }
+	protected AppFixture App { get; } = app;
+	protected HttpClient Client { get; private set; } = null!;
+	internal MailInbox Inbox { get; private set; } = null!;
+	internal BackgroundCallback BackgroundCallback { get; private set; } = null!;
+	internal SkewDateTimeProvider DateTimeProvider { get; private set; } = null!;
 
-	public BaseEndpointTests(TeamApiWebApplicationFactory appFactory)
-	{
-		AppFactory = appFactory;
-		Client = appFactory.CreateClient();
-		Client.BaseAddress = new Uri($"https://{Client.BaseAddress?.Host}:{TeamApiWebApplicationFactory.HTTPS_PORT}");
-
-		Inbox = appFactory.Services.GetRequiredService<MailInbox>();
-		BackgroundCallback = appFactory.Services.GetRequiredService<OutboxBackgroundCallback>();
-		DateTimeProvider = (SkewDateTimeProvider)appFactory.Services.GetRequiredService<IDateTimeProvider>();
-	}
 
 	public async Task InitializeAsync()
 	{
-		await using var connection = new NpgsqlConnection(AppFactory.ConnectionString);
-		await connection.OpenAsync();
-		await AppFactory.Respawner.ResetAsync(connection);
+		await App.ResetDatabaseAsync();
+
+		Client = App.CreateClient();
+		Client.BaseAddress = new Uri($"https://{Client.BaseAddress!.Host}:{App.HttpsPort}");
+
+		Inbox = App.Services.GetRequiredService<MailInbox>();
+		BackgroundCallback = App.Services.GetRequiredService<OutboxBackgroundCallback>();
+		DateTimeProvider = (SkewDateTimeProvider)App.Services.GetRequiredService<IDateTimeProvider>();
 
 		Inbox.Clear();
 		DateTimeProvider.Skew = TimeSpan.Zero;
@@ -43,7 +36,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 
 	public void Authenticate(User user)
 	{
-		var tokenService = AppFactory.Services.GetRequiredService<ITokenService>();
+		var tokenService = App.Services.GetRequiredService<ITokenService>();
 		var jwt = tokenService.GenerateToken(user);
 
 		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
@@ -51,7 +44,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 
 	protected async Task UseDbContextAsync(Func<ApplicationDbContext, Task> apply)
 	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
+		await using var scope = App.Services.CreateAsyncScope();
 
 		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		await apply(dbContext);
@@ -61,7 +54,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 
 	protected async ValueTask<T> UseDbContextAsync<T>(Func<ApplicationDbContext, ValueTask<T>> apply)
 	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
+		await using var scope = App.Services.CreateAsyncScope();
 
 		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		var result = await apply(dbContext);
@@ -72,7 +65,7 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 
 	protected async Task<T> UseDbContextAsync<T>(Func<ApplicationDbContext, Task<T>> apply)
 	{
-		await using var scope = AppFactory.Services.CreateAsyncScope();
+		await using var scope = App.Services.CreateAsyncScope();
 
 		await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		var result = await apply(dbContext);
@@ -88,5 +81,9 @@ public abstract class BaseEndpointTests : IAsyncLifetime
 		completedTask.Should().Be(waitTask, "Background callback has to be called");
 	}
 
-	public Task DisposeAsync() => Task.CompletedTask;
+	public Task DisposeAsync()
+	{
+		Client.Dispose();
+		return Task.CompletedTask;
+	}
 }
