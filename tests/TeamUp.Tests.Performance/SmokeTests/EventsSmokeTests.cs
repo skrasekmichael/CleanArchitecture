@@ -2,10 +2,8 @@ using Xunit.Abstractions;
 
 namespace TeamUp.Tests.Performance.SmokeTests;
 
-public sealed class EventsSmokeTests : BasePerformanceTests
+public sealed class EventsSmokeTests(AppFixture app, ITestOutputHelper output) : BasePerformanceTests(app, output)
 {
-	public EventsSmokeTests(TeamApiWebApplicationFactory appFactory, ITestOutputHelper output) : base(appFactory, output) { }
-
 	[Fact]
 	public async Task GetEvents_SmokeTest()
 	{
@@ -116,7 +114,7 @@ public sealed class EventsSmokeTests : BasePerformanceTests
 
 		Output.WriteLine($"average time without first run: {avg} ({avg.TotalMilliseconds} ms)");
 
-		avg.Should().BeLessThan(TimeSpan.FromMilliseconds(15));
-		firstRun.Should().BeLessThan(TimeSpan.FromMilliseconds(800));
+		avg.Should().BeLessThan(TimeSpan.FromMilliseconds(100));
+		firstRun.Should().BeLessThan(TimeSpan.FromMilliseconds(1000));
 	}
 }

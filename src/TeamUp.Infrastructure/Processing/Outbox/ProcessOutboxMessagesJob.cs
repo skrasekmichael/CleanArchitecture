@@ -6,6 +6,7 @@ namespace TeamUp.Infrastructure.Processing.Outbox;
 
 public interface IProcessOutboxMessagesJob : IJob;
 
+[DisallowConcurrentExecution]
 internal sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
 {
 	private readonly ApplicationDbContext _dbContext;

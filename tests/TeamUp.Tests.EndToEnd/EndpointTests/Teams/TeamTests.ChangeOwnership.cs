@@ -2,10 +2,8 @@
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
-public sealed class ChangeOwnershipTests : TeamTests
+public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 {
-	public ChangeOwnershipTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId) => GetUrl(teamId.Value);
 	public static string GetUrl(Guid teamId) => $"/api/v1/teams/{teamId}/owner";
 

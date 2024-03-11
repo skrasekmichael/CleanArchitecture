@@ -2,10 +2,8 @@
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
-public sealed class UpdateTeamMemberRoleTests : TeamTests
+public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 {
-	public UpdateTeamMemberRoleTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId, TeamMemberId memberId) => GetUrl(teamId.Value, memberId.Value);
 	public static string GetUrl(Guid teamId, Guid memberId) => $"/api/v1/teams/{teamId}/members/{memberId}/role";
 

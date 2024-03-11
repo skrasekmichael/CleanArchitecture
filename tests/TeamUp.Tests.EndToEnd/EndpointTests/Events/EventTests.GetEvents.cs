@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.Events;
 
-public sealed class GetEventsTests : EventTests
+public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 {
-	public GetEventsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(TeamId teamId, DateTime? from) => GetUrl(teamId.Value, from);
 	public static string GetUrl(Guid teamId, DateTime? from) => from switch
 	{

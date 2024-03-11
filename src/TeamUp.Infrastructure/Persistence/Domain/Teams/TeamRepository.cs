@@ -21,6 +21,7 @@ internal sealed class TeamRepository : ITeamRepository
 	public async Task<Team?> GetTeamByIdAsync(TeamId teamId, CancellationToken ct = default)
 	{
 		return await _context.Teams
+			.AsSplitQuery()
 			.Include(team => team.Members)
 			.Include(team => team.EventTypes)
 			.FirstOrDefaultAsync(team => team.Id == teamId, ct);

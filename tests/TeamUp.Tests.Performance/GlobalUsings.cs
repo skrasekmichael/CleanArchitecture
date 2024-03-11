@@ -17,3 +17,5 @@ global using TeamUp.Tests.Common.DataGenerators;
 global using TeamUp.Tests.Common.Extensions;
 
 global using Xunit;
+
+global using AppFixture = TeamUp.Tests.Common.Fixtures.AppFixture<TeamUp.Tests.Performance.AppFactory>;

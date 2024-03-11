@@ -3,12 +3,18 @@
   <ItemGroup>
     <PackageReference Include="Bogus" />
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Respawn" />
+    <PackageReference Include="Testcontainers" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="xunit.extensibility.core" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\TeamUp.Api\TeamUp.Api.csproj" />
     <ProjectReference Include="..\..\src\TeamUp.Contracts\TeamUp.Contracts.csproj" />
     <ProjectReference Include="..\..\src\TeamUp.Domain\TeamUp.Domain.csproj" />
+    <ProjectReference Include="..\..\src\TeamUp.Infrastructure\TeamUp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

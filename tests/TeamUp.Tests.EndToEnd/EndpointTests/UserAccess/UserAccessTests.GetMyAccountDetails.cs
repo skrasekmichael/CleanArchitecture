@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
 
-public sealed class GetMyAccountDetailsTests : UserAccessTests
+public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(app)
 {
-	public GetMyAccountDetailsTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public const string URL = "/api/v1/users";
 
 	[Fact]

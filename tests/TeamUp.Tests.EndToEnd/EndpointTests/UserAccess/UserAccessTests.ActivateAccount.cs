@@ -1,9 +1,7 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
 
-public sealed class ActivateAccountTests : UserAccessTests
+public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 {
-	public ActivateAccountTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public static string GetUrl(UserId userId) => GetUrl(userId.Value);
 	public static string GetUrl(Guid userId) => $"/api/v1/users/{userId}/activate";
 

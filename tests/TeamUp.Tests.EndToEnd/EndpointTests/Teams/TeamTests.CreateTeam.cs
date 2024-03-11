@@ -2,10 +2,8 @@
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
-public sealed class CreateTeamTests : TeamTests
+public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 {
-	public CreateTeamTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-
 	public const string URL = "/api/v1/teams";
 
 	[Fact]
@@ -38,6 +36,7 @@ public sealed class CreateTeamTests : TeamTests
 		var team = await UseDbContextAsync(dbContext =>
 		{
 			return dbContext.Teams
+				.AsSplitQuery()
 				.Include(team => team.Members)
 				.Include(team => team.EventTypes)
 				.FirstOrDefaultAsync(team => team.Id == teamId);

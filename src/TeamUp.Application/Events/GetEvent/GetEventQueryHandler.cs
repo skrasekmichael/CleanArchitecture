@@ -22,11 +22,13 @@ internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, Result
 	public async Task<Result<EventResponse>> Handle(GetEventQuery query, CancellationToken ct)
 	{
 		var team = await _appQueryContext.Teams
+			.AsSplitQuery()
 			.Include(team => team.Members)
 			.Select(team => new
 			{
 				team.Id,
 				Event = _appQueryContext.Events
+					.AsSplitQuery()
 					.Where(e => e.Id == query.EventId && e.TeamId == team.Id)
 					.Select(e => new EventResponse
 					{

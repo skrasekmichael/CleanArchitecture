@@ -1,6 +1,3 @@
 ﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
 
-public abstract class InvitationTests : BaseEndpointTests
-{
-	public InvitationTests(TeamApiWebApplicationFactory appFactory) : base(appFactory) { }
-}
+public abstract class InvitationTests(AppFixture app) : BaseEndpointTests(app);
