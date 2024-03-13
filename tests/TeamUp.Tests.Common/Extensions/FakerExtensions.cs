@@ -13,6 +13,13 @@ public static class FakerExtensions
 		return list[index];
 	}
 
+	public static T PopRandom<T>(this Faker faker, List<T> list) where T : class
+	{
+		var elem = faker.PickRandom(list);
+		list.Remove(elem);
+		return elem;
+	}
+
 	public static Faker<T> UsePrivateConstructor<T>(this Faker<T> faker) where T : class
 		=> faker.CustomInstantiator(f => (Activator.CreateInstance(typeof(T), nonPublic: true) as T)!);
 

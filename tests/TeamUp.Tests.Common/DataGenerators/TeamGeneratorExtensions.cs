@@ -43,12 +43,12 @@ public static class TeamGeneratorExtensions
 
 		return teamGenerator
 			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => f
-				.Make(count, index => f.PickRandom(pot)
+				.Make(count, index => f.PopRandom(new List<User>(pot))
 					.Map(user => TeamGenerators.TeamMember
 						.RuleForBackingField(tm => tm.TeamId, t.Id)
 						.RuleForBackingField(tm => tm.UserId, user.Id)
 						.RuleFor(tm => tm.Nickname, user.Name)
-						.RuleFor(tm => tm.Role, index == 0 ? TeamRole.Owner : TeamRole.Member)
+						.RuleFor(tm => tm.Role, index == 1 ? TeamRole.Owner : TeamRole.Member)
 						.Generate()))
 				.ToHashSet()
 				.ToList());

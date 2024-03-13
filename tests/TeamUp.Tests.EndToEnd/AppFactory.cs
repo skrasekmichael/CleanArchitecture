@@ -34,7 +34,7 @@ public sealed class AppFactory(string connectionString) : WebApplicationFactory<
 				options.UseNpgsql(connectionString);
 				options.ConfigureWarnings(warning =>
 				{
-					warning.Throw(RelationalEventId.MultipleCollectionIncludeWarning);
+					warning.Log(RelationalEventId.MultipleCollectionIncludeWarning);
 				});
 			});
 

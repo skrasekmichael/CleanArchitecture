@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
-
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
 public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
@@ -31,6 +29,8 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 
 		var targetTeamIndex = F.Random.Int(0, teams.Count - 1);
 		var targetTeam = teams[targetTeamIndex];
+		var teamOwner = targetTeam.Members.Single(member => member.Role.IsOwner());
+		var initiatorUser = users.Single(user => user.Id == teamOwner.UserId);
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -39,9 +39,6 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 			dbContext.Events.AddRange(events);
 			return dbContext.SaveChangesAsync();
 		});
-
-		var owner = targetTeam.Members.Single(member => member.Role.IsOwner());
-		var initiatorUser = users.Single(user => user.Id == owner.UserId);
 
 		Authenticate(initiatorUser);
 
