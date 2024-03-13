@@ -24,6 +24,7 @@ public static class TeamErrors
 	public static readonly AuthorizationError UnauthorizedToReadInvitationList = AuthorizationError.New("Not allowed to read invitation list.", "Teams.NotAllowedToReadInvitations");
 	public static readonly AuthorizationError UnauthorizedToDeleteTeam = AuthorizationError.New("Not allowed to delete team.", "Teams.NotAllowedToDeleteTeam");
 	public static readonly AuthorizationError UnauthorizedToCreateEventTypes = AuthorizationError.New("Not allowed to create event types.", "Teams.NotAllowedToCreateEventTypes");
+	public static readonly AuthorizationError UnauthorizedToDeleteEvents = AuthorizationError.New("Not allowed to delete events.", "Teams.NotAllowedToDeleteEvents");
 
 	public static readonly ConflictError UserIsAlreadyInvited = ConflictError.New("User has been already invited to this team.", "Teams.UserIsAlreadyInvited");
 

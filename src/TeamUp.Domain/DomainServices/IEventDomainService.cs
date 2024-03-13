@@ -17,4 +17,6 @@ public interface IEventDomainService
 		TimeSpan meetTime,
 		TimeSpan replyClosingTimeBeforeMeetTime,
 		CancellationToken ct = default);
+
+	public Task<Result> DeleteEventAsync(UserId initiatorId, TeamId teamId, EventId eventId, CancellationToken ct = default);
 }

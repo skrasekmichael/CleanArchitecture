@@ -84,6 +84,12 @@ public static partial class ResultExtensions
 		return self.Value;
 	}
 
+	public static async Task<Result<TValue>> EnsureNotNull<TValue, TError>(this Task<Result<TValue?>> selfTask, TError error) where TError : ErrorBase
+	{
+		var self = await selfTask;
+		return self.EnsureNotNull(error);
+	}
+
 	public static Result<(TFirst, TSecond)> Ensure<TFirst, TSecond, TError>(this Result<(TFirst, TSecond)> self, Rule<TFirst, TSecond> rule, TError error) where TError : ErrorBase
 	{
 		if (self.IsFailure)
