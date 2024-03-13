@@ -20,6 +20,12 @@ public static class FakerExtensions
 		return elem;
 	}
 
+	public static IList<TOut> Make<TOut, TListElem>(this Faker _, Func<List<TListElem>> prepareList, int count, Func<List<TListElem>, int, TOut> action)
+	{
+		var list = prepareList();
+		return Enumerable.Range(1, count).Select((index, elem) => action(list, index)).ToList();
+	}
+
 	public static Faker<T> UsePrivateConstructor<T>(this Faker<T> faker) where T : class
 		=> faker.CustomInstantiator(f => (Activator.CreateInstance(typeof(T), nonPublic: true) as T)!);
 
