@@ -13,42 +13,62 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 	public async Task DeleteTeam_AsOwner_Should_DeleteTeamInDatabase()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
-		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
+		var users = UserGenerators.ActivatedUser.Generate(80);
+		var teams = TeamGenerators.Team
+			.WithRandomMembers(25, users)
+			.WithEventTypes(5)
+			.Generate(4);
+
+		var teamEvents = teams.Select(team =>
+		{
+			return EventGenerators.Event
+				.ForTeam(team.Id)
+				.WithEventType(team.EventTypes[0].Id)
+				.WithRandomEventResponses(team.Members)
+				.Generate(15);
+		}).ToList();
+		var events = teamEvents.SelectMany(events => events);
+
+		var targetTeamIndex = F.Random.Int(0, teams.Count - 1);
+		var targetTeam = teams[targetTeamIndex];
 
 		await UseDbContextAsync(dbContext =>
 		{
-			dbContext.Users.Add(owner);
-			dbContext.Users.AddRange(members);
-			dbContext.Teams.Add(team);
+			dbContext.Users.AddRange(users);
+			dbContext.Teams.AddRange(teams);
+			dbContext.Events.AddRange(events);
 			return dbContext.SaveChangesAsync();
 		});
 
-		Authenticate(owner);
+		var owner = targetTeam.Members.Single(member => member.Role.IsOwner());
+		var initiatorUser = users.Single(user => user.Id == owner.UserId);
+
+		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id));
+		var response = await Client.DeleteAsync(GetUrl(targetTeam.Id));
 
 		//assert
 		response.Should().Be200Ok();
 
 		await UseDbContextAsync(async dbContext =>
 		{
-			var deletedTeam = await dbContext.Teams.FindAsync(team.Id);
-			deletedTeam.Should().BeNull();
+			//no users deleted
+			var notDeletedUsers = await dbContext.Users.ToListAsync();
+			notDeletedUsers.Should().BeEquivalentTo(users);
 
-			var members = await dbContext.Set<TeamMember>().ToListAsync();
-			members.Should().BeEmpty();
+			//only team, team members and event types from target team were deleted
+			var notDeletedTeams = await dbContext.Teams
+				.Include(team => team.Members)
+				.Include(team => team.EventTypes)
+				.ToListAsync();
+			notDeletedTeams.Should().BeEquivalentTo(teams.Except([targetTeam]));
 
-			var eventTypes = await dbContext.Set<EventType>().ToListAsync();
-			eventTypes.Should().BeEmpty();
-
-			var events = await dbContext.Events.ToListAsync();
-			events.Should().BeEmpty();
-
-			var eventResponses = await dbContext.Set<EventResponse>().ToListAsync();
-			eventResponses.Should().BeEmpty();
+			//only events and event responses from target team were deleted
+			var notDeletedEvents = await dbContext.Events
+				.Include(e => e.EventResponses)
+				.ToListAsync();
+			notDeletedEvents.Should().BeEquivalentTo(events.Except(teamEvents[targetTeamIndex]));
 		});
 	}
 
