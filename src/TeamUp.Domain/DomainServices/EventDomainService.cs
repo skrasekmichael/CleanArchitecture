@@ -37,7 +37,7 @@ internal sealed class EventDomainService : IEventDomainService
 			.EnsureNotNull(TeamErrors.TeamNotFound)
 			.Ensure(team => team.EventTypes.Any(type => type.Id == eventTypeId), TeamErrors.EventTypeNotFound)
 			.And(team => team.GetTeamMemberByUserId(initiatorId))
-			.Ensure((_, member) => member.Role.CanCreateEvents(), TeamErrors.UnauthorizedToCreateEvents)
+			.Ensure((_, member) => member.Role.CanManipulateEvents(), TeamErrors.UnauthorizedToCreateEvents)
 			.Then((team, _) => Event.Create(
 				eventTypeId,
 				team.Id,
@@ -50,5 +50,19 @@ internal sealed class EventDomainService : IEventDomainService
 			))
 			.Tap(_eventRepository.AddEvent)
 			.Then(@event => @event.Id);
+	}
+
+	public async Task<Result> DeleteEventAsync(UserId initiatorId, TeamId teamId, EventId eventId, CancellationToken ct = default)
+	{
+		var team = await _teamRepository.GetTeamByIdAsync(teamId, ct);
+		return await team
+			.EnsureNotNull(TeamErrors.TeamNotFound)
+			.Then(team => team.GetTeamMemberByUserId(initiatorId))
+			.Ensure(member => member.Role.CanManipulateEvents(), TeamErrors.UnauthorizedToDeleteEvents)
+			.ThenAsync(_ => _eventRepository.GetEventByIdAsync(eventId, ct))
+			.EnsureNotNull(EventErrors.EventNotFound)
+			.Ensure(e => e.TeamId == teamId, EventErrors.EventNotFound)
+			.Tap(_eventRepository.RemoveEvent)
+			.ToResultAsync();
 	}
 }

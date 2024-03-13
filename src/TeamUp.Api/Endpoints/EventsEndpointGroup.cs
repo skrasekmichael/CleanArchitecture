@@ -10,6 +10,7 @@ public sealed class EventsEndpointGroup : IEndpointGroup
 		group.MapEndpoint<CreateEventEndpoint>()
 			.MapEndpoint<GetEventEndpoint>()
 			.MapEndpoint<GetEventsEndpoint>()
+			.MapEndpoint<RemoveEventEndpoint>()
 			.MapEndpoint<UpsertEventReplyEndpoint>();
 	}
 }
