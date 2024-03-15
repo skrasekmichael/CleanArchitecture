@@ -9,7 +9,10 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 	public async Task ActivateAccount_Should_SetUserStatusAsActivatedInDatabase()
 	{
 		//arrange
-		var user = UserGenerators.NotActivatedUser.Generate();
+		var user = UserGenerators.User
+			.Clone()
+			.WithStatus(UserStatus.NotActivated)
+			.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

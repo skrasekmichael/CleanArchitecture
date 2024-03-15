@@ -16,7 +16,10 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var passwordService = App.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerators.GenerateValidPassword();
-		var user = UserGenerators.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
+		var user = UserGenerators.User
+			.Clone()
+			.WithPassword(passwordService.HashPassword(rawPassword))
+			.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -60,7 +63,11 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var passwordService = App.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerators.GenerateValidPassword();
-		var user = UserGenerators.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.NotActivated);
+		var user = UserGenerators.User
+			.Clone()
+			.WithPassword(passwordService.HashPassword(rawPassword))
+			.WithStatus(UserStatus.NotActivated)
+			.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -112,7 +119,10 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var passwordService = App.Services.GetRequiredService<IPasswordService>();
 
 		var rawPassword = UserGenerators.GenerateValidPassword();
-		var user = UserGenerators.GenerateUser(passwordService.HashPassword(rawPassword), UserStatus.Activated);
+		var user = UserGenerators.User
+			.Clone()
+			.WithPassword(passwordService.HashPassword(rawPassword))
+			.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

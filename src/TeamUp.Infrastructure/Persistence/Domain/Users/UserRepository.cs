@@ -16,6 +16,8 @@ internal sealed class UserRepository : IUserRepository
 
 	public void AddUser(User user) => _context.Users.Add(user);
 
+	public void RemoveUser(User user) => _context.Users.Remove(user);
+
 	public async Task<bool> ExistsUserWithConflictingEmailAsync(string email, CancellationToken ct = default)
 	{
 		return await _context.Users.AnyAsync(user => user.Email == email, ct);

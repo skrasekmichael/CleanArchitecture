@@ -13,8 +13,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_Should_AddEventResponseToDatabase()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -57,8 +57,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_WhenUpdating_Should_UpdateEventResponseToDatabase()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -101,8 +101,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_WhenReplyingCloseToReplyCloseTime_Should_AddEventResponseToDatabase()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -147,8 +147,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_ToUnExistingEvent_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -183,8 +183,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_InUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var teamId = Guid.NewGuid();
 		var targetEventId = Guid.NewGuid();
 
@@ -213,9 +213,9 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(owner, members)
 			.WithEventTypes(5)
@@ -255,8 +255,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_ToEventOfAnotherTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var teams = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -305,8 +305,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_WhenEventIsClosedForResponses_Should_ResultInBadRequest_DomainError(EventStatus status)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -347,8 +347,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_WhenTimeForResponsesExpired_Should_ResultInBadRequest_DomainError()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -392,8 +392,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 	public async Task UpsertEventReply_WithInvalidRequest_Should_ResultInBadRequest_ValidationError(InvalidRequest<UpsertEventReplyRequest> request)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)

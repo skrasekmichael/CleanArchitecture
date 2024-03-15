@@ -12,8 +12,8 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 	public async Task CreateEvent_AsCoordinatorOrHigher_Should_CreateNewEventInDatabase(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, initiatorRole, members)
 			.WithEventTypes(5)
@@ -54,8 +54,8 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 	public async Task CreateEvent_AsMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, TeamRole.Member, members)
 			.WithEventTypes(5)
@@ -90,9 +90,9 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 	public async Task CreateEvent_WhenNotMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(owner, members)
 			.WithEventTypes(5)
@@ -127,7 +127,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 	public async Task CreateEvent_ForUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
 		var teamId = Guid.NewGuid();
 		var eventTypeId = EventTypeId.New();
 
@@ -158,9 +158,9 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 	public async Task CreateEvent_WithUnExistingEventType_Should_ResultInNotFound()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(owner, members)
 			.WithEventTypes(5)
@@ -196,8 +196,8 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 	public async Task CreateEvent_WithInvalidParameters_AsOwner_Should_ResultInBadRequest_ValidationError(InvalidRequest<CreateEventRequest> invalidRequest)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)

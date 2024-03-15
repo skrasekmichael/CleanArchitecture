@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using TeamUp.Contracts.Teams;
+using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Infrastructure.Persistence.Domain.Teams;
@@ -25,5 +26,15 @@ internal sealed class TeamRepository : ITeamRepository
 			.Include(team => team.Members)
 			.Include(team => team.EventTypes)
 			.FirstOrDefaultAsync(team => team.Id == teamId, ct);
+	}
+
+	public async Task<List<Team>> GetTeamsByUserIdAsync(UserId userId, CancellationToken ct = default)
+	{
+		return await _context.Teams
+			.AsSplitQuery()
+			.Include(team => team.Members)
+			.Include(team => team.EventTypes)
+			.Where(team => team.Members.Any(member => member.UserId == userId))
+			.ToListAsync(ct);
 	}
 }

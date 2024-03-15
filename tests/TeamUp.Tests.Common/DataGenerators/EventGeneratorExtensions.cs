@@ -17,7 +17,7 @@ public static class EventGeneratorExtensions
 						.Between(DateTime.UtcNow.AddDays(-2), e.FromUtc - e.MeetTime - e.ReplyClosingTimeBeforeMeetTime)
 						.DropMicroSeconds()
 						.AsUtc())
-					.RuleFor(er => er.ReplyType, f => f.Random.ArrayElement([ReplyType.Yes, ReplyType.No, ReplyType.Maybe, ReplyType.Delay]))
+					.RuleFor(er => er.ReplyType, f => f.PickRandom(EventGenerators.ReplyTypes))
 					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE))
 					.Generate())
 				.ToList());

@@ -14,9 +14,9 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 	public async Task ChangeOwnership_ToAdminOrLower_AsOwner_Should_ChangeTeamOwnerInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var owner = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, teamRole)).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -72,10 +72,10 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 	public async Task ChangeOwnership_ToAdminOrLower_AsAdminOrLower_Should_ResultInForbidden(TeamRole initiatorTeamRole, TeamRole targetTeamRole)
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(17);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(17);
 		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, targetTeamRole), (initiatorUser, initiatorTeamRole)).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -104,8 +104,8 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 	public async Task ChangeOwnership_ToUnExistingMember_AsOwner_Should_ResultInNotFound()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -134,10 +134,10 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 	public async Task ChangeOwnership_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, TeamRole.Member)).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -166,7 +166,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 	public async Task ChangeOwnership_OfUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

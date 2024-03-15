@@ -14,8 +14,8 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 	public async Task RemoveEvent_AsCoordinatorOrHigher_Should_RemoveEventAndEventResponsesFromDatabase(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, initiatorRole, members)
 			.WithEventTypes(5)
@@ -58,8 +58,8 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 	public async Task RemoveEvent_AsMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, TeamRole.Member, members)
 			.WithEventTypes(5)
@@ -97,8 +97,8 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 	public async Task RemoveEvent_ThatDoesNotExist_AsOwner_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -136,7 +136,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 	public async Task RemoveEvent_FromUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -163,8 +163,8 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 	public async Task RemoveEvent_OfAnotherTeam_AsOwner_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 
 		var team1 = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)

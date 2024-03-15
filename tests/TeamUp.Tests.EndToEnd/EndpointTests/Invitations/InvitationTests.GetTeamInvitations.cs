@@ -12,8 +12,8 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 	public async Task GetTeamInvitations_AsCoordinatorOrHigher_Should_ReturnListOfInvitations(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
 		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow.DropMicroSeconds(), members);
 
@@ -42,8 +42,8 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 	public async Task GetTeamInvitations_AsMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, TeamRole.Member, members).Generate();
 		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
@@ -72,9 +72,9 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 	public async Task GetTeamInvitations_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
@@ -103,7 +103,7 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 	public async Task GetTeamInvitations_OfUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
 		var teamId = Guid.NewGuid();
 
 		await UseDbContextAsync(dbContext =>

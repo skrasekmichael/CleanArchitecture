@@ -11,7 +11,7 @@ public sealed class InvitationGenerators : BaseGenerator
 
 	public static readonly InvitationGenerator Invitation = new InvitationGenerator(binder: InvitationBinder)
 		.UsePrivateConstructor()
-		.RuleFor(i => i.Id, f => InvitationId.FromGuid(f.Random.Guid()));
+		.RuleFor(i => i.Id, f => InvitationId.New());
 
 	public static Invitation GenerateInvitation(UserId userId, TeamId teamId, DateTime createdUtc)
 	{

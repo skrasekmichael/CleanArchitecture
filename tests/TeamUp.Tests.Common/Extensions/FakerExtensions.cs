@@ -13,9 +13,12 @@ public static class FakerExtensions
 		return list[index];
 	}
 
-	public static T PopRandom<T>(this Faker faker, List<T> list) where T : class
+	public static T PopRandom<T>(this Faker faker, List<T> list, int ignoreLastX = 0) where T : class
 	{
-		var elem = faker.PickRandom(list);
+		(list.Count - ignoreLastX).Should().BeGreaterThan(0);
+
+		var index = faker.Random.Int(0, list.Count - ignoreLastX - 1);
+		var elem = list[index];
 		list.Remove(elem);
 		return elem;
 	}

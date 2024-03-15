@@ -15,8 +15,8 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 	public async Task GetEvent_AsTeamMember_Should_ReturnEvent(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, initiatorRole, members)
 			.WithEventTypes(5)
@@ -57,8 +57,8 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 	public async Task GetEvent_ThatDoesNotExist_AsOwner_Should_ReturnNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(initiatorUser, members)
 			.WithEventTypes(5)
@@ -90,7 +90,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 	public async Task GetEvent_InUnExistingTeam_Should_ReturnNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -117,9 +117,9 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 	public async Task GetEvent_WhenNotMemberOfTeam_Should_ReturnForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team
 			.WithMembers(owner, members)
 			.WithEventTypes(5)

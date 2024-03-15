@@ -3,31 +3,31 @@
 using Microsoft.AspNetCore.Mvc;
 
 using TeamUp.Api.Extensions;
-using TeamUp.Application.Teams.DeleteTeam;
-using TeamUp.Contracts.Teams;
+using TeamUp.Application.Users.DeleteAccount;
+using TeamUp.Contracts.Users;
 
-namespace TeamUp.Api.Endpoints.Teams;
+namespace TeamUp.Api.Endpoints.UserAccess;
 
-public sealed class DeleteTeamEndpoint : IEndpointGroup
+public sealed class DeleteAccountEndpoint : IEndpointGroup
 {
 	public void MapEndpoints(RouteGroupBuilder group)
 	{
-		group.MapDelete("/{teamId:guid}", DeleteTeamAsync)
+		group.MapDelete("/", DeleteUserAsync)
 			.Produces(StatusCodes.Status200OK)
 			.ProducesProblem(StatusCodes.Status401Unauthorized)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound)
-			.WithName(nameof(DeleteTeamEndpoint))
+			.WithName(nameof(DeleteAccountEndpoint))
 			.MapToApiVersion(1);
 	}
 
-	private async Task<IResult> DeleteTeamAsync(
-		[FromRoute] Guid teamId,
+	private async Task<IResult> DeleteUserAsync(
 		[FromServices] ISender sender,
+		[FromHeader(Name = UserConstants.HTTP_HEADER_CONFIRM_PASSWORD)] string password,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
-		var command = new DeleteTeamCommand(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId));
+		var command = new DeleteAccountCommand(httpContext.GetCurrentUserId(), password);
 		var result = await sender.Send(command, ct);
 		return result.Match(TypedResults.Ok);
 	}

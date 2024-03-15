@@ -9,7 +9,7 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 	public async Task GetTeam_ThatDoesNotExist_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 		var teamId = Guid.NewGuid();
 
 		await UseDbContextAsync(dbContext =>
@@ -37,8 +37,8 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 	public async Task GetTeam_AsTeamMember_Should_ReturnTeam(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -71,9 +71,9 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 	public async Task GetTeam_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>

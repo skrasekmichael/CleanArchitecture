@@ -125,4 +125,11 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 		var teamMember = _members.Find(member => member.Id == memberId);
 		return teamMember.EnsureNotNull(Errors.MemberNotFound);
 	}
+
+	public TeamMember? GetHighestNonOwnerTeamMember()
+	{
+		return _members.OrderBy(member => member.Role)
+			.SkipLast(1)
+			.LastOrDefault();
+	}
 }

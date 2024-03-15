@@ -8,9 +8,9 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 	public async Task GetMyInvitations_Should_ReturnListOfInvitations()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var teams = TeamGenerators.Team.WithMembers(owner, members).Generate(3);
 		var invitations = InvitationGenerators.GenerateUserInvitations(initiatorUser.Id, DateTime.UtcNow.DropMicroSeconds(), teams);
 
@@ -39,9 +39,9 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 	public async Task GetMyInvitations_WhenNotInvited_Should_ReturnEmptyList()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var teams = TeamGenerators.Team.WithMembers(owner, members).Generate(3);
 
 		await UseDbContextAsync(dbContext =>

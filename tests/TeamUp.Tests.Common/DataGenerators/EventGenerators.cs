@@ -7,6 +7,8 @@ namespace TeamUp.Tests.Common.DataGenerators;
 
 public sealed class EventGenerators : BaseGenerator
 {
+	public static readonly ReplyType[] ReplyTypes = [ReplyType.Yes, ReplyType.No, ReplyType.Maybe, ReplyType.Delay];
+
 	internal const string EVENT_RESPONSES_FIELD = "_eventResponses";
 	private static readonly PrivateBinder EventBinder = new(
 		EVENT_RESPONSES_FIELD,
@@ -20,7 +22,7 @@ public sealed class EventGenerators : BaseGenerator
 
 	public static readonly EventGenerator Event = new EventGenerator(binder: EventBinder)
 		.UsePrivateConstructor()
-		.RuleFor(e => e.Id, f => EventId.FromGuid(f.Random.Guid()))
+		.RuleFor(e => e.Id, f => EventId.New())
 		.RuleFor(e => e.Description, f => f.Random.Text(1, EventConstants.EVENT_DESCRIPTION_MAX_SIZE))
 		.RuleFor(e => e.MeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
 		.RuleFor(e => e.ReplyClosingTimeBeforeMeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds())
@@ -30,7 +32,7 @@ public sealed class EventGenerators : BaseGenerator
 
 	public static readonly EventResponseGenerator Response = new EventResponseGenerator(binder: EventResponseBinder)
 		.UsePrivateConstructor()
-		.RuleFor(er => er.Id, f => EventResponseId.FromGuid(f.Random.Guid()));
+		.RuleFor(er => er.Id, f => EventResponseId.New());
 
 	public static readonly Faker<CreateEventRequest> ValidCreateEventRequest = new Faker<CreateEventRequest>()
 		.RuleFor(x => x.Description, f => f.Random.Text(1, EventConstants.EVENT_DESCRIPTION_MAX_SIZE))
@@ -38,7 +40,7 @@ public sealed class EventGenerators : BaseGenerator
 		.RuleFor(x => x.ReplyClosingTimeBeforeMeetTime, f => f.Date.Timespan(TimeSpan.FromHours(24)).DropMicroSeconds());
 
 	public static readonly Faker<UpsertEventReplyRequest> ValidUpsertEventReplyRequest = new Faker<UpsertEventReplyRequest>()
-		.RuleFor(r => r.ReplyType, f => f.PickRandom(ReplyType.Yes, ReplyType.No, ReplyType.Maybe, ReplyType.Delay))
+		.RuleFor(r => r.ReplyType, f => f.PickRandom(ReplyTypes))
 		.RuleFor(r => r.Message, (f, r) => r.ReplyType switch
 		{
 			ReplyType.Yes => string.Empty,

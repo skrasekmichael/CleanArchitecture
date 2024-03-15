@@ -34,7 +34,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 	public async Task RegisterUser_WithAlreadyUsedEmail_Should_ResultInConflict()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
