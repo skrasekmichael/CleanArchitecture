@@ -10,7 +10,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 	public async Task CreateTeam_Should_CreateNewTeamInDatabase_WithOneTeamOwner()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);

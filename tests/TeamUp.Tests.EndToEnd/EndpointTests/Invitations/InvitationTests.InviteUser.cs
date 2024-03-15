@@ -11,9 +11,9 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_ThatIsActivated_AsCoordinatorOrHigher_Should_CreateInvitationInDatabase_And_SendInvitationEmail(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -58,8 +58,8 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_ThatIsNotRegistered_AsCoordinatorOrHigher_Should_CreateInvitationInDatabase_And_GenerateNewUser_And_SendInvitationEmail(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -112,8 +112,8 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_ThatIsAlreadyInTeam_AsCoordinatorOrHigher_Should_ResultInBadRequest_DomainError(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 		var targetUser = members.First();
 
@@ -147,9 +147,9 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_AsTeamMember_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, TeamRole.Member, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -185,9 +185,9 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_ThatIsAlreadyInvited_AsCoordinatorOrHigher_Should_ResultInConflict(TeamRole initiatorRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 		var invitation = InvitationGenerators.GenerateInvitation(targetUser.Id, team.Id, DateTime.UtcNow);
 
@@ -222,10 +222,10 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -258,8 +258,8 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_ToUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -290,7 +290,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 	public async Task InviteUser_WithInvalidRequest_Should_ResultInBadRequest_ValidationErrors(InvalidRequest<InviteUserRequest> request)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

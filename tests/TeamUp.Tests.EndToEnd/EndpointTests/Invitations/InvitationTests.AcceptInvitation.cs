@@ -11,9 +11,9 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 	public async Task AcceptInvitation_ThatIsValid_AsRecipient_Should_RemoveInvitationFromDatabase_And_AddUserAsMemberToTeamInDatabase()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 		var invitation = InvitationGenerators.GenerateInvitation(initiatorUser.Id, team.Id, DateTime.UtcNow);
 
@@ -56,9 +56,9 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 	public async Task AcceptInvitation_ThatExpired_AsRecipient_Should_ResultInBadRequest_DomainError()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 		var invitation = InvitationGenerators.GenerateInvitation(initiatorUser.Id, team.Id, DateTime.UtcNow.AddDays(-5));
 
@@ -87,9 +87,9 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 	public async Task AcceptInvitation_ThatDoesNotExist_AsRecipient_Should_ResultInNotFound()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 		var invitationId = Guid.NewGuid();
 
@@ -116,10 +116,10 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 	public async Task AcceptInvitation_ForAnotherUser_Should_ResultInForbidden()
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 		var invitation = InvitationGenerators.GenerateInvitation(targetUser.Id, team.Id, DateTime.UtcNow.AddDays(-5));
 

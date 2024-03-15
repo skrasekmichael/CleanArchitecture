@@ -19,7 +19,7 @@ public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(a
 	public async Task GetMyProfile_AsExistingUser_Should_ReturnUserDetails()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{

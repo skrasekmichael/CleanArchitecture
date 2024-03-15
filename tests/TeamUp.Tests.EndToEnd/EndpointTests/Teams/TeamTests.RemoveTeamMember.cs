@@ -15,9 +15,9 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_AsOwnerOrAdmin_WhenRemovingAdminOrLower_Should_RemoveTeamMemberFromTeamInDatabase(TeamRole initiatorTeamRole, TeamRole targetMemberRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorTeamRole, targetUser, targetMemberRole, members).Generate();
 
 		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
@@ -56,8 +56,8 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_AsAdminOrLower_WhenRemovingMyself_Should_RemoveTeamMemberFromTeamInDatabase(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
 
 		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
@@ -95,10 +95,10 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_AsCoordinatorOrMember_WhenRemovingTeamMember_Should_ResultInForbidden(TeamRole memberRole)
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(owner, members, (initiatorUser, memberRole), (targetUser, TeamRole.Member)).Generate();
 
 		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
@@ -127,8 +127,8 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_AsOwner_WhenRemovingMyself_Should_ResultInBadRequest_DomainError()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		var targetMemberId = team.Members.First(member => member.UserId == owner.Id).Id;
@@ -157,9 +157,9 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_AsAdmin_WhenRemovingTeamOwner_Should_ResultInBadRequest_DomainError()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var user = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var owner = UserGenerators.User.Generate();
+		var user = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(owner, members, (user, TeamRole.Admin)).Generate();
 
 		var targetMemberId = team.Members.First(member => member.UserId == owner.Id).Id;
@@ -188,8 +188,8 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_ThatDoesNotExist_AsOwner_Should_ResultInNotFound()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		var targetMemberId = Guid.NewGuid();
@@ -218,7 +218,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_FromUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 
 		var teamId = Guid.NewGuid();
 		var targetMemberId = Guid.NewGuid();
@@ -244,9 +244,9 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 	public async Task RemoveTeamMember_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		var targetMemberId = team.Members.First(member => member.Role != TeamRole.Owner).Id;

@@ -9,8 +9,8 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamName_AsOwner_Should_UpdateTeamNameInDatabase()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -47,8 +47,8 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamName_AsAdminOrLower_Should_ResultInForbidden(TeamRole teamRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -80,7 +80,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamName_OfUnExistingTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 		var teamId = Guid.NewGuid();
 
 		await UseDbContextAsync(dbContext =>
@@ -110,9 +110,9 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamName_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -147,8 +147,8 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamName_WithInvalidTeamName_AsOwner_Should_ResultInBadRequest_ValidationErrors(string name)
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>

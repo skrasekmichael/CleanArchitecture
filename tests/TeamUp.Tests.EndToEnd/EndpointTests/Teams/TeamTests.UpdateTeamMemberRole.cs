@@ -24,9 +24,9 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_OfAdminOrLower_AsOwnerOrAdmin_Should_UpdateTeamMemberRoleInDatabase(TeamRole initiatorRole, TeamRole targetRole, TeamRole newRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, targetUser, targetRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -85,9 +85,9 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_OfAdminOrLower_AsCoordinatorOrMember_Should_ResultInForbidden(TeamRole initiatorRole, TeamRole targetRole, TeamRole newRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(18);
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(18);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, targetUser, targetRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -126,8 +126,8 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_OfOwner_AsOwnerOrAdmin_Should_ResultInBadRequest_DomainError(TeamRole initiatorRole, TeamRole newRole)
 	{
 		//arrange
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -163,9 +163,9 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_OfMember_ToInvalidValue_AsOwner_Should_ResultInBadRequest_ValidationErrors(TeamRole newRole)
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var targetUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members, (targetUser, TeamRole.Member)).Generate();
 
 
@@ -199,8 +199,8 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_OfUnExistingMember_AsOwner_Should_ResultInNotFound()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>
@@ -233,7 +233,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_InUnExistingTeam_Should_ResultInNotFound()
 	{
 		//arrange
-		var user = UserGenerators.ActivatedUser.Generate();
+		var user = UserGenerators.User.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -264,9 +264,9 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 	public async Task UpdateTeamRole_WhenNotMemberOfTeam_Should_ResultInForbidden()
 	{
 		//arrange
-		var owner = UserGenerators.ActivatedUser.Generate();
-		var initiatorUser = UserGenerators.ActivatedUser.Generate();
-		var members = UserGenerators.ActivatedUser.Generate(19);
+		var owner = UserGenerators.User.Generate();
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
 
 		await UseDbContextAsync(dbContext =>

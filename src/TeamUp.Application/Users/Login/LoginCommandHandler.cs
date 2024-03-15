@@ -25,6 +25,6 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, Result
 			.EnsureNotNull(AuthenticationErrors.InvalidCredentials)
 			.Ensure(user => _passwordService.VerifyPassword(command.Password, user.Password), AuthenticationErrors.InvalidCredentials)
 			.Ensure(user => user.Status == UserStatus.Activated, AuthenticationErrors.NotActivatedAccount)
-			.Then(user => _tokenService.GenerateToken(user));
+			.Then(_tokenService.GenerateToken);
 	}
 }

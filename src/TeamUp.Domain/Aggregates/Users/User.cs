@@ -24,12 +24,17 @@ public sealed class User : AggregateRoot<User, UserId>
 		AddDomainEvent(new UserCreatedDomainEvent(this));
 	}
 
-	public override string ToString() => Name;
+	public override string ToString() => $"{Name} ({Status})";
 
 	public void Activate()
 	{
 		Status = UserStatus.Activated;
 		AddDomainEvent(new UserActivatedDomainEvent(this));
+	}
+
+	public void Delete()
+	{
+		AddDomainEvent(new UserDeletedDomainEvent(this));
 	}
 
 	internal static User Generate(string email) => new(

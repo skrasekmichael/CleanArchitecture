@@ -36,21 +36,20 @@ public static class TeamGeneratorExtensions
 		return teamGenerator.GetTeamGeneratorWithMembers(members, userMembersWithOwner);
 	}
 
-	public static TeamGenerator WithRandomMembers(this TeamGenerator teamGenerator, int count, List<User> pot)
+	public static TeamGenerator WithRandomMembers(this TeamGenerator teamGenerator, int count, List<User> pot, int lastXNonOwners = 0)
 	{
 		count.Should().BeGreaterThan(0);
 		pot.Should().HaveCountGreaterThanOrEqualTo(1);
 
 		return teamGenerator
 			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => f
-				.Make(() => new List<User>(pot), count, (list, index) => f.PopRandom(list)
+				.Make(() => new List<User>(pot), count, (list, index) => f.PopRandom(list, index == 1 ? lastXNonOwners : 0)
 					.Map(user => TeamGenerators.TeamMember
 						.RuleForBackingField(tm => tm.TeamId, t.Id)
 						.RuleForBackingField(tm => tm.UserId, user.Id)
 						.RuleFor(tm => tm.Nickname, user.Name)
 						.RuleFor(tm => tm.Role, index == 1 ? TeamRole.Owner : TeamRole.Member)
 						.Generate()))
-				.ToHashSet()
 				.ToList());
 	}
 
@@ -80,6 +79,20 @@ public static class TeamGeneratorExtensions
 						.Generate()))
 				.ToList()
 			);
+	}
+
+	public static TeamGenerator WithOneOwner(this TeamGenerator teamGenerator, User owner)
+	{
+		return teamGenerator
+			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => new List<TeamMember>()
+			{
+				TeamGenerators.TeamMember
+					.RuleForBackingField(tm => tm.TeamId, t.Id)
+					.RuleForBackingField(tm => tm.UserId, owner.Id)
+					.RuleFor(tm => tm.Nickname, owner.Name)
+					.RuleFor(tm => tm.Role, TeamRole.Owner)
+					.Generate()
+			});
 	}
 
 	public static TeamGenerator WithEventTypes(this TeamGenerator teamGenerator, int count)
