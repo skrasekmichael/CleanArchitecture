@@ -1,10 +1,10 @@
-﻿using TeamUp.Common;
+﻿using RailwayResult;
 
 namespace TeamUp.Tests.EndToEnd.Extensions;
 
 public static class ProblemDetailsExtensions
 {
-	public static void ShouldContainError<TError>(this ProblemDetails? details, TError error) where TError : ErrorBase
+	public static void ShouldContainError<TError>(this ProblemDetails? details, TError error) where TError : Error
 	{
 		details.ShouldNotBeNull();
 		details.Title.Should().Be(error.GetType().Name);

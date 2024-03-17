@@ -33,6 +33,9 @@
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.8.1" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Riok.Mapperly" Version="3.3.0" />
+    <PackageVersion Include="Skrasek.RailwayResult" Version="1.0.1" />
+    <PackageVersion Include="Skrasek.RailwayResult.Errors" Version="1.0.1" />
+    <PackageVersion Include="Skrasek.RailwayResult.FunctionalExtensions" Version="1.0.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
     <PackageVersion Include="Testcontainers" Version="3.7.0" />

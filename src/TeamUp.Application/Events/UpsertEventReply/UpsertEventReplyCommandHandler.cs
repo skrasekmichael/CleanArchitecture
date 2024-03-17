@@ -1,5 +1,4 @@
 ﻿using TeamUp.Application.Abstractions;
-using TeamUp.Common;
 using TeamUp.Common.Abstractions;
 using TeamUp.Contracts.Events;
 using TeamUp.Domain.Abstractions;
@@ -43,6 +42,6 @@ internal sealed class UpsertEventReplyCommandHandler : ICommandHandler<UpsertEve
 		ReplyType.Maybe => EventReply.Maybe(command.Message),
 		ReplyType.Delay => EventReply.Delay(command.Message),
 		ReplyType.No => EventReply.No(command.Message),
-		_ => InternalError.New($"{nameof(MapRequestToReply)} does not implement case for type [{command.ReplyType}]", "InternalErrors.MissingSwitchCase")
+		_ => new InternalError("InternalErrors.MissingSwitchCase", $"{nameof(MapRequestToReply)} does not implement case for type [{command.ReplyType}]")
 	};
 }

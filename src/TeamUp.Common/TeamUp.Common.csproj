@@ -1,1 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Skrasek.RailwayResult" />
+    <PackageReference Include="Skrasek.RailwayResult.FunctionalExtensions" />
+  </ItemGroup>
+
+</Project>

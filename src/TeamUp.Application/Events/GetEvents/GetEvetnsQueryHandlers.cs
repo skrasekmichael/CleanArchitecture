@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using TeamUp.Application.Abstractions;
-using TeamUp.Common;
 using TeamUp.Common.Abstractions;
 using TeamUp.Contracts.Events;
 using TeamUp.Domain.Aggregates.Teams;

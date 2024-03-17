@@ -1,6 +1,5 @@
 ﻿using TeamUp.Api.Endpoints.Teams;
 using TeamUp.Application.Abstractions;
-using TeamUp.Common;
 using TeamUp.Common.Abstractions;
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Abstractions;

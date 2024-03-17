@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using TeamUp.Common;
+using RailwayResult;
+using RailwayResult.Errors;
 
 namespace TeamUp.Api.Extensions;
 
@@ -22,7 +23,7 @@ public static class ResultExtensions
 		return result.Error.ToResponse();
 	}
 
-	public static IResult ToResponse(this ErrorBase error)
+	public static IResult ToResponse(this Error error)
 	{
 		return TypedResults.Problem(new ProblemDetails
 		{

@@ -1,5 +1,4 @@
-﻿using TeamUp.Common;
-using TeamUp.Common.Abstractions;
+﻿using TeamUp.Common.Abstractions;
 using TeamUp.Contracts.Teams;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;

@@ -1,6 +1,4 @@
-﻿using TeamUp.Common;
-using TeamUp.Contracts.Users;
-using TeamUp.Domain.Aggregates.Teams;
+﻿using TeamUp.Contracts.Users;
 
 namespace TeamUp.Domain.Aggregates.Users;
 
@@ -11,5 +9,4 @@ public static class UserRules
 
 	public static readonly RuleWithError<string> UserNameMinSize = new(UserNameMinSizeRule, UserErrors.UserNameMinSize);
 	public static readonly RuleWithError<string> UserNameMaxSize = new(UserNameMaxSizeRule, UserErrors.UserNameMaxSize);
-
 }
