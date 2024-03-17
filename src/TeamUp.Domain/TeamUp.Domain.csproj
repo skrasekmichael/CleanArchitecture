@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Skrasek.RailwayResult.Errors" />
   </ItemGroup>
 
   <ItemGroup>
@@ -11,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Aggregates\Teams\DomainEvents\" />
+    <Using Include="RailwayResult" />
+    <Using Include="RailwayResult.Errors" />
+    <Using Include="RailwayResult.FunctionalExtensions" />
   </ItemGroup>
 
 </Project>

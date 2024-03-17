@@ -1,9 +1,7 @@
-﻿using TeamUp.Common;
-
-namespace TeamUp.Application.Users;
+﻿namespace TeamUp.Application.Users;
 
 public static class AuthenticationErrors
 {
-	public static readonly AuthenticationError InvalidCredentials = AuthenticationError.New("Invalid Credentials.", "Auth.InvalidCredentials");
-	public static readonly AuthenticationError NotActivatedAccount = AuthenticationError.New("Account is not activated.", "Auth.NotActivatedAccount");
+	public static readonly AuthenticationError InvalidCredentials = new("Authentication.InvalidCredentials", "Invalid Credentials.");
+	public static readonly AuthenticationError NotActivatedAccount = new("Authentication.NotActivatedAccount", "Account is not activated.");
 }

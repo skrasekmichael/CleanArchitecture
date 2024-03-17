@@ -1,6 +1,4 @@
-﻿using TeamUp.Common;
-
-namespace TeamUp.Domain.Aggregates.Users;
+﻿namespace TeamUp.Domain.Aggregates.Users;
 
 public sealed class UserFactory
 {
