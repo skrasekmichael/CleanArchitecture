@@ -24,5 +24,9 @@ internal sealed class TeamMemberConfiguration : BaseEntityConfiguration<TeamMemb
 			.Property(team => team.Nickname)
 			.IsRequired()
 			.HasMaxLength(255);
+
+		teamMemberEntityBuilder
+			.Property<byte[]>("RowVersion")
+			.IsRowVersion();
 	}
 }

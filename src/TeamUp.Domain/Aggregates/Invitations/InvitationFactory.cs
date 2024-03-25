@@ -21,7 +21,7 @@ internal sealed class InvitationFactory
 	{
 		if (await _invitationRepository.ExistsInvitationForUserToTeamAsync(userId, teamId, ct))
 		{
-			return TeamErrors.UserIsAlreadyInvited;
+			return InvitationErrors.UserIsAlreadyInvited;
 		}
 
 		return new Invitation(InvitationId.New(), userId, teamId, _dateTimeProvider.UtcNow);

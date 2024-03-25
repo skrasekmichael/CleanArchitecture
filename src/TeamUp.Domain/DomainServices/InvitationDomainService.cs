@@ -75,7 +75,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 					.Ensure(member => member.Role.CanInviteTeamMembers(), TeamErrors.UnauthorizedToCancelInvitations)
 					.Then(_ => invitation);
 			})
-			.Tap(invitation => _invitationRepository.RemoveInvitation(invitation))
+			.Tap(_invitationRepository.RemoveInvitation)
 			.ToResultAsync();
 	}
 }

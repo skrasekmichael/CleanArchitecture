@@ -1,4 +1,5 @@
-﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
+﻿
+namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
 
 public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 {
@@ -215,7 +216,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		response.Should().Be409Conflict();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
-		problemDetails.ShouldContainError(TeamErrors.UserIsAlreadyInvited);
+		problemDetails.ShouldContainError(InvitationErrors.UserIsAlreadyInvited);
 	}
 
 	[Fact]

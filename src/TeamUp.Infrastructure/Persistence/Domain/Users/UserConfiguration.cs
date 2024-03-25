@@ -42,5 +42,9 @@ internal sealed class UserConfiguration : BaseEntityConfiguration<User, UserId>
 			.WithOne()
 			.HasForeignKey(invitation => invitation.RecipientId)
 			.OnDelete(DeleteBehavior.Cascade);
+
+		userEntityBuilder
+			.Property<byte[]>("RowVersion")
+			.IsRowVersion();
 	}
 }
