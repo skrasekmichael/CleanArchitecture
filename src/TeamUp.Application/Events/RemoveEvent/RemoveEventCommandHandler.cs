@@ -19,6 +19,6 @@ internal sealed class RemoveEventCommandHandler : ICommandHandler<RemoveEventCom
 	{
 		return await _eventDomainService
 			.DeleteEventAsync(command.InitiatorId, command.TeamId, command.EventId, ct)
-			.TapAsync(() => _unitOfWork.SaveChangesAsync());
+			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

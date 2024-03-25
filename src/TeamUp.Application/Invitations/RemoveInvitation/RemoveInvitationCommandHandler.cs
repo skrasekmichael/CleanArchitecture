@@ -19,6 +19,6 @@ internal sealed class RemoveInvitationCommandHandler : ICommandHandler<RemoveInv
 	{
 		return _invitationDomainService
 			.RemoveInvitationAsync(command.InitiatorId, command.InvitationId, ct)
-			.TapAsync(() => _unitOfWork.SaveChangesAsync());
+			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

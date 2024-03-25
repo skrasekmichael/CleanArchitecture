@@ -7,4 +7,6 @@ public static class InvitationErrors
 	public static readonly NotFoundError InvitationNotFound = new("Invitations.NotFound", "Invitation not found.");
 
 	public static readonly DomainError InvitationExpired = new("Invitations.Domain.Expired", "Invitation has expired.");
+
+	public static readonly ConflictError UserIsAlreadyInvited = new("Invitations.Conflict.InvitedUser", "User has been already invited to this team.");
 }

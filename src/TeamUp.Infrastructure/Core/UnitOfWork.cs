@@ -1,4 +1,10 @@
-﻿using TeamUp.Domain.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+using RailwayResult;
+using RailwayResult.Errors;
+
+using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Persistence;
 using TeamUp.Infrastructure.Processing;
 
@@ -6,18 +12,38 @@ namespace TeamUp.Infrastructure.Core;
 
 internal sealed class UnitOfWork : IUnitOfWork
 {
+	private static readonly ConflictError ConcurrencyError = new("Database.Concurrency.Conflict", "Multiple concurrent update requests have occurred.");
+	private static readonly InternalError UnexpectedError = new("Database.InternalError", "Unexpected error have occurred.");
+
 	private readonly ApplicationDbContext _context;
 	private readonly IDomainEventsDispatcher _eventsDispatcher;
+	private readonly ILogger<UnitOfWork> _logger;
 
-	public UnitOfWork(IDomainEventsDispatcher eventsDispatcher, ApplicationDbContext context)
+	public UnitOfWork(IDomainEventsDispatcher eventsDispatcher, ApplicationDbContext context, ILogger<UnitOfWork> logger)
 	{
 		_eventsDispatcher = eventsDispatcher;
 		_context = context;
+		_logger = logger;
 	}
 
-	public async Task SaveChangesAsync(CancellationToken ct = default)
+	public async Task<Result> SaveChangesAsync(CancellationToken ct = default)
 	{
 		await _eventsDispatcher.DispatchDomainEventsAsync(ct);
-		await _context.SaveChangesAsync(ct);
+
+		try
+		{
+			await _context.SaveChangesAsync(ct);
+			return Result.Success;
+		}
+		catch (DbUpdateConcurrencyException ex)
+		{
+			_logger.LogInformation("Database Concurrency Conflict: {msg}", ex.Message);
+			return ConcurrencyError;
+		}
+		catch (DbUpdateException ex)
+		{
+			_logger.LogError(ex, "Database Update Exception");
+			return UnexpectedError;
+		}
 	}
 }

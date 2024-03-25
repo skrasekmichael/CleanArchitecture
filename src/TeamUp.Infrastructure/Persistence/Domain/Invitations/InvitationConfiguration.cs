@@ -20,5 +20,9 @@ internal sealed class InvitationConfiguration : BaseEntityConfiguration<Invitati
 			.HasOne<Team>()
 			.WithMany()
 			.HasForeignKey(e => e.TeamId);
+
+		invitationEntityBuilder
+			.Property<byte[]>("RowVersion")
+			.IsRowVersion();
 	}
 }

@@ -25,8 +25,6 @@ public static class TeamErrors
 	public static readonly AuthorizationError UnauthorizedToCreateEventTypes = new("Teams.Authorization.CreateEventType", "Not allowed to create event types.");
 	public static readonly AuthorizationError UnauthorizedToDeleteEvents = new("Teams.Authorization.DeleteEvent", "Not allowed to delete events.");
 
-	public static readonly ConflictError UserIsAlreadyInvited = new("Teams.Conflict.InvitedUser", "User has been already invited to this team.");
-
 	public static readonly NotFoundError TeamNotFound = new("Teams.NotFound", "Team not found.");
 	public static readonly NotFoundError MemberNotFound = new("Teams.NotFound.Members", "Member not found.");
 	public static readonly NotFoundError EventTypeNotFound = new("Teams.NotFound.EventTypes", "Event type not found.");
