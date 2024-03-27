@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TeamUp.Infrastructure.Core;
+
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
 
 public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
@@ -187,5 +189,66 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
+	}
+
+	[Fact]
+	public async Task ChangeOwnership_AsOwner_WhenConcurrentUpdateCompletes_Should_ResultInConflict()
+	{
+		//arrange
+		var owner = UserGenerators.User.Generate();
+		var targetUserA = UserGenerators.User.Generate();
+		var targetUserB = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(17);
+		var team = TeamGenerators.Team
+			.WithMembers(owner, members, (targetUserA, TeamRole.Member), (targetUserB, TeamRole.Member))
+			.Generate();
+
+		await UseDbContextAsync(dbContext =>
+		{
+			dbContext.Users.AddRange([owner, targetUserA, targetUserB]);
+			dbContext.Users.AddRange(members);
+			dbContext.Teams.Add(team);
+			return dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(owner);
+
+		var targetMemberAId = team.Members.First(member => member.UserId == targetUserA.Id).Id;
+		var targetMemberBId = team.Members.First(member => member.UserId == targetUserB.Id).Id;
+
+		//assert
+		var (responseA, responseB) = await RunConcurrentRequestsAsync(
+			() => Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberAId.Value),
+			() => Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberBId.Value)
+		);
+
+		//act
+		responseA.Should().Be200Ok();
+		responseB.Should().Be409Conflict();
+
+		var teamMembers = await UseDbContextAsync(dbContext =>
+		{
+			return dbContext
+				.Set<TeamMember>()
+				.Where(member => member.TeamId == team.Id)
+				.ToListAsync();
+		});
+
+		var originalOwner = teamMembers.Single(member => member.UserId == owner.Id);
+		originalOwner.Role.Should().Be(TeamRole.Admin);
+
+		var newOwner = teamMembers.Single(member => member.UserId == targetUserA.Id);
+		newOwner.Role.Should().Be(TeamRole.Owner);
+
+		var concurrentTarget = teamMembers.Single(member => member.UserId == targetUserB.Id);
+		concurrentTarget.Role.Should().Be(TeamRole.Member);
+
+		teamMembers
+			.Except<TeamMember>([originalOwner, newOwner])
+			.Should()
+			.Contain(member => TeamContainsMemberWithSameRole(team, member));
+
+		var problemDetails = await responseB.ReadProblemDetailsAsync();
+		problemDetails.ShouldContainError(UnitOfWork.ConcurrencyError);
 	}
 }

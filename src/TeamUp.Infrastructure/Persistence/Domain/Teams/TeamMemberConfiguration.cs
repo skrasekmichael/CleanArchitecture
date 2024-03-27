@@ -26,7 +26,10 @@ internal sealed class TeamMemberConfiguration : BaseEntityConfiguration<TeamMemb
 			.HasMaxLength(255);
 
 		teamMemberEntityBuilder
-			.Property<byte[]>("RowVersion")
+			.HasIndex(team => team.TeamId);
+
+		teamMemberEntityBuilder
+			.Property<uint>("RowVersion")
 			.IsRowVersion();
 	}
 }

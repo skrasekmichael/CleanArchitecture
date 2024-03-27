@@ -26,5 +26,15 @@ internal sealed class EventConfiguration : BaseEntityConfiguration<Event, EventI
 			.WithOne()
 			.HasForeignKey(eventResponse => eventResponse.EventId)
 			.OnDelete(DeleteBehavior.Cascade);
+
+		eventEntityBuilder
+			.HasIndex(e => e.TeamId);
+
+		eventEntityBuilder
+			.HasIndex(e => e.EventTypeId);
+
+		eventEntityBuilder
+			.Property<uint>("RowVersion")
+			.IsRowVersion();
 	}
 }

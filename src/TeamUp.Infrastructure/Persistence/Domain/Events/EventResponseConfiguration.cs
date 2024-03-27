@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using TeamUp.Contracts.Events;
-using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Teams;
 
 using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
@@ -26,5 +25,12 @@ internal sealed class EventResponseConfiguration : BaseEntityConfiguration<Event
 		eventResponseEntityBuilder
 			.Property(eventResponse => eventResponse.Message)
 			.HasMaxLength(255);
+
+		eventResponseEntityBuilder
+			.HasIndex(eventResponse => eventResponse.EventId);
+
+		eventResponseEntityBuilder
+			.HasIndex(eventResponse => new { eventResponse.EventId, eventResponse.TeamMemberId })
+			.IsUnique();
 	}
 }

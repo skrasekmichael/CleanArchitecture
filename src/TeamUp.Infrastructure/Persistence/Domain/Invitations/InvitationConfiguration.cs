@@ -14,15 +14,21 @@ internal sealed class InvitationConfiguration : BaseEntityConfiguration<Invitati
 		invitationEntityBuilder
 			.HasOne<User>()
 			.WithMany()
-			.HasForeignKey(e => e.RecipientId);
+			.HasForeignKey(invitation => invitation.RecipientId);
 
 		invitationEntityBuilder
 			.HasOne<Team>()
 			.WithMany()
-			.HasForeignKey(e => e.TeamId);
+			.HasForeignKey(invitation => invitation.TeamId);
 
 		invitationEntityBuilder
-			.Property<byte[]>("RowVersion")
-			.IsRowVersion();
+			.HasIndex(invitation => invitation.RecipientId);
+
+		invitationEntityBuilder
+			.HasIndex(invitation => invitation.TeamId);
+
+		invitationEntityBuilder
+			.HasIndex(invitation => new { invitation.TeamId, invitation.RecipientId })
+			.IsUnique();
 	}
 }

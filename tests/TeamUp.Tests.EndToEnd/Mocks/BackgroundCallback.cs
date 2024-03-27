@@ -6,11 +6,9 @@ internal abstract class BackgroundCallback
 
 	public void Invoke()
 	{
-		_tcs.TrySetResult(true);
+		_tcs.SetResult(true);
 		_tcs = new();
 	}
 
 	public async Task WaitForCallbackAsync() => await _tcs.Task;
 }
-
-internal sealed class OutboxBackgroundCallback : BackgroundCallback;
