@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Processing.Outbox;
 using TeamUp.Tests.Common.Fixtures;
 using TeamUp.Tests.EndToEnd.Mocks;
@@ -48,6 +49,12 @@ public sealed class AppFactory(string connectionString) : WebApplicationFactory<
 			//background services
 			services.AddSingleton<OutboxBackgroundCallback>();
 			services.Replace<IProcessOutboxMessagesJob, ProcessOutboxMessagesWithCallbackJob>();
+
+			//unit of work
+			services.AddSingleton<CanCommitCallback>();
+			services.AddSingleton<BeforeCommitCallback>();
+			services.AddSingleton<DelayedCommitUnitOfWorkOptions>();
+			services.Replace<IUnitOfWork, DelayedCommitUnitOfWork>();
 		});
 
 		builder.UseEnvironment(Environments.Production);

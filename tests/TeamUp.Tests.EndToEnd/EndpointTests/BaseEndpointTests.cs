@@ -16,7 +16,7 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 	internal MailInbox Inbox { get; private set; } = null!;
 	internal BackgroundCallback BackgroundCallback { get; private set; } = null!;
 	internal SkewDateTimeProvider DateTimeProvider { get; private set; } = null!;
-
+	internal DelayedCommitUnitOfWorkOptions DelayedCommitUnitOfWorkOptions { get; private set; } = null!;
 
 	public async Task InitializeAsync()
 	{
@@ -28,10 +28,12 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 		Inbox = App.Services.GetRequiredService<MailInbox>();
 		BackgroundCallback = App.Services.GetRequiredService<OutboxBackgroundCallback>();
 		DateTimeProvider = (SkewDateTimeProvider)App.Services.GetRequiredService<IDateTimeProvider>();
+		DelayedCommitUnitOfWorkOptions = App.Services.GetRequiredService<DelayedCommitUnitOfWorkOptions>();
 
 		Inbox.Clear();
 		DateTimeProvider.Skew = TimeSpan.Zero;
 		DateTimeProvider.ExactTime = null;
+		DelayedCommitUnitOfWorkOptions.IsDelayRequested = false;
 	}
 
 	public void Authenticate(User user)
@@ -79,6 +81,29 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 		var waitTask = BackgroundCallback.WaitForCallbackAsync();
 		var completedTask = await Task.WhenAny(waitTask, Task.Delay(millisecondsTimeout));
 		completedTask.Should().Be(waitTask, "Background callback has to be called");
+	}
+
+	protected async Task<(HttpResponseMessage A, HttpResponseMessage B)> RunConcurrentRequestsAsync(Func<Task<HttpResponseMessage>> requestA, Func<Task<HttpResponseMessage>> requestB)
+	{
+		var beforeCommitCallback = App.Services.GetRequiredService<BeforeCommitCallback>();
+		var canCommitCallback = App.Services.GetRequiredService<CanCommitCallback>();
+
+		var reqA = Task.Run(async () =>
+		{
+			await beforeCommitCallback.WaitForCallbackAsync();
+			DelayedCommitUnitOfWorkOptions.IsDelayRequested = false;
+			var response = await requestA();
+			canCommitCallback.Invoke();
+			return response;
+		});
+
+		var reqB = Task.Run(() =>
+		{
+			DelayedCommitUnitOfWorkOptions.IsDelayRequested = true;
+			return requestB();
+		});
+
+		return await Task.WhenAll(reqA, reqB).ContinueWith(task => (task.Result[0], task.Result[1]));
 	}
 
 	public Task DisposeAsync()

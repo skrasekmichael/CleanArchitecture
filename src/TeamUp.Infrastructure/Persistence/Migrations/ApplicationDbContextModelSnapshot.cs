@@ -43,6 +43,12 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                     b.Property<TimeSpan>("ReplyClosingTimeBeforeMeetTime")
                         .HasColumnType("interval");
 
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -89,6 +95,9 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TeamMemberId");
 
+                    b.HasIndex("EventId", "TeamMemberId")
+                        .IsUnique();
+
                     b.ToTable("EventResponse");
                 });
 
@@ -103,11 +112,6 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("RecipientId")
                         .HasColumnType("uuid");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea");
-
                     b.Property<Guid>("TeamId")
                         .HasColumnType("uuid");
 
@@ -116,6 +120,9 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                     b.HasIndex("RecipientId");
 
                     b.HasIndex("TeamId");
+
+                    b.HasIndex("TeamId", "RecipientId")
+                        .IsUnique();
 
                     b.ToTable("Invitations");
                 });
@@ -171,10 +178,11 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<uint>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea");
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<Guid>("TeamId")
                         .HasColumnType("uuid");
@@ -210,10 +218,11 @@ namespace TeamUp.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<uint>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea");
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");

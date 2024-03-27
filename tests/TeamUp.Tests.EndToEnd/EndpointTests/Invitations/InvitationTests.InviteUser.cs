@@ -1,4 +1,8 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+
+using TeamUp.Infrastructure.Core;
+
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
 
 public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
@@ -309,5 +313,55 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
+	}
+
+	[Fact]
+	public async Task InviteUser_AsOwner_WhenConcurrentInvitationOfSameUserCompletes_Should_ResultInConflict()
+	{
+		//arrange
+		var owner = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
+		var team = TeamGenerators.Team.WithMembers(owner, members).Generate();
+
+		await UseDbContextAsync(dbContext =>
+		{
+			dbContext.Users.AddRange([owner, targetUser]);
+			dbContext.Users.AddRange(members);
+			dbContext.Teams.Add(team);
+			return dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(owner);
+
+		var request = new InviteUserRequest
+		{
+			Email = targetUser.Email,
+			TeamId = team.Id
+		};
+
+		//act
+		var (responseA, responseB) = await RunConcurrentRequestsAsync(
+			() => Client.PostAsJsonAsync(URL, request),
+			() => Client.PostAsJsonAsync(URL, request)
+		);
+
+		//assert
+		responseA.Should().Be201Created();
+		responseB.Should().Be409Conflict();
+
+		var invitationId = await responseA.ReadFromJsonAsync<InvitationId>();
+		invitationId.ShouldNotBeNull();
+
+		await UseDbContextAsync(async dbContext =>
+		{
+			var invitation = await dbContext.Invitations.SingleAsync(invitation =>
+				invitation.TeamId == team.Id &&
+				invitation.RecipientId == targetUser.Id);
+			invitation.Id.Should().Be(invitationId);
+		});
+
+		var problemDetails = await responseB.ReadProblemDetailsAsync();
+		problemDetails.ShouldContainError(UnitOfWork.UniqueConstraintError);
 	}
 }

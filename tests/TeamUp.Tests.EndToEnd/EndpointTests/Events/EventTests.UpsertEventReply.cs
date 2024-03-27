@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using TeamUp.Infrastructure.Core;
+
 using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Events;
@@ -426,5 +428,55 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 
 		var validationProblemDetails = await response.ReadValidationProblemDetailsAsync();
 		validationProblemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
+	}
+
+	[Fact]
+	public async Task UpsertEventReply_WhenConcurrentUpsertFromSameMemberCompletes_Should_ResultInConflict()
+	{
+		//arrange
+		var initiatorUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(19);
+		var team = TeamGenerators.Team
+			.WithMembers(initiatorUser, members)
+			.WithEventTypes(5)
+			.Generate();
+		var eventType = team.EventTypes[0];
+		var initiatorMemberId = team.Members.Single(member => member.UserId == initiatorUser.Id).Id;
+		var targetEvent = EventGenerators.Event
+			.ForTeam(team.Id)
+			.WithEventType(eventType.Id)
+			.WithStatus(EventStatus.Open)
+			.WithRandomEventResponses(team.Members.Where(member => member.Id != initiatorMemberId))
+			.Generate();
+
+		await UseDbContextAsync(dbContext =>
+		{
+			dbContext.Users.Add(initiatorUser);
+			dbContext.Users.AddRange(members);
+			dbContext.Teams.Add(team);
+			dbContext.Events.Add(targetEvent);
+			return dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(initiatorUser);
+
+		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
+
+		//act
+		var (responseA, responseB) = await RunConcurrentRequestsAsync(
+			() => Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request),
+			() => Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request)
+		);
+
+		//assert
+		responseA.Should().Be200Ok();
+		responseB.Should().Be409Conflict();
+
+		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleAsync(er => er.TeamMemberId == initiatorMemberId));
+		eventResponse.ReplyType.Should().Be(request.ReplyType);
+		eventResponse.Message.Should().Be(request.Message);
+
+		var problemDetails = await responseB.ReadProblemDetailsAsync();
+		problemDetails.ShouldContainError(UnitOfWork.UniqueConstraintError);
 	}
 }

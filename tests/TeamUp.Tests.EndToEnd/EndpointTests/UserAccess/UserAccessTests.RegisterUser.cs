@@ -1,4 +1,8 @@
-﻿namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
+﻿using Microsoft.EntityFrameworkCore;
+
+using TeamUp.Infrastructure.Core;
+
+namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
 
 public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 {
@@ -72,5 +76,37 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
+	}
+
+	[Fact]
+	public async Task RegisterUser_WhenConcurrentRegistrationWithSameEmailCompletes_Should_ResultInConflict()
+	{
+		//arrange
+		var request = UserGenerators.ValidRegisterUserRequest.Generate();
+
+		//act
+		var (responseA, responseB) = await RunConcurrentRequestsAsync(
+			() => Client.PostAsJsonAsync(URL, request),
+			() => Client.PostAsJsonAsync(URL, request)
+		);
+
+		//assert
+		responseA.Should().Be201Created();
+		responseB.Should().Be409Conflict();
+
+		var userId = await responseA.ReadFromJsonAsync<UserId>();
+		userId.ShouldNotBeNull();
+
+		var user = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(userId));
+		user.ShouldNotBeNull();
+
+		user.Name.Should().BeEquivalentTo(request.Name);
+		user.Email.Should().BeEquivalentTo(request.Email);
+
+		var singleUser = await UseDbContextAsync(dbContext => dbContext.Users.SingleAsync(user => user.Email == request.Email));
+		user.Should().BeEquivalentTo(singleUser);
+
+		var problemDetails = await responseB.ReadProblemDetailsAsync();
+		problemDetails.ShouldContainError(UnitOfWork.UniqueConstraintError);
 	}
 }

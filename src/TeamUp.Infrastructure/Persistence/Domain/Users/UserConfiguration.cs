@@ -44,7 +44,7 @@ internal sealed class UserConfiguration : BaseEntityConfiguration<User, UserId>
 			.OnDelete(DeleteBehavior.Cascade);
 
 		userEntityBuilder
-			.Property<byte[]>("RowVersion")
+			.Property<uint>("RowVersion")
 			.IsRowVersion();
 	}
 }

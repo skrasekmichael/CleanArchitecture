@@ -5,6 +5,8 @@ using TeamUp.Infrastructure.Processing.Outbox;
 
 namespace TeamUp.Tests.EndToEnd.Mocks;
 
+internal sealed class OutboxBackgroundCallback : BackgroundCallback;
+
 [DisallowConcurrentExecution]
 internal sealed class ProcessOutboxMessagesWithCallbackJob : IProcessOutboxMessagesJob
 {
