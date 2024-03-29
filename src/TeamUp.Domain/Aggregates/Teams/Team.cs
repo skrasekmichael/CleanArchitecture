@@ -2,6 +2,7 @@
 using TeamUp.Contracts.Teams;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;
+using TeamUp.Domain.Aggregates.Teams.DomainEvents;
 using TeamUp.Domain.Aggregates.Users;
 
 using Errors = TeamUp.Domain.Aggregates.Teams.TeamErrors;
@@ -15,6 +16,8 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 	private readonly List<TeamMember> _members = [];
 
 	public string Name { get; private set; }
+	public int NumberOfMembers { get; private set; }
+
 	public IReadOnlyList<EventType> EventTypes => _eventTypes.AsReadOnly();
 	public IReadOnlyList<TeamMember> Members => _members.AsReadOnly();
 
@@ -26,6 +29,25 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 	{
 		Name = name;
 	}
+
+	public static Result<Team> Create(string name, User owner, IDateTimeProvider dateTimeProvider)
+	{
+		return name
+			.Ensure(Rules.TeamNameMinSize, Rules.TeamNameMaxSize)
+			.Then(name => new Team(TeamId.New(), name))
+			.Tap(team => team.AddTeamMember(owner, dateTimeProvider, TeamRole.Owner))
+			.Tap(_ => owner.IncreaseNumberOfOwningTeams());
+	}
+
+	public Result Delete(UserId initiatorId)
+	{
+		return GetTeamMemberByUserId(initiatorId)
+			.Ensure(Rules.MemberIsOwner, Errors.UnauthorizedToDeleteTeam)
+			.Tap(_ => AddDomainEvent(new TeamDeletedDomainEvent(this)))
+			.ToResult();
+	}
+
+	internal void DecreaseNumberOfMembers() => NumberOfMembers--;
 
 	public Result<EventTypeId> CreateEventType(UserId initiatorId, string name, string description)
 	{
@@ -49,6 +71,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			role,
 			dateTimeProvider.DateTimeOffsetUtcNow
 		));
+		NumberOfMembers += 1;
 	}
 
 	public Result RemoveTeamMember(UserId initiatorId, TeamMemberId teamMemberId)
@@ -58,6 +81,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			.And(() => GetTeamMemberByUserId(initiatorId))
 			.Ensure(Rules.MemberCanBeRemovedByInitiator)
 			.Tap((member, _) => _members.Remove(member))
+			.Tap(_ => NumberOfMembers--)
 			.ToResult();
 	}
 
@@ -91,6 +115,7 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			{
 				initiator.UpdateRole(TeamRole.Admin);
 				member.UpdateRole(TeamRole.Owner);
+				AddDomainEvent(new TeamOwnershipChangedDomainEvent(initiator, member));
 			})
 			.ToResult();
 	}
@@ -103,14 +128,6 @@ public sealed class Team : AggregateRoot<Team, TeamId>
 			.Ensure(Rules.MemberCanChangeTeamName)
 			.Then(_ => Name = newName)
 			.ToResult();
-	}
-
-	public static Result<Team> Create(string name, User owner, IDateTimeProvider dateTimeProvider)
-	{
-		return name
-			.Ensure(Rules.TeamNameMinSize, Rules.TeamNameMaxSize)
-			.Then(name => new Team(TeamId.New(), name))
-			.Tap(team => team.AddTeamMember(owner, dateTimeProvider, TeamRole.Owner));
 	}
 
 	public Result<TeamMember> GetTeamMemberByUserId(UserId userId)

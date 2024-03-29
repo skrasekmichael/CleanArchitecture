@@ -2,7 +2,6 @@
 using TeamUp.Contracts.Invitations;
 using TeamUp.Contracts.Teams;
 using TeamUp.Contracts.Users;
-using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Domain.Aggregates.Invitations;
 

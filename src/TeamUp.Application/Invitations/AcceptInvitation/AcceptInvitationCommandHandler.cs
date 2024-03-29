@@ -1,29 +1,24 @@
 ﻿using TeamUp.Application.Abstractions;
-using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Abstractions;
-using TeamUp.Domain.Aggregates.Invitations;
+using TeamUp.Domain.DomainServices;
 
 namespace TeamUp.Application.Invitations.AcceptInvitation;
 
 internal sealed class AcceptInvitationCommandHandler : ICommandHandler<AcceptInvitationCommand, Result>
 {
-	private readonly IInvitationRepository _invitationRepository;
+	private readonly IInvitationDomainService _invitationDomainService;
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IDateTimeProvider _dateTimeProvider;
 
-	public AcceptInvitationCommandHandler(IInvitationRepository invitationRepository, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
+	public AcceptInvitationCommandHandler(IInvitationDomainService invitationDomainService, IUnitOfWork unitOfWork)
 	{
-		_invitationRepository = invitationRepository;
+		_invitationDomainService = invitationDomainService;
 		_unitOfWork = unitOfWork;
-		_dateTimeProvider = dateTimeProvider;
 	}
 
 	public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken ct)
 	{
-		var invitation = await _invitationRepository.GetInvitationByIdAsync(command.InvitationId, ct);
-		return await invitation
-			.EnsureNotNull(InvitationErrors.InvitationNotFound)
-			.Then(invitation => invitation.Accept(command.InitiatorId, _dateTimeProvider))
+		return await _invitationDomainService
+			.AcceptInvitationAsync(command.InitiatorId, command.InvitationId, ct)
 			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }

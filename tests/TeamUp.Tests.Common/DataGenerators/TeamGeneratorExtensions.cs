@@ -4,6 +4,12 @@ namespace TeamUp.Tests.Common.DataGenerators;
 
 public static class TeamGeneratorExtensions
 {
+	private static TeamRole GetOwner(this User user)
+	{
+		user.IncreaseNumberOfOwningTeams();
+		return TeamRole.Owner;
+	}
+
 	public static TeamGenerator WithMembers(this TeamGenerator teamGenerator, User user, TeamRole role, List<User> members)
 	{
 		var hasOwner = role == TeamRole.Owner || members.Count >= 1;
@@ -42,13 +48,14 @@ public static class TeamGeneratorExtensions
 		pot.Should().HaveCountGreaterThanOrEqualTo(1);
 
 		return teamGenerator
+			.RuleFor(t => t.NumberOfMembers, count)
 			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => f
 				.Make(() => new List<User>(pot), count, (list, index) => f.PopRandom(list, index == 1 ? lastXNonOwners : 0)
 					.Map(user => TeamGenerators.TeamMember
 						.RuleForBackingField(tm => tm.TeamId, t.Id)
 						.RuleForBackingField(tm => tm.UserId, user.Id)
 						.RuleFor(tm => tm.Nickname, user.Name)
-						.RuleFor(tm => tm.Role, index == 1 ? TeamRole.Owner : TeamRole.Member)
+						.RuleFor(tm => tm.Role, index == 1 ? user.GetOwner() : TeamRole.Member)
 						.Generate()))
 				.ToList());
 	}
@@ -63,12 +70,13 @@ public static class TeamGeneratorExtensions
 	private static TeamGenerator GetTeamGeneratorWithMembers(this TeamGenerator teamGenerator, List<User> members, params (User User, TeamRole Role)[] userMembers)
 	{
 		return teamGenerator
+			.RuleFor(t => t.NumberOfMembers, members.Count + userMembers.Length)
 			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => userMembers
 				.Select(um => TeamGenerators.TeamMember
 					.RuleForBackingField(tm => tm.TeamId, t.Id)
 					.RuleForBackingField(tm => tm.UserId, um.User.Id)
 					.RuleFor(tm => tm.Nickname, um.User.Name)
-					.RuleFor(tm => tm.Role, um.Role)
+					.RuleFor(tm => tm.Role, um.Role == TeamRole.Owner ? um.User.GetOwner() : um.Role)
 					.Generate())
 				.Concat(members
 					.Select(member => TeamGenerators.TeamMember
@@ -84,13 +92,14 @@ public static class TeamGeneratorExtensions
 	public static TeamGenerator WithOneOwner(this TeamGenerator teamGenerator, User owner)
 	{
 		return teamGenerator
+			.RuleFor(t => t.NumberOfMembers, 1)
 			.RuleFor(TeamGenerators.TEAM_MEMBERS_FIELD, (f, t) => new List<TeamMember>()
 			{
 				TeamGenerators.TeamMember
 					.RuleForBackingField(tm => tm.TeamId, t.Id)
 					.RuleForBackingField(tm => tm.UserId, owner.Id)
 					.RuleFor(tm => tm.Nickname, owner.Name)
-					.RuleFor(tm => tm.Role, TeamRole.Owner)
+					.RuleFor(tm => tm.Role, owner.GetOwner())
 					.Generate()
 			});
 	}

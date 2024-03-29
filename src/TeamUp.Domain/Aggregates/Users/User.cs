@@ -9,6 +9,7 @@ public sealed class User : AggregateRoot<User, UserId>
 	public string Email { get; private set; }
 	public Password Password { get; private set; }
 	public UserStatus Status { get; private set; }
+	public int NumberOfOwnedTeams { get; private set; }
 
 #pragma warning disable CS8618 // EF Core constructor
 	private User() : base() { }
@@ -52,4 +53,8 @@ public sealed class User : AggregateRoot<User, UserId>
 		password,
 		UserStatus.NotActivated
 	);
+
+	internal void IncreaseNumberOfOwningTeams() => NumberOfOwnedTeams += 1;
+
+	internal void DecreaseNumberOfOwningTeams() => NumberOfOwnedTeams -= 1;
 }

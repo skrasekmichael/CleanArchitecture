@@ -8,4 +8,5 @@ public interface IInvitationDomainService
 {
 	public Task<Result<InvitationId>> InviteUserAsync(UserId initiatorId, TeamId teamId, string email, CancellationToken ct = default);
 	public Task<Result> RemoveInvitationAsync(UserId initiatorId, InvitationId invitationId, CancellationToken ct = default);
+	public Task<Result> AcceptInvitationAsync(UserId initiatorId, InvitationId invitationId, CancellationToken ct = default);
 }

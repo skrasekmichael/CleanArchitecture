@@ -33,4 +33,6 @@ public static class TeamErrors
 	public static readonly DomainError CannotHaveMultipleTeamOwners = new("Teams.Domain.MultipleOwners", "Cannot have multiple team owners.");
 	public static readonly DomainError CannotRemoveTeamOwner = new("Teams.Domain.RemoveOwner", "Cannot remove owner of the team.");
 	public static readonly DomainError CannotInviteUserThatIsTeamMember = new("Teams.Domain.InviteMember", "Cannot invite user that is already member of the team.");
+	public static readonly DomainError CannotOwnSoManyTeams = new("Teams.Domain.OwnsToManyTeams", $"Cannot own more than {TeamConstants.MAX_NUMBER_OF_OWNED_TEAMS} teams.");
+	public static readonly DomainError MaximumCapacityReached = new("Teams.Domain.MaximumCapacity", $"Team has reached maximum capacity of {TeamConstants.MAX_TEAM_CAPACITY} members.");
 }
