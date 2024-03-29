@@ -1,4 +1,5 @@
-﻿using TeamUp.Contracts.Invitations;
+﻿using TeamUp.Common.Abstractions;
+using TeamUp.Contracts.Invitations;
 using TeamUp.Contracts.Teams;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;
@@ -16,19 +17,46 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 	private readonly IInvitationRepository _invitationRepository;
 	private readonly IIntegrationEventManager _integrationEventManager;
 	private readonly InvitationFactory _invitationFactory;
+	private readonly IDateTimeProvider _dateTimeProvider;
 
 	public InvitationDomainService(
 		IUserRepository userRepository,
 		ITeamRepository teamRepository,
 		IInvitationRepository invitationRepository,
 		IIntegrationEventManager integrationEventManager,
-		InvitationFactory invitationFactory)
+		InvitationFactory invitationFactory,
+		IDateTimeProvider dateTimeProvider)
 	{
 		_userRepository = userRepository;
 		_teamRepository = teamRepository;
 		_invitationRepository = invitationRepository;
 		_integrationEventManager = integrationEventManager;
 		_invitationFactory = invitationFactory;
+		_dateTimeProvider = dateTimeProvider;
+	}
+
+	public async Task<Result> AcceptInvitationAsync(UserId initiatorId, InvitationId invitationId, CancellationToken ct = default)
+	{
+		var invitation = await _invitationRepository.GetInvitationByIdAsync(invitationId, ct);
+		return await invitation
+			.EnsureNotNull(InvitationErrors.InvitationNotFound)
+			.Ensure(invitation => invitation.RecipientId == initiatorId, InvitationErrors.UnauthorizedToAcceptInvitation)
+			.Ensure(invitation => !invitation.HasExpired(_dateTimeProvider.UtcNow), InvitationErrors.InvitationExpired)
+			.AndAsync(invitation => _teamRepository.GetTeamByIdAsync(invitation.TeamId, ct))
+			.EnsureSecondNotNull(TeamErrors.TeamNotFound)
+			.ThenAsync(async (invitation, team) =>
+			{
+				return await team
+					.Ensure(TeamRules.TeamHasNotReachedCapacity)
+					.ThenAsync(_ => _userRepository.GetUserByIdAsync(invitation.RecipientId))
+					.EnsureNotNull(UserErrors.AccountNotFound)
+					.Tap(user =>
+					{
+						team.AddTeamMember(user, _dateTimeProvider);
+						_invitationRepository.RemoveInvitation(invitation);
+					});
+			})
+			.ToResultAsync();
 	}
 
 	public async Task<Result<InvitationId>> InviteUserAsync(UserId initiatorId, TeamId teamId, string email, CancellationToken ct = default)
@@ -36,6 +64,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 		var team = await _teamRepository.GetTeamByIdAsync(teamId, ct);
 		return await team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
+			.Ensure(TeamRules.TeamHasNotReachedCapacity)
 			.And(team => team.GetTeamMemberByUserId(initiatorId))
 			.Ensure((_, member) => member.Role.CanInviteTeamMembers(), TeamErrors.UnauthorizedToInviteTeamMembers)
 			.Then((team, _) => team)

@@ -364,4 +364,39 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var problemDetails = await responseB.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UnitOfWork.UniqueConstraintError);
 	}
+
+	[Fact]
+	public async Task InviteUser_AsOwner_WhenTeamIsFull_Should_ResultInBadRequest_DomainError()
+	{
+		//arrange
+		var initiatorUser = UserGenerators.User.Generate();
+		var targetUser = UserGenerators.User.Generate();
+		var members = UserGenerators.User.Generate(TeamConstants.MAX_TEAM_CAPACITY - 1);
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, members).Generate();
+
+		await UseDbContextAsync(dbContext =>
+		{
+			dbContext.Users.AddRange([initiatorUser, targetUser]);
+			dbContext.Users.AddRange(members);
+			dbContext.Teams.Add(team);
+			return dbContext.SaveChangesAsync();
+		});
+
+		Authenticate(initiatorUser);
+
+		var request = new InviteUserRequest
+		{
+			Email = targetUser.Email,
+			TeamId = team.Id
+		};
+
+		//act
+		var response = await Client.PostAsJsonAsync(URL, request);
+
+		//assert
+		response.Should().Be400BadRequest();
+
+		var problemDetails = await response.ReadProblemDetailsAsync();
+		problemDetails.ShouldContainError(TeamErrors.MaximumCapacityReached);
+	}
 }

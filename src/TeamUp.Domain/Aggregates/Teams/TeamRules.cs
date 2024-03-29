@@ -44,4 +44,14 @@ public static class TeamRules
 		context => context.User is null || context.Team.Members.FirstOrDefault(member => member.UserId == context.User.Id) is null,
 		TeamErrors.CannotInviteUserThatIsTeamMember
 	);
+
+	public static readonly RuleWithError<User> UserDoesNotOwnToManyTeams = new(
+		user => user.NumberOfOwnedTeams < TeamConstants.MAX_NUMBER_OF_OWNED_TEAMS,
+		TeamErrors.CannotOwnSoManyTeams
+	);
+
+	public static readonly RuleWithError<Team> TeamHasNotReachedCapacity = new(
+		team => team.NumberOfMembers < TeamConstants.MAX_TEAM_CAPACITY,
+		TeamErrors.MaximumCapacityReached
+	);
 }

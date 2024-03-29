@@ -28,6 +28,7 @@ internal sealed class CreateTeamCommandHandler : ICommandHandler<CreateTeamComma
 		var user = await _userRepository.GetUserByIdAsync(command.OwnerId, ct);
 		return await user
 			.EnsureNotNull(UserErrors.AccountNotFound)
+			.Ensure(TeamRules.UserDoesNotOwnToManyTeams)
 			.Then(user => Team.Create(command.Name, user, _dateTimeProvider))
 			.Tap(_teamRepository.AddTeam)
 			.Then(team => team.Id)

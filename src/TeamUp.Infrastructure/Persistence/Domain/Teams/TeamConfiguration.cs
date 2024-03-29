@@ -40,5 +40,9 @@ internal sealed class TeamConfiguration : BaseEntityConfiguration<Team, TeamId>
 			.WithOne()
 			.HasForeignKey(e => e.TeamId)
 			.OnDelete(DeleteBehavior.Cascade);
+
+		teamEntityTypeBuilder
+			.Property<uint>("RowVersion")
+			.IsRowVersion();
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Teams;
+using TeamUp.Domain.Aggregates.Teams.DomainEvents;
 using TeamUp.Domain.Aggregates.Users;
 
 namespace TeamUp.Domain.EventHandlers;
@@ -37,8 +38,12 @@ internal sealed class UserDeletedEventHandler : IDomainEventHandler<UserDeletedD
 						var newOwner = team.GetHighestNonOwnerTeamMember()!;
 						initiator.UpdateRole(TeamRole.Admin);
 						newOwner.UpdateRole(TeamRole.Owner);
+						team.AddDomainEvent(new TeamOwnershipChangedDomainEvent(initiator, newOwner));
 					}
 				});
+
+			//db will cascade delete member, but number of members needs to be updated manually
+			team.DecreaseNumberOfMembers();
 		}
 
 		_userRepository.RemoveUser(domainEvent.User);

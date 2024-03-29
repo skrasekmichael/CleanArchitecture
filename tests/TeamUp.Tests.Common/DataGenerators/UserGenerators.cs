@@ -13,7 +13,8 @@ public sealed class UserGenerators : BaseGenerator
 		.RuleFor(u => u.Email, f => f.Internet.Email())
 		.RuleFor(u => u.Name, f => f.Internet.UserName())
 		.RuleFor(u => u.Status, UserStatus.Activated)
-		.RuleFor(u => u.Password, new Password());
+		.RuleFor(u => u.Password, new Password())
+		.RuleFor(u => u.NumberOfOwnedTeams, 0);
 
 	public static readonly Faker<User> DistinctUser = new Faker<User>()
 		.UsePrivateConstructor()
@@ -21,7 +22,8 @@ public sealed class UserGenerators : BaseGenerator
 		.RuleFor(u => u.Email, f => f.Internet.Email(uniqueSuffix: Guid.NewGuid().ToString()))
 		.RuleFor(u => u.Name, f => f.Internet.UserName())
 		.RuleFor(u => u.Password, new Password())
-		.RuleFor(u => u.Status, UserStatus.Activated);
+		.RuleFor(u => u.Status, UserStatus.Activated)
+		.RuleFor(u => u.NumberOfOwnedTeams, 0);
 
 	public static string GenerateValidPassword() => F.Internet.Password(10);
 

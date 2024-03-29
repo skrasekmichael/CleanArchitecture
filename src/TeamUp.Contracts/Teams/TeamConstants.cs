@@ -12,4 +12,7 @@ public static class TeamConstants
 	public const int EVENTTYPE_NAME_MAX_SIZE = 30;
 
 	public const int EVENTTYPE_DESCRIPTION_MAX_SIZE = 30;
+
+	public const int MAX_NUMBER_OF_OWNED_TEAMS = 5;
+	public const int MAX_TEAM_CAPACITY = 30;
 }
