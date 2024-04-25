@@ -6,7 +6,7 @@ using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Events;
 
-public sealed class UpsertEventReplyRequest : IRequestBody
+public sealed record UpsertEventReplyRequest : IRequestBody
 {
 	public required ReplyType ReplyType { get; init; }
 

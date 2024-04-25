@@ -32,7 +32,7 @@ public sealed class InviteUserEndpoint : IEndpointGroup
 		var command = new InviteUserCommand(httpContext.GetCurrentUserId(), request.TeamId, request.Email);
 
 		var result = await sender.Send(command, ct);
-		return result.Match(invitationId => TypedResults.Created(
+		return result.ToResponse(invitationId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamInvitationsEndpoint), request.TeamId.Value),
 			value: invitationId
 		));

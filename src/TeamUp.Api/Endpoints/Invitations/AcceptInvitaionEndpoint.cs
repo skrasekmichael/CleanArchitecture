@@ -30,6 +30,6 @@ public sealed class AcceptInvitationEndpoint : IEndpointGroup
 	{
 		var command = new AcceptInvitationCommand(httpContext.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

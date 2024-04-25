@@ -28,6 +28,6 @@ public sealed class LoginUserEndpoint : IEndpointGroup
 	{
 		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

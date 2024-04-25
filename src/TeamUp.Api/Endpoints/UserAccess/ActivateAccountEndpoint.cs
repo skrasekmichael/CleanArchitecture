@@ -26,6 +26,6 @@ public sealed class ActivateAccountEndpoint : IEndpointGroup
 	{
 		var command = new ActivateAccountCommand(UserId.FromGuid(userId));
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

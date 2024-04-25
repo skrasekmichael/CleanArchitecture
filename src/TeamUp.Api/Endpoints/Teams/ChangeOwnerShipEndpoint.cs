@@ -34,6 +34,6 @@ public class ChangeOwnershipEndpoint : IEndpointGroup
 			TeamMemberId.FromGuid(teamMemberId)
 		);
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

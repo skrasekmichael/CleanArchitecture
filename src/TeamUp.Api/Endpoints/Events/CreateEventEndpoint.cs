@@ -44,8 +44,8 @@ public sealed class CreateEventEndpoint : IEndpointGroup
 			ReplyClosingTimeBeforeMeetTime: request.ReplyClosingTimeBeforeMeetTime
 		);
 
-		var response = await sender.Send(command, ct);
-		return response.Match(eventId => TypedResults.Created(
+		var result = await sender.Send(command, ct);
+		return result.ToResponse(eventId => TypedResults.Created(
 			linkGenerator.GetPathByName(httpContext, nameof(GetEventEndpoint), new { teamId, eventId = eventId.Value }),
 			eventId
 		));

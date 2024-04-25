@@ -6,7 +6,7 @@ using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Teams;
 
-public sealed class ChangeNicknameRequest : IRequestBody
+public sealed record ChangeNicknameRequest : IRequestBody
 {
 	[DataType(DataType.Text)]
 	public required string Nickname { get; init; }

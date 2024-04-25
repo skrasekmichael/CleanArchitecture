@@ -6,7 +6,7 @@ using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Users;
 
-public sealed class RegisterUserRequest : IRequestBody
+public sealed record RegisterUserRequest : IRequestBody
 {
 	[DataType(DataType.Text)]
 	public required string Name { get; init; }

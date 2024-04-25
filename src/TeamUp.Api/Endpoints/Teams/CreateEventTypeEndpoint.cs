@@ -38,7 +38,7 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 		);
 
 		var result = await sender.Send(command, ct);
-		return result.Match(eventTypeId => TypedResults.Created(
+		return result.ToResponse(eventTypeId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamEndpoint), teamId),
 			value: eventTypeId
 		));

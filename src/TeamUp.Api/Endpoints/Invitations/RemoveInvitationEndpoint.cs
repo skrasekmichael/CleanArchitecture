@@ -29,6 +29,6 @@ public sealed class RemoveInvitationEndpoint : IEndpointGroup
 	{
 		var command = new RemoveInvitationCommand(httpContext.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

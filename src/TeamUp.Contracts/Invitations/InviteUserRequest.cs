@@ -7,7 +7,7 @@ using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Contracts.Invitations;
 
-public sealed class InviteUserRequest : IRequestBody
+public sealed record InviteUserRequest : IRequestBody
 {
 	public required TeamId TeamId { get; init; }
 

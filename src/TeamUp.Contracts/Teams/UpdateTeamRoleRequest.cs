@@ -4,7 +4,7 @@ using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Teams;
 
-public sealed class UpdateTeamRoleRequest : IRequestBody
+public sealed record UpdateTeamRoleRequest : IRequestBody
 {
 	public required TeamRole Role { get; init; }
 

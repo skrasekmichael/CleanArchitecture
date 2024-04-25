@@ -213,14 +213,9 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 
 		Authenticate(initiatorUser);
 
-		var request = new CreateEventRequest
+		var request = invalidRequest.Request with
 		{
-			EventTypeId = team.EventTypes[0].Id,
-			Description = invalidRequest.Request.Description,
-			MeetTime = invalidRequest.Request.MeetTime,
-			ReplyClosingTimeBeforeMeetTime = invalidRequest.Request.ReplyClosingTimeBeforeMeetTime,
-			FromUtc = invalidRequest.Request.FromUtc,
-			ToUtc = invalidRequest.Request.ToUtc,
+			EventTypeId = team.EventTypes[0].Id
 		};
 
 		//act

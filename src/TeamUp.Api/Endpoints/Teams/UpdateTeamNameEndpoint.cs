@@ -35,6 +35,6 @@ public sealed class UpdateTeamNameEndpoint : IEndpointGroup
 			request.Name
 		);
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

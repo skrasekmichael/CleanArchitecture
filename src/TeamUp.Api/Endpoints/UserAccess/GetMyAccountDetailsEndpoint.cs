@@ -27,6 +27,6 @@ public sealed class GetMyAccountDetailsEndpoint : IEndpointGroup
 	{
 		var query = new GetAccountDetailsQuery(httpContext.GetCurrentUserId());
 		var result = await sender.Send(query, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

@@ -3,11 +3,13 @@
 using RailwayResult;
 using RailwayResult.Errors;
 
+using IResult = Microsoft.AspNetCore.Http.IResult;
+
 namespace TeamUp.Api.Extensions;
 
-public static class ResultExtensions
+public static class ResultToResponseExtensions
 {
-	public static IResult Match<TOut>(this Result<TOut> result, Func<TOut, IResult> success)
+	public static IResult ToResponse<TOut>(this Result<TOut> result, Func<TOut, IResult> success)
 	{
 		if (result.IsSuccess)
 			return success(result.Value!);
@@ -15,7 +17,7 @@ public static class ResultExtensions
 		return result.Error.ToResponse();
 	}
 
-	public static IResult Match(this Result result, Func<IResult> success)
+	public static IResult ToResponse(this Result result, Func<IResult> success)
 	{
 		if (result.IsSuccess)
 			return success();
