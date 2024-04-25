@@ -30,6 +30,6 @@ public sealed class GetTeamInvitationsEndpoint : IEndpointGroup
 	{
 		var query = new GetTeamInvitationsQuery(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId));
 		var result = await sender.Send(query, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

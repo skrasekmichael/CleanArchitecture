@@ -35,6 +35,6 @@ public sealed class ChangeNicknameEndpoint : IEndpointGroup
 			request.Nickname
 		);
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

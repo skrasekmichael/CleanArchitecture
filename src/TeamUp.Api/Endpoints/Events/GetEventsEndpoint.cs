@@ -35,7 +35,8 @@ public sealed class GetEventsEndpoint : IEndpointGroup
 			TeamId.FromGuid(teamId),
 			fromUtc
 		);
-		var response = await sender.Send(query, ct);
-		return response.Match(TypedResults.Ok);
+
+		var result = await sender.Send(query, ct);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

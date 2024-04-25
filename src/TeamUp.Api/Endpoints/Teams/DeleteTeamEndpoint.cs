@@ -29,6 +29,6 @@ public sealed class DeleteTeamEndpoint : IEndpointGroup
 	{
 		var command = new DeleteTeamCommand(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId));
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

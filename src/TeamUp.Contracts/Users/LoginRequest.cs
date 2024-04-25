@@ -6,7 +6,7 @@ using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Contracts.Users;
 
-public sealed class LoginRequest : IRequestBody
+public sealed record LoginRequest : IRequestBody
 {
 	[DataType(DataType.EmailAddress)]
 	public required string Email { get; init; }

@@ -42,7 +42,7 @@ public sealed class UpsertEventReplyEndpoint : IEndpointGroup
 			Message: request.Message
 		);
 
-		var response = await sender.Send(command, ct);
-		return response.Match(TypedResults.Ok);
+		var result = await sender.Send(command, ct);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

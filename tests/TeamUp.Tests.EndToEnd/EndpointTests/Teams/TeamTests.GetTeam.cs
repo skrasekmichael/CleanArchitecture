@@ -58,13 +58,7 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 		response.Should().Be200Ok();
 
 		var teamResponse = await response.ReadFromJsonAsync<TeamResponse>();
-		teamResponse.ShouldNotBeNull();
-		team.Should().BeEquivalentTo(teamResponse, options =>
-		{
-			return options
-				.ExcludingMissingMembers()
-				.IgnoringCyclicReferences();
-		});
+		team.Should().BeEquivalentTo(teamResponse);
 	}
 
 	[Fact]

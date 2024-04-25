@@ -31,7 +31,7 @@ public sealed class RemoveEventEndpoint : IEndpointGroup
 	{
 		var command = new RemoveEventCommand(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId), EventId.FromGuid(eventId));
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 
 }

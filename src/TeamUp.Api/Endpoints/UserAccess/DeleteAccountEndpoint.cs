@@ -29,6 +29,6 @@ public sealed class DeleteAccountEndpoint : IEndpointGroup
 	{
 		var command = new DeleteAccountCommand(httpContext.GetCurrentUserId(), password);
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

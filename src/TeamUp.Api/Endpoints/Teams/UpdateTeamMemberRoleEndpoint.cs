@@ -38,6 +38,6 @@ public sealed class UpdateTeamMemberRoleEndpoint : IEndpointGroup
 			request.Role
 		);
 		var result = await sender.Send(command, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

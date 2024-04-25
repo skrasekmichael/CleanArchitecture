@@ -30,7 +30,7 @@ public sealed class RegisterUserEndpoint : IEndpointGroup
 	{
 		var command = mapper.ToCommand(request);
 		var result = await sender.Send(command, ct);
-		return result.Match(userId => TypedResults.Created(
+		return result.ToResponse(userId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(httpContext, nameof(GetMyAccountDetailsEndpoint)),
 			value: userId
 		));

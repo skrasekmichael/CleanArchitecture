@@ -26,6 +26,6 @@ public sealed class GetMyInvitationsEndpoint : IEndpointGroup
 	{
 		var query = new GetMyInvitationsQuery(httpContext.GetCurrentUserId());
 		var result = await sender.Send(query, ct);
-		return result.Match(TypedResults.Ok);
+		return result.ToResponse(TypedResults.Ok);
 	}
 }

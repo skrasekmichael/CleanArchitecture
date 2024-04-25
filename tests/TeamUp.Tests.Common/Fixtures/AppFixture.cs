@@ -17,6 +17,7 @@ namespace TeamUp.Tests.Common.Fixtures;
 public sealed class AppFixture<TAppFactory> : IAsyncLifetime where TAppFactory : WebApplicationFactory<Program>, IAppFactory<TAppFactory>
 {
 	private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
+		.WithImage("postgres:16.2")
 		.WithDatabase("POSTGRES")
 		.WithUsername("POSTGRES")
 		.WithPassword("DEVPASS")

@@ -8,7 +8,7 @@ using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Contracts.Events;
 
-public sealed class CreateEventRequest : IRequestBody
+public sealed record CreateEventRequest : IRequestBody
 {
 	public required EventTypeId EventTypeId { get; init; }
 
