@@ -18,7 +18,7 @@ internal sealed class UserCreatedEventHandler : IDomainEventHandler<UserCreatedD
 	{
 		if (domainEvent.User.Status == UserStatus.NotActivated)
 		{
-			var integrationEvent = new UserRegisteredEvent(domainEvent.User.Email, domainEvent.User.Name);
+			var integrationEvent = new UserRegisteredEvent(domainEvent.User.Id, domainEvent.User.Email, domainEvent.User.Name);
 			_integrationEventManager.AddIntegrationEvent(integrationEvent);
 		}
 

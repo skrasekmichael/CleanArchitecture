@@ -36,6 +36,8 @@ builder.Services
 	.AddSecurity()
 	.AddMessaging();
 
+builder.Configure();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
