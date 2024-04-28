@@ -22,7 +22,7 @@ internal sealed class ConfigureCorsOptions : IConfigureNamedOptions<CorsOptions>
 		{
 			policy.WithOrigins(_clientSettings.Value.Url)
 				.AllowAnyHeader()
-				.WithMethods("GET", "POST", "PUT", "DELETE");
+				.WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD");
 		});
 	}
 }

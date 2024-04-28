@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 using Quartz;
@@ -127,5 +130,14 @@ public static class ServiceCollectionExtensions
 		});
 
 		return services;
+	}
+
+	public static void Configure(this WebApplicationBuilder builder)
+	{
+		if (builder.Environment.IsDevelopment())
+		{
+			builder.Services.RemoveAll<IEmailSender>();
+			builder.Services.AddSingleton<IEmailSender, LogEmailMock>();
+		}
 	}
 }
