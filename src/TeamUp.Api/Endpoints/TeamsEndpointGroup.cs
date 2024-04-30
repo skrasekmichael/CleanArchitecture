@@ -10,6 +10,7 @@ public sealed class TeamsEndpointGroup : IEndpointGroup
 		group.RequireAuthorization()
 			.MapEndpoint<CreateTeamEndpoint>()
 			.MapEndpoint<GetTeamEndpoint>()
+			.MapEndpoint<GetUserTeamsEndpoint>()
 			.MapEndpoint<DeleteTeamEndpoint>()
 			.MapEndpoint<ChangeOwnershipEndpoint>()
 			.MapEndpoint<RemoveTeamMemberEndpoint>()
