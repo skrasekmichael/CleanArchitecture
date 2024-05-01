@@ -29,8 +29,10 @@ internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 			entities.ForEach(entity => entity.ClearDomainEvents());
 
 			//publish all domain events
-			var tasks = domainEvents.Select(domainEvent => _publisher.Publish(domainEvent, ct));
-			await Task.WhenAll(tasks);
+			foreach (var domainEvent in domainEvents)
+			{
+				await _publisher.Publish(domainEvent, ct);
+			}
 		}
 	}
 
