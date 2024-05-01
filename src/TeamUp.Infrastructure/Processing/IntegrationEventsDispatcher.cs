@@ -72,7 +72,9 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 		_logger.LogInformation("Publishing outbox messages.");
 
 		//publish integration events
-		var tasks = messages.Select(msg => DispatchEventAsync(msg, ct));
-		await Task.WhenAll(tasks);
+		foreach (var message in messages)
+		{
+			await DispatchEventAsync(message, ct);
+		}
 	}
 }
