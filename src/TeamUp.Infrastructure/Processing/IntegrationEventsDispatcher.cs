@@ -49,10 +49,11 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 		{
 			await _publisher.Publish(integrationEvent, ct);
 			message.ProcessedUtc = _dateTimeProvider.UtcNow;
+			message.Error = null;
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Failed to publish event from outbox message {message}.", message);
+			_logger.LogError(ex, "Failed for {failCount}nth time to publish event from outbox message {message} ", message.FailCount, message);
 			message.Error = "Failed to publish event.";
 		}
 	}
@@ -64,8 +65,11 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 		//get unpublished integration events
 		var messages = await _dbContext
 			.Set<OutboxMessage>()
-			.Where(msg => msg.ProcessedUtc == null)
-			.OrderBy(msg => msg.CreatedUtc)
+			.Where(msg =>
+				msg.ProcessedUtc == null && //unprocessed
+				msg.FailCount != -1 && //not marked for skipping
+				msg.NextProcessingUtc < _dateTimeProvider.UtcNow) //is scheduled for processing
+			.OrderBy(msg => msg.NextProcessingUtc)
 			.Take(20)
 			.ToListAsync(ct);
 
@@ -75,6 +79,17 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 		foreach (var message in messages)
 		{
 			await DispatchEventAsync(message, ct);
+
+			if (message.ProcessedUtc is null)
+			{
+				message.FailCount++;
+				message.NextProcessingUtc = message.FailCount switch
+				{
+					< 5 => _dateTimeProvider.UtcNow.AddSeconds(10),
+					< 10 => _dateTimeProvider.UtcNow.AddMinutes(message.FailCount - 10),
+					_ => _dateTimeProvider.UtcNow.AddMinutes(message.FailCount)
+				};
+			}
 		}
 	}
 }
