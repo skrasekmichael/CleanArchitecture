@@ -31,7 +31,8 @@ internal sealed class IntegrationEventManager : IIntegrationEventManager
 			Id = Guid.NewGuid(),
 			CreatedUtc = _dateTimeProvider.UtcNow,
 			Type = integrationEvent.GetType().FullName!,
-			Data = JsonSerializer.Serialize(integrationEvent, JsonSerializerOptions)
+			Data = JsonSerializer.Serialize(integrationEvent, JsonSerializerOptions),
+			NextProcessingUtc = _dateTimeProvider.UtcNow,
 		};
 
 		_dbContext.Set<OutboxMessage>().Add(message);
