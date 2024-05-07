@@ -2,3 +2,4 @@
 
 [assembly: InternalsVisibleTo("TeamUp.Tests.Common")]
 [assembly: InternalsVisibleTo("TeamUp.Tests.EndToEnd")]
+[assembly: InternalsVisibleTo("TeamUp.Infrastructure")]
