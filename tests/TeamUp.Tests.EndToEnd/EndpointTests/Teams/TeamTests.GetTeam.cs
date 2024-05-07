@@ -39,7 +39,9 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 		//arrange
 		var initiatorUser = UserGenerators.User.Generate();
 		var members = UserGenerators.User.Generate(19);
-		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members).Generate();
+		var team = TeamGenerators.Team.WithMembers(initiatorUser, initiatorRole, members)
+			.WithEventTypes(5)
+			.Generate();
 
 		await UseDbContextAsync(dbContext =>
 		{
