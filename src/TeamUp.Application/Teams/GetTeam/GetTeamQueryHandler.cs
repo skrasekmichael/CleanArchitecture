@@ -31,6 +31,15 @@ internal sealed class GetTeamQueryHandler : IQueryHandler<GetTeamQuery, Result<T
 						Role = member.Role
 					})
 					.ToList()
+					.AsReadOnly(),
+				EventTypes = team.EventTypes
+					.Select(eventType => new EventTypeResponse
+					{
+						Id = eventType.Id,
+						Name = eventType.Name,
+						Description = eventType.Description,
+					})
+					.ToList()
 					.AsReadOnly()
 			})
 			.FirstOrDefaultAsync(ct);

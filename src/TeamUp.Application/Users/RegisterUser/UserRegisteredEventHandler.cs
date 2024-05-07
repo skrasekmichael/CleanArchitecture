@@ -18,6 +18,6 @@ internal sealed class UserRegisteredEventHandler : IIntegrationEventHandler<User
 		return _emailSender.SendEmailAsync(
 			email: integrationEvent.Email,
 			subject: "Successful registration",
-			message: $"You need to activate at /users/{integrationEvent.UserId}/activate your account to finalize your registration.", ct);
+			message: $"You need to activate at /users/{integrationEvent.UserId.Value}/activate your account to finalize your registration.", ct);
 	}
 }
