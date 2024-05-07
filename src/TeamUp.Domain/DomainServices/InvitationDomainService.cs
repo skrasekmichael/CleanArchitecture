@@ -18,6 +18,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 	private readonly IIntegrationEventManager _integrationEventManager;
 	private readonly InvitationFactory _invitationFactory;
 	private readonly IDateTimeProvider _dateTimeProvider;
+	private readonly UserFactory _userFactory;
 
 	public InvitationDomainService(
 		IUserRepository userRepository,
@@ -25,7 +26,8 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 		IInvitationRepository invitationRepository,
 		IIntegrationEventManager integrationEventManager,
 		InvitationFactory invitationFactory,
-		IDateTimeProvider dateTimeProvider)
+		IDateTimeProvider dateTimeProvider,
+		UserFactory userFactory)
 	{
 		_userRepository = userRepository;
 		_teamRepository = teamRepository;
@@ -33,6 +35,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 		_integrationEventManager = integrationEventManager;
 		_invitationFactory = invitationFactory;
 		_dateTimeProvider = dateTimeProvider;
+		_userFactory = userFactory;
 	}
 
 	public async Task<Result> AcceptInvitationAsync(UserId initiatorId, InvitationId invitationId, CancellationToken ct = default)
@@ -74,8 +77,7 @@ internal sealed class InvitationDomainService : IInvitationDomainService
 			{
 				if (user is null)
 				{
-					var generatedUser = User.Generate(email);
-					_userRepository.AddUser(generatedUser);
+					var generatedUser = _userFactory.GenerateAndAddUser(email);
 					return (team, generatedUser);
 				}
 

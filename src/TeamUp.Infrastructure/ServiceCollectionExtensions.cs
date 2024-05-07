@@ -81,21 +81,42 @@ public static class ServiceCollectionExtensions
 
 		//background jobs
 		services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
+		services.AddScoped<ICleanProcessedOutboxMessagesJob, CleanProcessedOutboxMessagesJob>();
+		services.AddScoped<ICleanExpiredDataJob, CleanExpiredDataJob>();
+
 		services.AddQuartzHostedService(options =>
 		{
 			options.WaitForJobsToComplete = true;
 			options.AwaitApplicationStarted = true;
 			options.StartDelay = TimeSpan.FromSeconds(2);
 		});
+
 		services.AddQuartz(configurator =>
 		{
 			var processOutboxJobKey = new JobKey(nameof(IProcessOutboxMessagesJob));
+			var cleanProcessedOutboxMessagesJobKey = new JobKey(nameof(ICleanProcessedOutboxMessagesJob));
+			var cleanExpiredDataJobKey = new JobKey(nameof(ICleanExpiredDataJob));
+
 			configurator
 				.AddJob<IProcessOutboxMessagesJob>(processOutboxJobKey)
+				.AddJob<ICleanProcessedOutboxMessagesJob>(cleanProcessedOutboxMessagesJobKey)
+				.AddJob<ICleanExpiredDataJob>(cleanExpiredDataJobKey);
+
+			configurator
 				.AddTrigger(trigger => trigger
 					.ForJob(processOutboxJobKey)
 					.WithSimpleSchedule(schedule => schedule
 						.WithIntervalInSeconds(5)
+						.RepeatForever()))
+				.AddTrigger(trigger => trigger
+					.ForJob(cleanProcessedOutboxMessagesJobKey)
+					.WithSimpleSchedule(schedule => schedule
+						.WithIntervalInMinutes(5)
+						.RepeatForever()))
+				.AddTrigger(trigger => trigger
+					.ForJob(cleanExpiredDataJobKey)
+					.WithSimpleSchedule(schedule => schedule
+						.WithIntervalInHours(23)
 						.RepeatForever()));
 		});
 
