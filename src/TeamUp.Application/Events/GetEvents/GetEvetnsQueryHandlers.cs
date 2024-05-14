@@ -22,9 +22,24 @@ internal sealed class GetEventsQueryHandlers : IQueryHandler<GetEventsQuery, Res
 	{
 		var from = query.FromUtc ?? _dateTimeProvider.UtcNow;
 		var team = await _appQueryContext.Teams
+			.Where(team => team.Id == query.TeamId)
 			.Select(team => new
 			{
 				team.Id,
+				team.EventTypes,
+				Initiator = team.Members
+					.Where(member => member.UserId == query.InitiatorId)
+					.Select(member => new
+					{
+						member.Id,
+						member.Nickname,
+					})
+					.FirstOrDefault()
+			})
+			.Select(team => new
+			{
+				team.Id,
+				team.Initiator,
 				Events = _appQueryContext.Events
 					.AsSplitQuery()
 					.Where(e => e.TeamId == team.Id && e.ToUtc > from)
@@ -38,6 +53,17 @@ internal sealed class GetEventsQueryHandlers : IQueryHandler<GetEventsQuery, Res
 						Status = e.Status,
 						MeetTime = e.MeetTime,
 						ReplyClosingTimeBeforeMeetTime = e.ReplyClosingTimeBeforeMeetTime,
+						InitiatorResponse = e.EventResponses
+							.Where(er => er.TeamMemberId == team.Initiator!.Id)
+							.Select(er => new EventResponseResponse
+							{
+								TeamMemberId = team.Initiator!.Id,
+								Message = er.Message,
+								TeamMemberNickname = team.Initiator.Nickname,
+								TimeStampUtc = er.TimeStampUtc,
+								Type = er.ReplyType,
+							})
+							.FirstOrDefault(),
 						ReplyCount = e.EventResponses
 							.GroupBy(er => er.ReplyType)
 							.Select(x => new ReplyCountResponse
@@ -50,11 +76,25 @@ internal sealed class GetEventsQueryHandlers : IQueryHandler<GetEventsQuery, Res
 					})
 					.OrderBy(e => e.FromUtc)
 					.ToList(),
-				Initiator = team.Members
-					.Select(member => member.UserId)
-					.FirstOrDefault(id => id == query.InitiatorId)
 			})
 			.FirstOrDefaultAsync(team => team.Id == query.TeamId, ct);
+
+		/*
+		var team2 = await _appQueryContext.Teams
+			.Where(team => team.Id == query.TeamId)
+			.Select(team => new
+			{
+				Initiator = team.Members
+					.Where(member => member.UserId == query.InitiatorId)
+					.Select(member => new
+					{
+						member.Id,
+						member.Nickname,
+					})
+					.FirstOrDefault()
+			})
+			.FirstOrDefaultAsync(ct);
+		*/
 
 		return team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
