@@ -22,8 +22,7 @@ internal sealed class CompleteRegistrationCommandHandler : ICommandHandler<Compl
 		var user = await _userRepository.GetUserByIdAsync(command.UserId, ct);
 		return await user
 			.EnsureNotNull(UserErrors.UserNotFound)
-			.Tap(user => user.CompleteGeneratedRegistration(_passwordService.HashPassword(command.Password)))
-			.TapAsync(_ => _unitOfWork.SaveChangesAsync(ct))
-			.ToResultAsync();
+			.Then(user => user.CompleteGeneratedRegistration(_passwordService.HashPassword(command.Password)))
+			.TapAsync(() => _unitOfWork.SaveChangesAsync(ct));
 	}
 }
