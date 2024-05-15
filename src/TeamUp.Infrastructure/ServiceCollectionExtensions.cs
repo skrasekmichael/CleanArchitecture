@@ -56,6 +56,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddSingleton<IDateTimeProvider, DateTimeProvider>()
 			.AddSingleton<IEmailSender, EmailSender>()
+			.AddSingleton<IClientUrlGenerator, ClientUrlGenerator>()
 			.AddScoped<IIntegrationEventManager, IntegrationEventManager>()
 			.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>()
 			.AddScoped<IIntegrationEventsDispatcher, IntegrationEventsDispatcher>()
