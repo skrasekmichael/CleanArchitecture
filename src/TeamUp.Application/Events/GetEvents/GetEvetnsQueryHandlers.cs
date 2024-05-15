@@ -7,12 +7,12 @@ using TeamUp.Domain.Aggregates.Teams;
 
 namespace TeamUp.Application.Events.GetEvents;
 
-internal sealed class GetEventsQueryHandlers : IQueryHandler<GetEventsQuery, Result<List<EventSlimResponse>>>
+internal sealed class GetEventsQueryHandler : IQueryHandler<GetEventsQuery, Result<List<EventSlimResponse>>>
 {
 	private readonly IAppQueryContext _appQueryContext;
 	private readonly IDateTimeProvider _dateTimeProvider;
 
-	public GetEventsQueryHandlers(IAppQueryContext appQueryContext, IDateTimeProvider dateTimeProvider)
+	public GetEventsQueryHandler(IAppQueryContext appQueryContext, IDateTimeProvider dateTimeProvider)
 	{
 		_appQueryContext = appQueryContext;
 		_dateTimeProvider = dateTimeProvider;
@@ -75,26 +75,9 @@ internal sealed class GetEventsQueryHandlers : IQueryHandler<GetEventsQuery, Res
 						EventType = team.EventTypes.First(et => et.Id == e.EventTypeId).Name
 					})
 					.OrderBy(e => e.FromUtc)
-					.ToList(),
-			})
-			.FirstOrDefaultAsync(team => team.Id == query.TeamId, ct);
-
-		/*
-		var team2 = await _appQueryContext.Teams
-			.Where(team => team.Id == query.TeamId)
-			.Select(team => new
-			{
-				Initiator = team.Members
-					.Where(member => member.UserId == query.InitiatorId)
-					.Select(member => new
-					{
-						member.Id,
-						member.Nickname,
-					})
-					.FirstOrDefault()
+					.ToList()
 			})
 			.FirstOrDefaultAsync(ct);
-		*/
 
 		return team
 			.EnsureNotNull(TeamErrors.TeamNotFound)
