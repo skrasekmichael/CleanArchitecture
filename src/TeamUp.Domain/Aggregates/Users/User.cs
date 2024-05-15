@@ -34,15 +34,38 @@ public sealed class User : AggregateRoot<User, UserId>
 
 	public override string ToString() => $"{Name} ({Status})";
 
-	public void Activate()
+	public Result Activate()
 	{
+		if (Status == UserStatus.Generated)
+		{
+			return UserErrors.CannotActivateGeneratedAccount;
+		}
+		else if (Status == UserStatus.Activated)
+		{
+			return UserErrors.AccountAlreadyActivated;
+		}
+
 		Status = UserStatus.Activated;
 		AddDomainEvent(new UserActivatedDomainEvent(this));
+		return Result.Success;
 	}
 
 	public void Delete()
 	{
 		AddDomainEvent(new UserDeletedDomainEvent(this));
+	}
+
+	public Result CompleteGeneratedRegistration(Password password)
+	{
+		if (Status != UserStatus.Generated)
+		{
+			return UserErrors.CannotCompleteRegistrationOfNonGeneratedAccount;
+		}
+
+		Password = password;
+		Status = UserStatus.Activated;
+
+		return Result.Success;
 	}
 
 	internal void IncreaseNumberOfOwningTeams() => NumberOfOwnedTeams += 1;

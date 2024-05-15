@@ -23,7 +23,7 @@ public sealed class DeleteAccountEndpoint : IEndpointGroup
 
 	private async Task<IResult> DeleteUserAsync(
 		[FromServices] ISender sender,
-		[FromHeader(Name = UserConstants.HTTP_HEADER_CONFIRM_PASSWORD)] string password,
+		[FromHeader(Name = UserConstants.HTTP_HEADER_PASSWORD)] string password,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{

@@ -21,6 +21,11 @@ internal sealed class UserCreatedEventHandler : IDomainEventHandler<UserCreatedD
 			var integrationEvent = new UserRegisteredEvent(domainEvent.User.Id, domainEvent.User.Email, domainEvent.User.Name);
 			_integrationEventManager.AddIntegrationEvent(integrationEvent);
 		}
+		else if (domainEvent.User.Status == UserStatus.Generated)
+		{
+			var integrationEvent = new UserGeneratedEvent(domainEvent.User.Id, domainEvent.User.Email, domainEvent.User.Name);
+			_integrationEventManager.AddIntegrationEvent(integrationEvent);
+		}
 
 		return Task.CompletedTask;
 	}
