@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using Quartz;
-
 using TeamUp.Infrastructure.Persistence;
-using TeamUp.Infrastructure.Processing.Outbox;
 
-namespace TeamUp.Infrastructure.Processing;
+namespace TeamUp.Infrastructure.Processing.Outbox;
 
 public interface ICleanProcessedOutboxMessagesJob : IJob;
 
