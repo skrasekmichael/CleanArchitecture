@@ -30,7 +30,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var removedInvitation = await UseDbContextAsync(dbContext => dbContext.Invitations.FindAsync(invitation.Id));
 		removedInvitation.Should().BeNull();
@@ -64,7 +64,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var removedInvitation = await UseDbContextAsync(dbContext => dbContext.Invitations.FindAsync(invitation.Id));
 		removedInvitation.Should().BeNull();
@@ -95,7 +95,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToCancelInvitations);
@@ -127,7 +127,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -156,7 +156,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.DeleteAsync(GetUrl(invitationId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(InvitationErrors.InvitationNotFound);

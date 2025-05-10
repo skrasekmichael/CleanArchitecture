@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Infrastructure.Core;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
@@ -41,7 +40,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be201Created();
+		response.ShouldBe201Created();
 
 		var invitationId = await response.ReadFromJsonAsync<InvitationId>();
 		invitationId.ShouldNotBeNull();
@@ -88,7 +87,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be201Created();
+		response.ShouldBe201Created();
 
 		var invitationId = await response.ReadFromJsonAsync<InvitationId>();
 		invitationId.ShouldNotBeNull();
@@ -142,7 +141,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotInviteUserThatIsTeamMember);
@@ -177,7 +176,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToInviteTeamMembers);
@@ -217,7 +216,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be409Conflict();
+		response.ShouldBe409Conflict();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(InvitationErrors.UserIsAlreadyInvited);
@@ -253,7 +252,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -284,7 +283,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -309,7 +308,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request.Request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
@@ -347,8 +346,8 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		);
 
 		//assert
-		responseA.Should().Be201Created();
-		responseB.Should().Be409Conflict();
+		responseA.ShouldBe201Created();
+		responseB.ShouldBe409Conflict();
 
 		var invitationId = await responseA.ReadFromJsonAsync<InvitationId>();
 		invitationId.ShouldNotBeNull();
@@ -394,7 +393,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MaximumCapacityReached);

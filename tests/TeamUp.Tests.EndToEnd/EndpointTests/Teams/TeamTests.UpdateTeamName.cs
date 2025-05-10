@@ -32,7 +32,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var updatedTeam = await UseDbContextAsync(dbContext => dbContext.Teams.FindAsync(team.Id));
 
@@ -70,7 +70,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToChangeTeamName);
@@ -100,7 +100,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PatchAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -134,7 +134,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -170,7 +170,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(nameof(UpdateTeamNameRequest.Name));

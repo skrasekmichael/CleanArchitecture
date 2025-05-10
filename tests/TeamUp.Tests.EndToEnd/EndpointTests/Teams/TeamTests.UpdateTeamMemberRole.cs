@@ -49,7 +49,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var teamMembers = await UseDbContextAsync(dbContext =>
 		{
@@ -110,7 +110,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToUpdateTeamRoles);
@@ -150,7 +150,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotChangeTeamOwnersRole);
@@ -189,7 +189,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(nameof(UpdateTeamRoleRequest.Role));
@@ -223,7 +223,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetMemberId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MemberNotFound);
@@ -254,7 +254,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetMemberId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -289,7 +289,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);

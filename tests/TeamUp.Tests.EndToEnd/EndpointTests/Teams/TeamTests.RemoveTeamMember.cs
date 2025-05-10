@@ -36,7 +36,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -76,7 +76,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -117,7 +117,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToRemoveTeamMembers);
@@ -147,7 +147,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotRemoveTeamOwner);
@@ -178,7 +178,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotRemoveTeamOwner);
@@ -208,7 +208,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id.Value, targetMemberId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MemberNotFound);
@@ -234,7 +234,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(teamId, targetMemberId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -265,7 +265,7 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);

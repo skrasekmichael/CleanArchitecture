@@ -27,7 +27,7 @@ public sealed class CompleteAccountRegistrationTests(AppFixture app) : UserAcces
 		var response = await Client.PostAsync(GetUrl(user.Id), null);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.CannotCompleteRegistrationOfNonGeneratedAccount);
@@ -53,7 +53,7 @@ public sealed class CompleteAccountRegistrationTests(AppFixture app) : UserAcces
 		var response = await Client.PostAsync(GetUrl(user.Id), null);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var activatedUser = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(user.Id));
 		activatedUser.ShouldNotBeNull();

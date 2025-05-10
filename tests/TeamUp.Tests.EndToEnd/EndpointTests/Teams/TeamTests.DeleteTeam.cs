@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Common;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
@@ -53,7 +52,7 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(targetTeam.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -106,7 +105,7 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToDeleteTeam);
@@ -130,7 +129,7 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(teamId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -159,7 +158,7 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);

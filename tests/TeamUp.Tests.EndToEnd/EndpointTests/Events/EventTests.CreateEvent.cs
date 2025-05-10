@@ -38,7 +38,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be201Created();
+		response.ShouldBe201Created();
 
 		var eventId = await response.ReadFromJsonAsync<EventId>();
 		eventId.ShouldNotBeNull();
@@ -80,7 +80,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToCreateEvents);
@@ -117,7 +117,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -148,7 +148,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -185,7 +185,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.EventTypeNotFound);
@@ -222,7 +222,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(invalidRequest.InvalidProperty);

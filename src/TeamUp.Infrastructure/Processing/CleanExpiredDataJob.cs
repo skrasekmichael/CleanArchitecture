@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Quartz;
-
 using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Users;
@@ -32,7 +30,7 @@ internal sealed class CleanExpiredDataJob : ICleanExpiredDataJob
 		await CleanExpiredAccountsAsync(context.CancellationToken);
 	}
 
-	private Task CleanExpiredInvitationsAsync(CancellationToken ct)
+	private Task<int> CleanExpiredInvitationsAsync(CancellationToken ct)
 	{
 		_logger.LogInformation("Cleaning expired invitations.");
 
@@ -41,7 +39,7 @@ internal sealed class CleanExpiredDataJob : ICleanExpiredDataJob
 			.ExecuteDeleteAsync(ct);
 	}
 
-	private Task CleanExpiredAccountsAsync(CancellationToken ct)
+	private Task<int> CleanExpiredAccountsAsync(CancellationToken ct)
 	{
 		_logger.LogInformation("Cleaning expired accounts.");
 

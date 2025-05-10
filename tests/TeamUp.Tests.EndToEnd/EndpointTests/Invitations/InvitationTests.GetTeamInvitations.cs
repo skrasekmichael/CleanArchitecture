@@ -32,7 +32,7 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var teamInvitations = await response.ReadFromJsonAsync<List<TeamInvitationResponse>>();
 		invitations.Should().BeEquivalentTo(teamInvitations, o => o.ExcludingMissingMembers());
@@ -62,7 +62,7 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToReadInvitationList);
@@ -93,7 +93,7 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -118,7 +118,7 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		var response = await Client.GetAsync(GetUrl(teamId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);

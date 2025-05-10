@@ -29,7 +29,7 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.GetAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var userInvitations = await response.ReadFromJsonAsync<List<InvitationResponse>>();
 		invitations.Should().BeEquivalentTo(userInvitations, o => o.ExcludingMissingMembers());
@@ -58,7 +58,7 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.GetAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var invitations = await response.ReadFromJsonAsync<List<InvitationResponse>>();
 		invitations.Should().BeEmpty();

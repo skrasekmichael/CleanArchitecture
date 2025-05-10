@@ -39,7 +39,7 @@ public sealed class ChangeNicknameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var member = await UseDbContextAsync(dbContext =>
 		{
@@ -80,7 +80,7 @@ public sealed class ChangeNicknameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -110,7 +110,7 @@ public sealed class ChangeNicknameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -148,7 +148,7 @@ public sealed class ChangeNicknameTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(nameof(ChangeNicknameRequest.Nickname));

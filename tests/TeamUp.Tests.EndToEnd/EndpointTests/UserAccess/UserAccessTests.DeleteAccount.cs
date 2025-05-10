@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Application.Users;
 using TeamUp.Common;
 
@@ -73,7 +72,7 @@ public sealed class DeleteAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.DeleteAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -164,7 +163,7 @@ public sealed class DeleteAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.DeleteAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -261,7 +260,7 @@ public sealed class DeleteAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.DeleteAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -324,7 +323,7 @@ public sealed class DeleteAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.DeleteAsync(URL);
 
 		//assert
-		response.Should().Be401Unauthorized();
+		response.ShouldBe401Unauthorized();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
@@ -350,7 +349,7 @@ public sealed class DeleteAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.DeleteAsync(URL);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.AccountNotFound);

@@ -3,7 +3,7 @@ using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users;
 
-namespace TeamUp.Application.Users.Register;
+namespace TeamUp.Application.Users.RegisterUser;
 
 internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Result<UserId>>
 {

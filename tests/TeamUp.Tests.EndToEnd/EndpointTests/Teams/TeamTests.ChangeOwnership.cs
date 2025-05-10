@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Infrastructure.Core;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
@@ -37,7 +36,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value);
 
 		//act
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var teamMembers = await UseDbContextAsync(dbContext =>
 		{
@@ -96,7 +95,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value);
 
 		//act
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToChangeTeamOwnership);
@@ -126,7 +125,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId);
 
 		//act
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MemberNotFound);
@@ -158,7 +157,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId);
 
 		//act
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -185,7 +184,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(teamId), targetMemberId);
 
 		//act
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -223,8 +222,8 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		);
 
 		//act
-		responseA.Should().Be200Ok();
-		responseB.Should().Be409Conflict();
+		responseA.ShouldBe200OK();
+		responseB.ShouldBe409Conflict();
 
 		var teamMembers = await UseDbContextAsync(dbContext =>
 		{

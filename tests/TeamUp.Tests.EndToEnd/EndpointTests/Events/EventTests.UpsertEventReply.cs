@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Infrastructure.Core;
 
 using EventResponse = TeamUp.Domain.Aggregates.Events.EventResponse;
@@ -47,7 +46,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleOrDefaultAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ShouldNotBeNull();
@@ -91,7 +90,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleOrDefaultAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ShouldNotBeNull();
@@ -137,7 +136,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleOrDefaultAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ShouldNotBeNull();
@@ -175,7 +174,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetEventId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.EventNotFound);
@@ -205,7 +204,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetEventId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -247,7 +246,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -295,7 +294,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team1.Id, event2.Id), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.EventNotFound);
@@ -339,7 +338,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.NotOpenForResponses);
@@ -383,7 +382,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.TimeForResponsesExpired);
@@ -424,7 +423,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request.Request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var validationProblemDetails = await response.ReadValidationProblemDetailsAsync();
 		validationProblemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
@@ -469,8 +468,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		);
 
 		//assert
-		responseA.Should().Be200Ok();
-		responseB.Should().Be409Conflict();
+		responseA.ShouldBe200OK();
+		responseB.ShouldBe409Conflict();
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ReplyType.Should().Be(request.ReplyType);

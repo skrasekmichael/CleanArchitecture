@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
-
 using TeamUp.Application.Users;
 using TeamUp.Infrastructure.Persistence;
-
 using Xunit.Abstractions;
+
 
 namespace TeamUp.Tests.Performance;
 
@@ -77,7 +76,7 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 		var response = await Client.SendAsync(message);
 		var elapsed = Stopwatch.GetElapsedTime(timestamp);
 
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 		return elapsed;
 	}
 

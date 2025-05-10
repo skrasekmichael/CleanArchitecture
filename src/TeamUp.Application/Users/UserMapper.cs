@@ -1,7 +1,6 @@
 ﻿using Riok.Mapperly.Abstractions;
-
 using TeamUp.Application.Users.Login;
-using TeamUp.Application.Users.Register;
+using TeamUp.Application.Users.RegisterUser;
 using TeamUp.Contracts.Users;
 
 namespace TeamUp.Application.Users;

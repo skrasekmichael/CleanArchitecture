@@ -33,7 +33,7 @@ insert_final_newline = true
 [*.{cs,vb}]
 
 # Organize usings
-dotnet_separate_import_directive_groups = true
+dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
 file_header_template = unset
 
@@ -194,6 +194,7 @@ csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental
 csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true:silent
 csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_style_prefer_primary_constructors = false:suggestion
+csharp_prefer_system_threading_lock = true:suggestion
 
 #### Naming styles ####
 [*.{cs,vb}]

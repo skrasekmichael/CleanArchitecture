@@ -23,7 +23,7 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.GetAsync(GetUrl(teamId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -57,7 +57,7 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var teamResponse = await response.ReadFromJsonAsync<TeamResponse>();
 		team.Should().BeEquivalentTo(teamResponse);
@@ -86,7 +86,7 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.GetAsync(GetUrl(team.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);

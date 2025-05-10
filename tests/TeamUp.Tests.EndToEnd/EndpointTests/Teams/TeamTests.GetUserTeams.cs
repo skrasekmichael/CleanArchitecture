@@ -22,7 +22,7 @@ public sealed class GetUserTeamsTests(AppFixture app) : TeamTests(app)
 		var response = await Client.GetAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var teams = await response.ReadFromJsonAsync<List<TeamSlimResponse>>();
 		teams.Should().BeEmpty();
@@ -62,7 +62,7 @@ public sealed class GetUserTeamsTests(AppFixture app) : TeamTests(app)
 		var response = await Client.GetAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var teams = await response.ReadFromJsonAsync<List<TeamSlimResponse>>();
 		teams.Should().BeEquivalentTo(expectedTeams);

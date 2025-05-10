@@ -43,7 +43,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.GetAsync(GetUrl(team.Id, @event.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var returnedEvent = await response.ReadFromJsonAsync<EventResponse>();
 		returnedEvent.ShouldNotBeNull();
@@ -80,7 +80,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.GetAsync(GetUrl(team.Id.Value, eventId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.EventNotFound);
@@ -107,7 +107,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.GetAsync(GetUrl(teamId, eventId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -146,7 +146,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.GetAsync(GetUrl(team.Id, @event.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);

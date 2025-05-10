@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-
 using TeamUp.Application.Users;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
@@ -37,7 +36,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var token = await response.ReadFromJsonAsync<string>();
 		token.Should().NotBeNullOrEmpty();
@@ -85,7 +84,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be401Unauthorized();
+		response.ShouldBe401Unauthorized();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.NotActivatedAccount);
@@ -106,7 +105,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be401Unauthorized();
+		response.ShouldBe401Unauthorized();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
@@ -140,7 +139,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be401Unauthorized();
+		response.ShouldBe401Unauthorized();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(AuthenticationErrors.InvalidCredentials);
