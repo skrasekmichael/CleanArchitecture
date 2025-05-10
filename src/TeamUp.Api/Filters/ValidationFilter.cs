@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-
 using TeamUp.Contracts.Abstractions;
 
 namespace TeamUp.Api.Filters;
 
-public class ValidationFilter : IEndpointFilter
+public sealed class ValidationFilter : IEndpointFilter
 {
 	private readonly IServiceProvider _services;
 	private readonly ILogger<ValidationFilter> _logger;

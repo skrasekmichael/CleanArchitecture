@@ -43,7 +43,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id));
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var rest = await UseDbContextAsync(dbContext =>
 		{
@@ -87,7 +87,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id));
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToDeleteEvents);
@@ -126,7 +126,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEventId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.EventNotFound);
@@ -153,7 +153,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.DeleteAsync(GetUrl(targetTeamId, targetEventId));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -205,7 +205,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var response = await Client.DeleteAsync(GetUrl(targetTeamId, targetEvent.Id));
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(EventErrors.EventNotFound);

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Infrastructure.Core;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Teams;
@@ -35,7 +34,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
 
 		//assert
-		response.Should().Be201Created();
+		response.ShouldBe201Created();
 
 		var teamId = await response.ReadFromJsonAsync<TeamId>();
 		teamId.ShouldNotBeNull();
@@ -86,7 +85,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor("Name");
@@ -110,7 +109,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.AccountNotFound);
@@ -143,7 +142,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.CannotOwnSoManyTeams);
@@ -179,8 +178,8 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		);
 
 		//assert
-		responseA.Should().Be201Created();
-		responseB.Should().Be409Conflict();
+		responseA.ShouldBe201Created();
+		responseB.ShouldBe409Conflict();
 
 		var teamId = await responseA.ReadFromJsonAsync<TeamId>();
 		teamId.ShouldNotBeNull();

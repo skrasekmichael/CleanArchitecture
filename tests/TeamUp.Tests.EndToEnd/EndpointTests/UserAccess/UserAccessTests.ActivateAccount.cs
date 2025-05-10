@@ -24,7 +24,7 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsync(GetUrl(user.Id), null);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var activatedUser = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(user.Id));
 		activatedUser.ShouldNotBeNull();
@@ -50,7 +50,7 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsync(GetUrl(user.Id), null);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.AccountAlreadyActivated);
@@ -75,7 +75,7 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsync(GetUrl(user.Id), null);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.CannotActivateGeneratedAccount);

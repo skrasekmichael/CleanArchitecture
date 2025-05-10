@@ -32,7 +32,7 @@ public sealed class CreateEventTypeTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be201Created();
+		response.ShouldBe201Created();
 
 		var eventTypeId = await response.ReadFromJsonAsync<EventTypeId>();
 		eventTypeId.ShouldNotBeNull();
@@ -74,7 +74,7 @@ public sealed class CreateEventTypeTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.UnauthorizedToCreateEventTypes);
@@ -105,7 +105,7 @@ public sealed class CreateEventTypeTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.NotMemberOfTeam);
@@ -132,7 +132,7 @@ public sealed class CreateEventTypeTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(teamId), request);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.TeamNotFound);
@@ -161,7 +161,7 @@ public sealed class CreateEventTypeTests(AppFixture app) : TeamTests(app)
 		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request.Request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);

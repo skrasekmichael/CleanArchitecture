@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Infrastructure.Core;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Invitations;
@@ -34,7 +33,7 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		await UseDbContextAsync(async dbContext =>
 		{
@@ -79,7 +78,7 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(InvitationErrors.InvitationExpired);
@@ -108,7 +107,7 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsync(GetUrl(invitationId), null);
 
 		//assert
-		response.Should().Be404NotFound();
+		response.ShouldBe404NotFound();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(InvitationErrors.InvitationNotFound);
@@ -140,7 +139,7 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
-		response.Should().Be403Forbidden();
+		response.ShouldBe403Forbidden();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(InvitationErrors.UnauthorizedToAcceptInvitation);
@@ -171,7 +170,7 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(TeamErrors.MaximumCapacityReached);
@@ -213,8 +212,8 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 		);
 
 		//assert
-		responseA.Should().Be200Ok();
-		responseB.Should().Be409Conflict();
+		responseA.ShouldBe200OK();
+		responseB.ShouldBe409Conflict();
 
 		await UseDbContextAsync(async dbContext =>
 		{

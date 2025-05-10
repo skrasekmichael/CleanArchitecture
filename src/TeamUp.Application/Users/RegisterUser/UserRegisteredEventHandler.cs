@@ -2,7 +2,7 @@
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Users.IntegrationEvents;
 
-namespace TeamUp.Application.Users.Register;
+namespace TeamUp.Application.Users.RegisterUser;
 
 internal sealed class UserRegisteredEventHandler : IIntegrationEventHandler<UserRegisteredEvent>
 {

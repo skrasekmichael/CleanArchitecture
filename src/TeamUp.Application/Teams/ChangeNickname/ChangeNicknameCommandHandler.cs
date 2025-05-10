@@ -2,7 +2,7 @@
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Teams;
 
-namespace TeamUp.Application.Teams.SetMemberNickname;
+namespace TeamUp.Application.Teams.ChangeNickname;
 
 internal sealed class ChangeNicknameCommandHandler : ICommandHandler<ChangeNicknameCommand, Result>
 {

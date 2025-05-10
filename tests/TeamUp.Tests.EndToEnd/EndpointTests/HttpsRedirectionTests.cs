@@ -1,8 +1,4 @@
-﻿using System.Net.Http.Headers;
-
-using Microsoft.AspNetCore.Mvc.Testing;
-
-using TeamUp.Application.Users;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests;
 
@@ -22,14 +18,6 @@ public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 		return Task.CompletedTask;
 	}
 
-	private void Authenticate(User user)
-	{
-		var tokenService = App.Services.GetRequiredService<ITokenService>();
-		var jwt = tokenService.GenerateToken(user);
-
-		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-	}
-
 	[Fact]
 	public async Task HttpRequest_ToHealthCheckEndpoint_Should_RedirectToHttps()
 	{
@@ -40,7 +28,7 @@ public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 		var response = await Client.GetAsync("/_health");
 
 		//assert
-		response.Should().Be307TemporaryRedirect();
+		response.ShouldBe307TemporaryRedirect();
 
 		var location = response.Headers.Location?.ToString();
 		location.ShouldNotBeNull();

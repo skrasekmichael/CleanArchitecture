@@ -12,7 +12,7 @@ public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(a
 		var response = await Client.GetAsync(URL);
 
 		//assert
-		response.Should().Be401Unauthorized();
+		response.ShouldBe401Unauthorized();
 	}
 
 	[Fact]
@@ -33,7 +33,7 @@ public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(a
 		var response = await Client.GetAsync(URL);
 
 		//assert
-		response.Should().Be200Ok();
+		response.ShouldBe200OK();
 
 		var userResponse = await response.ReadFromJsonAsync<AccountResponse>();
 		user.Should().BeEquivalentTo(userResponse, o => o.ExcludingMissingMembers());

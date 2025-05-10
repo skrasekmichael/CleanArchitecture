@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Infrastructure.Core;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.UserAccess;
@@ -18,7 +17,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be201Created();
+		response.ShouldBe201Created();
 
 		var userId = await response.ReadFromJsonAsync<UserId>();
 		userId.ShouldNotBeNull();
@@ -57,7 +56,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request);
 
 		//assert
-		response.Should().Be409Conflict();
+		response.ShouldBe409Conflict();
 
 		var problemDetails = await response.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UserErrors.ConflictingEmail);
@@ -72,7 +71,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		var response = await Client.PostAsJsonAsync(URL, request.Request);
 
 		//assert
-		response.Should().Be400BadRequest();
+		response.ShouldBe400BadRequest();
 
 		var problemDetails = await response.ReadValidationProblemDetailsAsync();
 		problemDetails.ShouldContainValidationErrorFor(request.InvalidProperty);
@@ -91,8 +90,8 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		);
 
 		//assert
-		responseA.Should().Be201Created();
-		responseB.Should().Be409Conflict();
+		responseA.ShouldBe201Created();
+		responseB.ShouldBe409Conflict();
 
 		var userId = await responseA.ReadFromJsonAsync<UserId>();
 		userId.ShouldNotBeNull();

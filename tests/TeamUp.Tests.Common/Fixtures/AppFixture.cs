@@ -1,15 +1,10 @@
 using DotNet.Testcontainers.Builders;
-
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-
 using Npgsql;
-
 using Respawn;
 using Respawn.Graph;
-
 using TeamUp.Infrastructure.Persistence;
-
 using Testcontainers.PostgreSql;
 
 namespace TeamUp.Tests.Common.Fixtures;
@@ -48,11 +43,7 @@ public sealed class AppFixture<TAppFactory> : IAsyncLifetime where TAppFactory :
 			.Options;
 
 		await using var dbContext = new ApplicationDbContext(options);
-		await using (var transaction = dbContext.Database.BeginTransaction())
-		{
-			await dbContext.Database.MigrateAsync();
-			await transaction.CommitAsync();
-		}
+		await dbContext.Database.MigrateAsync();
 
 		await using var connection = dbContext.Database.GetDbConnection();
 		await connection.OpenAsync();

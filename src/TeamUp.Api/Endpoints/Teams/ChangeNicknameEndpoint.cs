@@ -1,9 +1,7 @@
 ﻿using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
-using TeamUp.Application.Teams.SetMemberNickname;
+using TeamUp.Application.Teams.ChangeNickname;
 using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Api.Endpoints.Teams;
