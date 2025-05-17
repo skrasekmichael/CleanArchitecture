@@ -17,7 +17,7 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, Result
 		_tokenService = tokenService;
 	}
 
-	public async Task<Result<string>> Handle(LoginCommand command, CancellationToken ct)
+	public async Task<Result<string>> HandleAsync(LoginCommand command, CancellationToken ct)
 	{
 		var user = await _userRepository.GetUserByEmailAsync(command.Email, ct);
 		return user

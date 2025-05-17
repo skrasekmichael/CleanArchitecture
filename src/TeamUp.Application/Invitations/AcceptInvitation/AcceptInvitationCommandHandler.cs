@@ -15,7 +15,7 @@ internal sealed class AcceptInvitationCommandHandler : ICommandHandler<AcceptInv
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(AcceptInvitationCommand command, CancellationToken ct)
 	{
 		return await _invitationDomainService
 			.AcceptInvitationAsync(command.InitiatorId, command.InvitationId, ct)

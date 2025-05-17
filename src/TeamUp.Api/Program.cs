@@ -47,8 +47,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 
-	app.UseMiddleware<RequestLoggingMiddleware>();
-	app.UseMiddleware<ResponseLoggingMiddleware>();
+	app.UseMiddleware<HttpLoggingMiddleware>();
 }
 else
 {

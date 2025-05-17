@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Events.CreateEvent;
 using TeamUp.Contracts.Events;
@@ -28,7 +26,7 @@ public sealed class CreateEventEndpoint : IEndpointGroup
 	public async Task<IResult> CreateEventAsync(
 		[FromRoute] Guid teamId,
 		[FromBody] CreateEventRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		[FromServices] LinkGenerator linkGenerator,
 		HttpContext httpContext,
 		CancellationToken ct)
@@ -44,7 +42,7 @@ public sealed class CreateEventEndpoint : IEndpointGroup
 			ReplyClosingTimeBeforeMeetTime: request.ReplyClosingTimeBeforeMeetTime
 		);
 
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<CreateEventCommand, RailwayResult.Result<EventId>>(command, ct);
 		return result.ToResponse(eventId => TypedResults.Created(
 			linkGenerator.GetPathByName(httpContext, nameof(GetEventEndpoint), new { teamId, eventId = eventId.Value }),
 			eventId

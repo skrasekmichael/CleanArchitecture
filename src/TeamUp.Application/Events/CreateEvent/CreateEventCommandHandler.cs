@@ -16,7 +16,7 @@ internal sealed class CreateEventCommandHandler : ICommandHandler<CreateEventCom
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<EventId>> Handle(CreateEventCommand command, CancellationToken ct)
+	public async Task<Result<EventId>> HandleAsync(CreateEventCommand command, CancellationToken ct)
 	{
 		return await _eventDomainService
 			.CreateEventAsync(

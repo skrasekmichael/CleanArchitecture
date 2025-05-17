@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Mediato;
+using Mediato.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-
 using Quartz;
-
 using TeamUp.Application.Abstractions;
 using TeamUp.Application.Users;
 using TeamUp.Common.Abstractions;
@@ -144,11 +144,16 @@ public static class ServiceCollectionExtensions
 
 	public static IServiceCollection AddMessaging(this IServiceCollection services)
 	{
-		services.AddMediatR(config =>
+		services.AddMediato(config =>
 		{
-			config.RegisterServicesFromAssemblies(
-				typeof(Domain.ServiceCollectionExtensions).Assembly,
-				typeof(Application.ServiceCollectionExtensions).Assembly);
+			config.UseDefaultNotificationPublisher(ServiceLifetime.Scoped);
+			config.RegisterNotificationHandlersFromAssembly(typeof(Domain.ServiceCollectionExtensions).Assembly, ServiceLifetime.Scoped);
+			config.RegisterNotificationHandlersFromAssembly(typeof(Application.ServiceCollectionExtensions).Assembly, ServiceLifetime.Scoped);
+
+			config.UseDefaultRequestSender(ServiceLifetime.Scoped);
+			config.RegisterRequestHandlersFromAssembly(typeof(Application.ServiceCollectionExtensions).Assembly, ServiceLifetime.Scoped);
+
+			config.UseCachingLayer(true);
 		});
 
 		return services;

@@ -15,7 +15,7 @@ internal sealed class ChangeOwnershipCommandHandler : ICommandHandler<ChangeOwne
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(ChangeOwnershipCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(ChangeOwnershipCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

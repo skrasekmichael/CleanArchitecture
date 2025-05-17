@@ -15,7 +15,7 @@ internal sealed class DeleteTeamCommandHandler : ICommandHandler<DeleteTeamComma
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(DeleteTeamCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(DeleteTeamCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

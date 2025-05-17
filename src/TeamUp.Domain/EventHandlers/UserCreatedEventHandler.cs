@@ -14,7 +14,7 @@ internal sealed class UserCreatedEventHandler : IDomainEventHandler<UserCreatedD
 		_integrationEventManager = integrationEventManager;
 	}
 
-	public Task Handle(UserCreatedDomainEvent domainEvent, CancellationToken ct)
+	public Task HandleAsync(UserCreatedDomainEvent domainEvent, CancellationToken ct)
 	{
 		if (domainEvent.User.Status == UserStatus.NotActivated)
 		{

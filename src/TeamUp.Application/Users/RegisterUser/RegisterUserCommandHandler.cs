@@ -18,7 +18,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<UserId>> Handle(RegisterUserCommand command, CancellationToken ct)
+	public async Task<Result<UserId>> HandleAsync(RegisterUserCommand command, CancellationToken ct)
 	{
 		var password = _passwordService.HashPassword(command.Password);
 		var user = await _userFactory.CreateAndAddUserAsync(command.Name, command.Email, password, ct);

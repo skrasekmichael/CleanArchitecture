@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.RemoveTeamMember;
 using TeamUp.Contracts.Teams;
@@ -25,7 +23,7 @@ public sealed class RemoveTeamMemberEndpoint : IEndpointGroup
 	private async Task<IResult> RemoveTeamMemberAsync(
 		[FromRoute] Guid teamId,
 		[FromRoute] Guid teamMemberId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -34,7 +32,7 @@ public sealed class RemoveTeamMemberEndpoint : IEndpointGroup
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<RemoveTeamMemberCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

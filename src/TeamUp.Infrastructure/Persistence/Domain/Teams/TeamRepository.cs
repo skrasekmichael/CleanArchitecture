@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Contracts.Teams;
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Aggregates.Teams;
-using TeamUp.Domain.Aggregates.Teams.DomainEvents;
 
 namespace TeamUp.Infrastructure.Persistence.Domain.Teams;
 

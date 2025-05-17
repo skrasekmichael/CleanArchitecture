@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Npgsql;
-
 using RailwayResult;
 using RailwayResult.Errors;
-
 using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Persistence;
 using TeamUp.Infrastructure.Processing;

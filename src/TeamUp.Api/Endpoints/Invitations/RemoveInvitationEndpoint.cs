@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Invitations.RemoveInvitation;
 using TeamUp.Contracts.Invitations;
@@ -23,12 +21,12 @@ public sealed class RemoveInvitationEndpoint : IEndpointGroup
 
 	private async Task<IResult> RemoveInvitationAsync(
 		[FromRoute] Guid invitationId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new RemoveInvitationCommand(httpContext.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<RemoveInvitationCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using Mediato.Abstractions;
 
 namespace TeamUp.Domain.Abstractions;
 
 public interface IDomainEventHandler<TDomainEvent> : INotificationHandler<TDomainEvent> where TDomainEvent : IDomainEvent
 {
-	public new Task Handle(TDomainEvent domainEvent, CancellationToken ct);
+	public new Task HandleAsync(TDomainEvent domainEvent, CancellationToken ct);
 }

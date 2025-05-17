@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Application.Abstractions;
 using TeamUp.Common.Abstractions;
 using TeamUp.Contracts.Events;
@@ -18,7 +17,7 @@ internal sealed class GetEventsQueryHandler : IQueryHandler<GetEventsQuery, Resu
 		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public async Task<Result<List<EventSlimResponse>>> Handle(GetEventsQuery query, CancellationToken ct)
+	public async Task<Result<List<EventSlimResponse>>> HandleAsync(GetEventsQuery query, CancellationToken ct)
 	{
 		var from = query.FromUtc ?? _dateTimeProvider.UtcNow;
 		var team = await _appQueryContext.Teams

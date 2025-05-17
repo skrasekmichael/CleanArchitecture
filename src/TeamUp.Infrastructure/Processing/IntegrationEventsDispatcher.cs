@@ -1,11 +1,9 @@
 ﻿using System.Text.Json;
-
-using MediatR;
-
+using Mediato.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using TeamUp.Common.Abstractions;
+using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Extensions;
 using TeamUp.Infrastructure.Persistence;
 using TeamUp.Infrastructure.Processing.Outbox;
@@ -15,11 +13,11 @@ namespace TeamUp.Infrastructure.Processing;
 internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 {
 	private readonly ApplicationDbContext _dbContext;
-	private readonly IPublisher _publisher;
+	private readonly INotificationPublisher _publisher;
 	private readonly IDateTimeProvider _dateTimeProvider;
 	private readonly ILogger<IntegrationEventsDispatcher> _logger;
 
-	public IntegrationEventsDispatcher(ApplicationDbContext dbContext, IPublisher publisher, IDateTimeProvider dateTimeProvider, ILogger<IntegrationEventsDispatcher> logger)
+	public IntegrationEventsDispatcher(ApplicationDbContext dbContext, INotificationPublisher publisher, IDateTimeProvider dateTimeProvider, ILogger<IntegrationEventsDispatcher> logger)
 	{
 		_dbContext = dbContext;
 		_publisher = publisher;
@@ -38,7 +36,7 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 		}
 
 		var integrationEvent = JsonSerializer.Deserialize(message.Data, integrationEventType);
-		if (integrationEvent is null)
+		if (integrationEvent is not IIntegrationEvent typedIntegrationEvent)
 		{
 			_logger.LogCritical("Failed to deserialize outbox message {message}.", message);
 			message.Error = "Failed to deserialize.";
@@ -47,7 +45,7 @@ internal sealed class IntegrationEventsDispatcher : IIntegrationEventsDispatcher
 
 		try
 		{
-			await _publisher.Publish(integrationEvent, ct);
+			await _publisher.PublishAsync(typedIntegrationEvent, ct);
 			message.ProcessedUtc = _dateTimeProvider.UtcNow;
 			message.Error = null;
 		}

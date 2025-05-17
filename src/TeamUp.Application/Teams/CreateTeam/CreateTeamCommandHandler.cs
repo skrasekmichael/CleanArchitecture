@@ -1,5 +1,4 @@
-﻿using TeamUp.Api.Endpoints.Teams;
-using TeamUp.Application.Abstractions;
+﻿using TeamUp.Application.Abstractions;
 using TeamUp.Common.Abstractions;
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Abstractions;
@@ -23,7 +22,7 @@ internal sealed class CreateTeamCommandHandler : ICommandHandler<CreateTeamComma
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<TeamId>> Handle(CreateTeamCommand command, CancellationToken ct)
+	public async Task<Result<TeamId>> HandleAsync(CreateTeamCommand command, CancellationToken ct)
 	{
 		var user = await _userRepository.GetUserByIdAsync(command.OwnerId, ct);
 		return await user

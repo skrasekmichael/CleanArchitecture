@@ -1,8 +1,7 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
+using TeamUp.Application.Teams.CreateTeam;
 using TeamUp.Contracts.Teams;
 
 namespace TeamUp.Api.Endpoints.Teams;
@@ -21,13 +20,13 @@ public sealed class CreateTeamEndpoint : IEndpointGroup
 
 	private async Task<IResult> CreateTeamAsync(
 		[FromBody] CreateTeamRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		[FromServices] LinkGenerator linkGenerator,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new CreateTeamCommand(httpContext.GetCurrentUserId(), request.Name);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<CreateTeamCommand, RailwayResult.Result<TeamId>>(command, ct);
 		return result.ToResponse(teamId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamEndpoint), teamId.Value),
 			value: teamId

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Skrasek.Mediato.Abstractions" />
     <PackageReference Include="Skrasek.RailwayResult.Errors" />
   </ItemGroup>
 

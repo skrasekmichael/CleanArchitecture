@@ -17,7 +17,7 @@ internal sealed class UserDeletedEventHandler : IDomainEventHandler<UserDeletedD
 		_teamRepository = teamRepository;
 	}
 
-	public async Task Handle(UserDeletedDomainEvent domainEvent, CancellationToken ct)
+	public async Task HandleAsync(UserDeletedDomainEvent domainEvent, CancellationToken ct)
 	{
 		var teams = await _teamRepository.GetTeamsByUserIdAsync(domainEvent.User.Id, ct);
 

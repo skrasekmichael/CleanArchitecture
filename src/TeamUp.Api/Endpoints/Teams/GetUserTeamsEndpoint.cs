@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.GetUserTeams;
 using TeamUp.Contracts.Teams;
@@ -21,10 +19,10 @@ public sealed class GetUserTeamsEndpoint : IEndpointGroup
 			.MapToApiVersion(1);
 	}
 
-	private async Task<IResult> GetTeamAsync([FromServices] ISender sender, HttpContext httpContext, CancellationToken ct)
+	private async Task<IResult> GetTeamAsync([FromServices] IRequestSender sender, HttpContext httpContext, CancellationToken ct)
 	{
 		var query = new GetUserTeamsQuery(httpContext.GetCurrentUserId());
-		var result = await sender.Send(query, ct);
+		var result = await sender.SendAsync<GetUserTeamsQuery, RailwayResult.Result<List<TeamSlimResponse>>>(query, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

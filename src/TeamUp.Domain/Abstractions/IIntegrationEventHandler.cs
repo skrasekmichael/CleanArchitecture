@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using Mediato.Abstractions;
 
 namespace TeamUp.Domain.Abstractions;
 
 public interface IIntegrationEventHandler<TIntegrationEvent> : INotificationHandler<TIntegrationEvent> where TIntegrationEvent : IIntegrationEvent
 {
-	public new Task Handle(TIntegrationEvent integrationEvent, CancellationToken ct);
+	public new Task HandleAsync(TIntegrationEvent integrationEvent, CancellationToken ct);
 }

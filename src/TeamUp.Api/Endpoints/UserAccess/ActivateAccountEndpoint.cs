@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users.Activation;
 using TeamUp.Contracts.Users;
@@ -22,11 +20,11 @@ public sealed class ActivateAccountEndpoint : IEndpointGroup
 
 	private async Task<IResult> ActivateAccountAsync(
 		[FromRoute] Guid userId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		CancellationToken ct)
 	{
 		var command = new ActivateAccountCommand(UserId.FromGuid(userId));
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<ActivateAccountCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

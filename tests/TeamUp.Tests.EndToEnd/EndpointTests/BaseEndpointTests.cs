@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-
 using TeamUp.Application.Users;
 using TeamUp.Common.Abstractions;
 using TeamUp.Tests.EndToEnd.Mocks;
@@ -33,7 +32,7 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 		Inbox.Clear();
 		DateTimeProvider.Skew = TimeSpan.Zero;
 		DateTimeProvider.ExactTime = null;
-		DelayedCommitUnitOfWorkOptions.IsDelayRequested = false;
+		DelayedCommitUnitOfWorkOptions.RequestDelay(false);
 	}
 
 	public void Authenticate(User user)
@@ -91,19 +90,20 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 		var reqA = Task.Run(async () =>
 		{
 			await beforeCommitCallback.WaitForCallbackAsync();
-			DelayedCommitUnitOfWorkOptions.IsDelayRequested = false;
+			DelayedCommitUnitOfWorkOptions.RequestDelay(false);
 			var response = await requestA();
 			canCommitCallback.Invoke();
 			return response;
 		});
 
-		var reqB = Task.Run(() =>
+		var reqB = Task.Run(async () =>
 		{
-			DelayedCommitUnitOfWorkOptions.IsDelayRequested = true;
-			return requestB();
+			DelayedCommitUnitOfWorkOptions.RequestDelay(true);
+			return await requestB();
 		});
 
-		return await Task.WhenAll(reqA, reqB).ContinueWith(task => (task.Result[0], task.Result[1]));
+		await Task.WhenAll(reqA, reqB);
+		return (reqA.Result, reqB.Result);
 	}
 
 	public Task DisposeAsync()

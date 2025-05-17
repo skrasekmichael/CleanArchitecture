@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Mediato.Abstractions;
 
 namespace TeamUp.Application.Abstractions;
 

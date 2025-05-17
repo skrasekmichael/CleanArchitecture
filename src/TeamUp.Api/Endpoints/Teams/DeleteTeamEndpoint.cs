@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.DeleteTeam;
 using TeamUp.Contracts.Teams;
@@ -23,12 +21,12 @@ public sealed class DeleteTeamEndpoint : IEndpointGroup
 
 	private async Task<IResult> DeleteTeamAsync(
 		[FromRoute] Guid teamId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new DeleteTeamCommand(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId));
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<DeleteTeamCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

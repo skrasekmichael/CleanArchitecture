@@ -15,7 +15,7 @@ internal sealed class RemoveTeamMemberCommandHandler : ICommandHandler<RemoveTea
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(RemoveTeamMemberCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(RemoveTeamMemberCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

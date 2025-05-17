@@ -14,7 +14,7 @@ internal sealed class GetUserTeamsQueryHandler : IQueryHandler<GetUserTeamsQuery
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<List<TeamSlimResponse>>> Handle(GetUserTeamsQuery query, CancellationToken ct)
+	public async Task<Result<List<TeamSlimResponse>>> HandleAsync(GetUserTeamsQuery query, CancellationToken ct)
 	{
 		return await _appQueryContext.Teams
 			.Where(team => team.Members.Any(member => member.UserId == query.InitiatorId))

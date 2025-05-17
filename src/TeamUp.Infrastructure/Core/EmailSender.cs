@@ -1,10 +1,7 @@
 ﻿using MailKit.Net.Smtp;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
 using MimeKit;
-
 using TeamUp.Common.Abstractions;
 using TeamUp.Infrastructure.Options;
 

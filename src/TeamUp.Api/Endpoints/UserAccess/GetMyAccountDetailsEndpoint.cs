@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users.GetAccountDetails;
 using TeamUp.Contracts.Users;
@@ -21,12 +19,12 @@ public sealed class GetMyAccountDetailsEndpoint : IEndpointGroup
 	}
 
 	private async Task<IResult> GetAccountDetailsAsync(
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var query = new GetAccountDetailsQuery(httpContext.GetCurrentUserId());
-		var result = await sender.Send(query, ct);
+		var result = await sender.SendAsync<GetAccountDetailsQuery, RailwayResult.Result<AccountResponse>>(query, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

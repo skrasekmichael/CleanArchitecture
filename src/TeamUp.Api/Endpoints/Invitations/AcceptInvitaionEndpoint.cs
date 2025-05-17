@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Invitations.AcceptInvitation;
 using TeamUp.Contracts.Invitations;
@@ -24,12 +22,12 @@ public sealed class AcceptInvitationEndpoint : IEndpointGroup
 
 	private async Task<IResult> AcceptInvitationAsync(
 		[FromRoute] Guid invitationId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new AcceptInvitationCommand(httpContext.GetCurrentUserId(), InvitationId.FromGuid(invitationId));
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<AcceptInvitationCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

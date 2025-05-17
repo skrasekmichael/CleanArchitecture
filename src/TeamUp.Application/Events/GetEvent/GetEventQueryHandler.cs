@@ -18,7 +18,7 @@ internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, Result
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<EventResponse>> Handle(GetEventQuery query, CancellationToken ct)
+	public async Task<Result<EventResponse>> HandleAsync(GetEventQuery query, CancellationToken ct)
 	{
 		var team = await _appQueryContext.Teams
 			.AsSplitQuery()
