@@ -15,7 +15,7 @@ internal sealed class SetMemberRoleCommandHandler : ICommandHandler<SetMemberRol
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(SetMemberRoleCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(SetMemberRoleCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

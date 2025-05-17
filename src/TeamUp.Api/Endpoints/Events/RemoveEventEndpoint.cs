@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Events.RemoveEvent;
 using TeamUp.Contracts.Teams;
@@ -25,13 +23,12 @@ public sealed class RemoveEventEndpoint : IEndpointGroup
 	private async Task<IResult> RemoveEventAsync(
 		[FromRoute] Guid teamId,
 		[FromRoute] Guid eventId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new RemoveEventCommand(httpContext.GetCurrentUserId(), TeamId.FromGuid(teamId), EventId.FromGuid(eventId));
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<RemoveEventCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
-
 }

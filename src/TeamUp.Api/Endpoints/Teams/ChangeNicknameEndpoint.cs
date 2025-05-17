@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.ChangeNickname;
@@ -23,7 +23,7 @@ public sealed class ChangeNicknameEndpoint : IEndpointGroup
 	private async Task<IResult> ChangeNicknameAsync(
 		[FromRoute] Guid teamId,
 		[FromBody] ChangeNicknameRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -32,7 +32,7 @@ public sealed class ChangeNicknameEndpoint : IEndpointGroup
 			TeamId.FromGuid(teamId),
 			request.Nickname
 		);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<ChangeNicknameCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

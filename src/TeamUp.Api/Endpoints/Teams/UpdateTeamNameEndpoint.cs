@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.SetTeamName;
 using TeamUp.Contracts.Teams;
@@ -25,7 +23,7 @@ public sealed class UpdateTeamNameEndpoint : IEndpointGroup
 	private async Task<IResult> UpdateTeamNameAsync(
 		[FromRoute] Guid teamId,
 		[FromBody] UpdateTeamNameRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -34,7 +32,7 @@ public sealed class UpdateTeamNameEndpoint : IEndpointGroup
 			TeamId.FromGuid(teamId),
 			request.Name
 		);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<SetTeamNameCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

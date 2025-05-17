@@ -24,13 +24,14 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.4" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.9.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="NetArchTest.Rules" Version="1.3.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Quartz" Version="3.14.0" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.14.0" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Riok.Mapperly" Version="4.2.1" />
+    <PackageVersion Include="Skrasek.Mediato.Abstractions" Version="1.0.4" />
+    <PackageVersion Include="Skrasek.Mediato.MicrosoftDependencyInjection" Version="1.0.4" />
     <PackageVersion Include="Skrasek.RailwayResult" Version="1.2.0" />
     <PackageVersion Include="Skrasek.RailwayResult.Errors" Version="1.2.0" />
     <PackageVersion Include="Skrasek.RailwayResult.FunctionalExtensions" Version="1.2.0" />

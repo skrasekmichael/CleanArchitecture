@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-
 using TeamUp.Contracts.Users;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Options;

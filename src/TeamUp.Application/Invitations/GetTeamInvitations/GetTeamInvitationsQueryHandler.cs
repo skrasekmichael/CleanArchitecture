@@ -15,7 +15,7 @@ internal sealed class GetTeamInvitationsQueryHandler : IQueryHandler<GetTeamInvi
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<List<TeamInvitationResponse>>> Handle(GetTeamInvitationsQuery query, CancellationToken ct)
+	public async Task<Result<List<TeamInvitationResponse>>> HandleAsync(GetTeamInvitationsQuery query, CancellationToken ct)
 	{
 		var teamWithInitiator = await _appQueryContext.Teams
 			.Select(team => new

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-
 using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Processing.Outbox;

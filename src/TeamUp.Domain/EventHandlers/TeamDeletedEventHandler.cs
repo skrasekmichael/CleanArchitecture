@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-
 using TeamUp.Common;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Teams;
@@ -21,7 +20,7 @@ internal sealed class TeamDeletedEventHandler : IDomainEventHandler<TeamDeletedD
 		_logger = logger;
 	}
 
-	public async Task Handle(TeamDeletedDomainEvent domainEvent, CancellationToken ct)
+	public async Task HandleAsync(TeamDeletedDomainEvent domainEvent, CancellationToken ct)
 	{
 		var owner = domainEvent.Team.Members.First(member => member.Role.IsOwner());
 

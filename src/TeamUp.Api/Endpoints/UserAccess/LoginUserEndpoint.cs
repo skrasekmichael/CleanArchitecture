@@ -1,9 +1,8 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users;
+using TeamUp.Application.Users.Login;
 using TeamUp.Contracts.Users;
 
 namespace TeamUp.Api.Endpoints.UserAccess;
@@ -22,12 +21,12 @@ public sealed class LoginUserEndpoint : IEndpointGroup
 
 	private async Task<IResult> LoginAsync(
 		[FromBody] LoginRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		[FromServices] UserMapper mapper,
 		CancellationToken ct)
 	{
 		var command = mapper.ToCommand(request);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<LoginCommand, RailwayResult.Result<string>>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

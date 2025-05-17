@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.ChangeOwnership;
 using TeamUp.Contracts.Teams;
@@ -24,7 +22,7 @@ public class ChangeOwnershipEndpoint : IEndpointGroup
 	private async Task<IResult> ChangeOwnerShipAsync(
 		[FromRoute] Guid teamId,
 		[FromBody] Guid teamMemberId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -33,7 +31,7 @@ public class ChangeOwnershipEndpoint : IEndpointGroup
 			TeamId.FromGuid(teamId),
 			TeamMemberId.FromGuid(teamMemberId)
 		);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<ChangeOwnershipCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

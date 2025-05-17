@@ -14,7 +14,7 @@ internal sealed class GetMyInvitationsQueryHandler : IQueryHandler<GetMyInvitati
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<List<InvitationResponse>>> Handle(GetMyInvitationsQuery query, CancellationToken ct)
+	public async Task<Result<List<InvitationResponse>>> HandleAsync(GetMyInvitationsQuery query, CancellationToken ct)
 	{
 		return await _appQueryContext.Invitations
 			.Where(invitation => invitation.RecipientId == query.InitiatorId)

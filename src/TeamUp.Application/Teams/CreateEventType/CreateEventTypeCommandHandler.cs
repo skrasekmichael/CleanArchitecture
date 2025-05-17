@@ -16,7 +16,7 @@ internal sealed class CreateEventTypeCommandHandler : ICommandHandler<CreateEven
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result<EventTypeId>> Handle(CreateEventTypeCommand command, CancellationToken ct)
+	public async Task<Result<EventTypeId>> HandleAsync(CreateEventTypeCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-
 using TeamUp.Common;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Teams.DomainEvents;
@@ -18,7 +17,7 @@ internal sealed class TeamOwnerShipChangedEventHandler : IDomainEventHandler<Tea
 		_logger = logger;
 	}
 
-	public async Task Handle(TeamOwnershipChangedDomainEvent domainEvent, CancellationToken ct)
+	public async Task HandleAsync(TeamOwnershipChangedDomainEvent domainEvent, CancellationToken ct)
 	{
 		var oldOwner = await _userRepository.GetUserByIdAsync(domainEvent.OldOwner.UserId, ct);
 		if (oldOwner is null)

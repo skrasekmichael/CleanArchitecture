@@ -15,7 +15,7 @@ internal sealed class RemoveEventCommandHandler : ICommandHandler<RemoveEventCom
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(RemoveEventCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(RemoveEventCommand command, CancellationToken ct)
 	{
 		return await _eventDomainService
 			.DeleteEventAsync(command.InitiatorId, command.TeamId, command.EventId, ct)

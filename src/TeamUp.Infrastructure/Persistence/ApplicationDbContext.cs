@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Invitations;
@@ -23,5 +23,17 @@ public sealed class ApplicationDbContext : DbContext
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
 		base.OnModelCreating(modelBuilder);
+	}
+
+	public override void Dispose()
+	{
+		Debug.WriteLine("Disposing DbContext");
+		base.Dispose();
+	}
+
+	public override async ValueTask DisposeAsync()
+	{
+		Debug.WriteLine("Disposing DbContext (async)");
+		await base.DisposeAsync();
 	}
 }

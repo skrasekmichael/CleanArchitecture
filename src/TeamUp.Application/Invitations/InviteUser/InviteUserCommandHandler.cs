@@ -16,7 +16,7 @@ internal sealed class InviteUserCommandHandler : ICommandHandler<InviteUserComma
 		_unitOfWork = unitOfWork;
 	}
 
-	public Task<Result<InvitationId>> Handle(InviteUserCommand command, CancellationToken ct)
+	public Task<Result<InvitationId>> HandleAsync(InviteUserCommand command, CancellationToken ct)
 	{
 		return _invitationDomainService
 			.InviteUserAsync(command.InitiatorId, command.TeamId, command.Email, ct)

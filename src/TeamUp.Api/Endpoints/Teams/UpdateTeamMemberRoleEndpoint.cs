@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.SetMemberRole;
 using TeamUp.Contracts.Teams;
@@ -27,7 +25,7 @@ public sealed class UpdateTeamMemberRoleEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromRoute] Guid teamMemberId,
 		[FromBody] UpdateTeamRoleRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -37,7 +35,7 @@ public sealed class UpdateTeamMemberRoleEndpoint : IEndpointGroup
 			TeamMemberId.FromGuid(teamMemberId),
 			request.Role
 		);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<SetMemberRoleCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

@@ -15,7 +15,7 @@ internal sealed class UserGeneratedEventHandler : IIntegrationEventHandler<UserG
 		_urlGenerator = urlGenerator;
 	}
 
-	public Task Handle(UserGeneratedEvent integrationEvent, CancellationToken ct)
+	public Task HandleAsync(UserGeneratedEvent integrationEvent, CancellationToken ct)
 	{
 		return _emailSender.SendEmailAsync(
 			email: integrationEvent.Email,

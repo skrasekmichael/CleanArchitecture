@@ -17,7 +17,7 @@ internal sealed class CompleteRegistrationCommandHandler : ICommandHandler<Compl
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(CompleteRegistrationCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(CompleteRegistrationCommand command, CancellationToken ct)
 	{
 		var user = await _userRepository.GetUserByIdAsync(command.UserId, ct);
 		return await user

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-
 using TeamUp.Domain.Aggregates.Invitations;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Domain.DomainServices;

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-
 using TeamUp.Common.Abstractions;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Persistence;
@@ -23,8 +22,7 @@ internal sealed class IntegrationEventManager : IIntegrationEventManager
 		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public void AddIntegrationEvent<TEvent>(TEvent integrationEvent)
-		where TEvent : notnull, IIntegrationEvent
+	public void AddIntegrationEvent<TEvent>(TEvent integrationEvent) where TEvent : notnull, IIntegrationEvent
 	{
 		var message = new OutboxMessage
 		{

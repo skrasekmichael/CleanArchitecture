@@ -15,7 +15,7 @@ internal sealed class RemoveInvitationCommandHandler : ICommandHandler<RemoveInv
 		_unitOfWork = unitOfWork;
 	}
 
-	public Task<Result> Handle(RemoveInvitationCommand command, CancellationToken ct)
+	public Task<Result> HandleAsync(RemoveInvitationCommand command, CancellationToken ct)
 	{
 		return _invitationDomainService
 			.RemoveInvitationAsync(command.InitiatorId, command.InvitationId, ct)

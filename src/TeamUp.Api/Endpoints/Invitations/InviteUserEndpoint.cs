@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Invitations.InviteUser;
 using TeamUp.Contracts.Invitations;
@@ -24,14 +22,14 @@ public sealed class InviteUserEndpoint : IEndpointGroup
 
 	private async Task<IResult> InviteUserAsync(
 		[FromBody] InviteUserRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		[FromServices] LinkGenerator linkGenerator,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new InviteUserCommand(httpContext.GetCurrentUserId(), request.TeamId, request.Email);
 
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<InviteUserCommand, RailwayResult.Result<InvitationId>>(command, ct);
 		return result.ToResponse(invitationId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamInvitationsEndpoint), request.TeamId.Value),
 			value: invitationId

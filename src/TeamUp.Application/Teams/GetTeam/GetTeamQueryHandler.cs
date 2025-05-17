@@ -15,7 +15,7 @@ internal sealed class GetTeamQueryHandler : IQueryHandler<GetTeamQuery, Result<T
 		_appQueryContext = appQueryContext;
 	}
 
-	public async Task<Result<TeamResponse>> Handle(GetTeamQuery query, CancellationToken ct)
+	public async Task<Result<TeamResponse>> HandleAsync(GetTeamQuery query, CancellationToken ct)
 	{
 		var team = await _appQueryContext.Teams
 			.Where(team => team.Id == query.TeamId)

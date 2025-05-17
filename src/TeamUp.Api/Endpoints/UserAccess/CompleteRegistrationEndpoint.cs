@@ -1,9 +1,6 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
-using TeamUp.Application.Users.Activation;
 using TeamUp.Application.Users.CompleteRegistration;
 using TeamUp.Contracts.Users;
 
@@ -24,11 +21,11 @@ public sealed class CompleteRegistrationEndpoint : IEndpointGroup
 	private async Task<IResult> ActivateAccountAsync(
 		[FromRoute] Guid userId,
 		[FromHeader(Name = UserConstants.HTTP_HEADER_PASSWORD)] string password,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		CancellationToken ct)
 	{
 		var command = new CompleteRegistrationCommand(UserId.FromGuid(userId), password);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<CompleteRegistrationCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

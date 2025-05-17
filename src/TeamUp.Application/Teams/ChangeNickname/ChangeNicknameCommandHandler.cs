@@ -15,7 +15,7 @@ internal sealed class ChangeNicknameCommandHandler : ICommandHandler<ChangeNickn
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(ChangeNicknameCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(ChangeNicknameCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

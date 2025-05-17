@@ -15,7 +15,7 @@ internal sealed class ActivateAccountCommandHandler : ICommandHandler<ActivateAc
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(ActivateAccountCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(ActivateAccountCommand command, CancellationToken ct)
 	{
 		var user = await _userRepository.GetUserByIdAsync(command.UserId, ct);
 		return await user

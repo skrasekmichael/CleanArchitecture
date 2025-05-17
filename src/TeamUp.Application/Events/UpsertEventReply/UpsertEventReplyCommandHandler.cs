@@ -22,7 +22,7 @@ internal sealed class UpsertEventReplyCommandHandler : ICommandHandler<UpsertEve
 		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public async Task<Result> Handle(UpsertEventReplyCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(UpsertEventReplyCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

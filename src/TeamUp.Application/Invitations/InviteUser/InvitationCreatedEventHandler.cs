@@ -13,7 +13,7 @@ internal sealed class InvitationCreatedEventHandler : IIntegrationEventHandler<I
 		_emailSender = emailSender;
 	}
 
-	public async Task Handle(InvitationCreatedEvent integrationEvent, CancellationToken ct)
+	public async Task HandleAsync(InvitationCreatedEvent integrationEvent, CancellationToken ct)
 	{
 		var subject = "TeamUp - invitation";
 		var message = $"You have been invited to team {integrationEvent.TeamName}.";

@@ -1,5 +1,4 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Persistence;
 
@@ -8,9 +7,9 @@ namespace TeamUp.Infrastructure.Processing;
 internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 {
 	private readonly ApplicationDbContext _context;
-	private readonly IPublisher _publisher;
+	private readonly INotificationPublisher _publisher;
 
-	public DomainEventsDispatcher(ApplicationDbContext context, IPublisher publisher)
+	public DomainEventsDispatcher(ApplicationDbContext context, INotificationPublisher publisher)
 	{
 		_context = context;
 		_publisher = publisher;
@@ -31,7 +30,7 @@ internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 			//publish all domain events
 			foreach (var domainEvent in domainEvents)
 			{
-				await _publisher.Publish(domainEvent, ct);
+				await _publisher.PublishAsync(domainEvent, ct);
 			}
 		}
 	}

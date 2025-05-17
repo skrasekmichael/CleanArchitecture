@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Events.UpsertEventReply;
 using TeamUp.Contracts.Events;
@@ -30,7 +28,7 @@ public sealed class UpsertEventReplyEndpoint : IEndpointGroup
 		[FromRoute] Guid teamId,
 		[FromRoute] Guid eventId,
 		[FromBody] UpsertEventReplyRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -42,7 +40,7 @@ public sealed class UpsertEventReplyEndpoint : IEndpointGroup
 			Message: request.Message
 		);
 
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<UpsertEventReplyCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

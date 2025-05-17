@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-
 using RailwayResult;
-
 using TeamUp.Domain.Abstractions;
 using TeamUp.Infrastructure.Core;
 using TeamUp.Infrastructure.Processing;
@@ -29,11 +27,10 @@ internal sealed class DelayedCommitUnitOfWork : IUnitOfWork
 
 	public async Task<Result> SaveChangesAsync(CancellationToken ct = default)
 	{
-		if (_options.IsDelayRequested)
+		if (_options.IsDelayRequested())
 		{
 			_beforeCommitCallback.Invoke();
 			await _canCommitCallback.WaitForCallbackAsync();
-			return await _unitOfWork.SaveChangesAsync(ct);
 		}
 
 		return await _unitOfWork.SaveChangesAsync(ct);

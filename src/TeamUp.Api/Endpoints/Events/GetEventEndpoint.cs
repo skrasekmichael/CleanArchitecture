@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Events.GetEvent;
 using TeamUp.Contracts.Events;
@@ -27,7 +25,7 @@ public sealed class GetEventEndpoint : IEndpointGroup
 	public async Task<IResult> GetEventAsync(
 		[FromRoute] Guid teamId,
 		[FromRoute] Guid eventId,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
@@ -37,7 +35,7 @@ public sealed class GetEventEndpoint : IEndpointGroup
 			EventId.FromGuid(eventId)
 		);
 
-		var result = await sender.Send(query, ct);
+		var result = await sender.SendAsync<GetEventQuery, RailwayResult.Result<EventResponse>>(query, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Teams.CreateEventType;
 using TeamUp.Contracts.Teams;
@@ -25,7 +23,7 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 	private async Task<IResult> CreateEventTypeAsync(
 		[FromRoute] Guid teamId,
 		[FromBody] UpsertEventTypeRequest request,
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		[FromServices] LinkGenerator linkGenerator,
 		HttpContext httpContext,
 		CancellationToken ct)
@@ -37,7 +35,7 @@ public sealed class CreateEventTypeEndpoint : IEndpointGroup
 			request.Description
 		);
 
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<CreateEventTypeCommand, RailwayResult.Result<EventTypeId>>(command, ct);
 		return result.ToResponse(eventTypeId => TypedResults.Created(
 			uri: linkGenerator.GetPathByName(httpContext, nameof(GetTeamEndpoint), teamId),
 			value: eventTypeId

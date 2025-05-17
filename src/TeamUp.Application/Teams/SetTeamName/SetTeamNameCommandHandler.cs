@@ -15,7 +15,7 @@ internal sealed class SetTeamNameCommandHandler : ICommandHandler<SetTeamNameCom
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(SetTeamNameCommand command, CancellationToken ct)
+	public async Task<Result> HandleAsync(SetTeamNameCommand command, CancellationToken ct)
 	{
 		var team = await _teamRepository.GetTeamByIdAsync(command.TeamId, ct);
 		return await team

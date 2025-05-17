@@ -1,7 +1,5 @@
-﻿using MediatR;
-
+﻿using Mediato.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-
 using TeamUp.Api.Extensions;
 using TeamUp.Application.Users.DeleteAccount;
 using TeamUp.Contracts.Users;
@@ -22,13 +20,13 @@ public sealed class DeleteAccountEndpoint : IEndpointGroup
 	}
 
 	private async Task<IResult> DeleteUserAsync(
-		[FromServices] ISender sender,
+		[FromServices] IRequestSender sender,
 		[FromHeader(Name = UserConstants.HTTP_HEADER_PASSWORD)] string password,
 		HttpContext httpContext,
 		CancellationToken ct)
 	{
 		var command = new DeleteAccountCommand(httpContext.GetCurrentUserId(), password);
-		var result = await sender.Send(command, ct);
+		var result = await sender.SendAsync<DeleteAccountCommand, RailwayResult.Result>(command, ct);
 		return result.ToResponse(TypedResults.Ok);
 	}
 }

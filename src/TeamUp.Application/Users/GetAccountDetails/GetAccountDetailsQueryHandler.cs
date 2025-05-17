@@ -15,7 +15,7 @@ internal sealed class GetAccountDetailsQueryHandler : IQueryHandler<GetAccountDe
 		_queryContext = queryContext;
 	}
 
-	public async Task<Result<AccountResponse>> Handle(GetAccountDetailsQuery query, CancellationToken ct)
+	public async Task<Result<AccountResponse>> HandleAsync(GetAccountDetailsQuery query, CancellationToken ct)
 	{
 		var user = await _queryContext.Users
 			.Where(user => user.Id == query.UserId)
