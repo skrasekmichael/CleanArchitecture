@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 
 namespace TeamUp.Tests.EndToEnd.EndpointTests.Events;
 
-public sealed class RemoveEventTests(AppFixture app, ITestOutputHelper output) : EventTests(app)
+public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 {
 	public static string GetUrl(TeamId teamId, EventId eventId) => GetUrl(teamId.Value, eventId.Value);
 	public static string GetUrl(Guid teamId, Guid eventId) => $"/api/v1/teams/{teamId}/events/{eventId}";
@@ -42,8 +42,6 @@ public sealed class RemoveEventTests(AppFixture app, ITestOutputHelper output) :
 
 		//act
 		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id));
-
-		output.WriteLine(await response.Content.ReadAsStringAsync());
 
 		//assert
 		response.ShouldBe200OK();

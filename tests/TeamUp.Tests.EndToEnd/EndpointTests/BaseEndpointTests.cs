@@ -99,8 +99,7 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 		var reqB = Task.Run(async () =>
 		{
 			DelayedCommitUnitOfWorkOptions.RequestDelay(true);
-			var response = await requestB();
-			return response;
+			return await requestB();
 		});
 
 		await Task.WhenAll(reqA, reqB);
