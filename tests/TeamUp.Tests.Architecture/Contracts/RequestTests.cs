@@ -18,7 +18,7 @@ public sealed class RequestTests : BaseTests
 			.HaveNameEndingWith("Request")
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Fact]
@@ -31,7 +31,7 @@ public sealed class RequestTests : BaseTests
 			.ImplementInterface(typeof(IRequestBody))
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Fact]
@@ -63,6 +63,6 @@ public sealed class RequestTests : BaseTests
 		}
 
 		//assert
-		failingRequestTypes.Should().BeEmpty();
+		failingRequestTypes.ShouldBeEmpty();
 	}
 }

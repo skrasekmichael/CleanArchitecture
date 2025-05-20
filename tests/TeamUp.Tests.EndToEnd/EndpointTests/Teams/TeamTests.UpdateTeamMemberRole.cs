@@ -59,14 +59,14 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 				.ToListAsync();
 		});
 
-		teamMembers.Should().ContainSingle(member => member.Role == TeamRole.Owner);
+		teamMembers.ShouldHaveSingleItem(member => member.Role == TeamRole.Owner);
 
 		var updatedMember = teamMembers.SingleOrDefault(member => member.UserId == targetUser.Id);
 		updatedMember.ShouldNotBeNull();
-		updatedMember.Role.Should().Be(newRole);
+		updatedMember.Role.ShouldBe(newRole);
 
 		teamMembers.Except([updatedMember])
-			.Should().OnlyContain(member => TeamContainsMemberWithSameRole(team, member));
+			.ShouldOnlyContain(member => TeamContainsMemberWithSameRole(team, member));
 	}
 
 	[Theory]

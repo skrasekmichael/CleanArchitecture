@@ -13,7 +13,7 @@ public static class TeamGeneratorExtensions
 	public static TeamGenerator WithMembers(this TeamGenerator teamGenerator, User user, TeamRole role, List<User> members)
 	{
 		var hasOwner = role == TeamRole.Owner || members.Count >= 1;
-		hasOwner.Should().Be(true, "team has to have exactly 1 owner");
+		hasOwner.ShouldBe(true, "team has to have exactly 1 owner");
 
 		return role switch
 		{
@@ -25,7 +25,7 @@ public static class TeamGeneratorExtensions
 	public static TeamGenerator WithMembers(this TeamGenerator teamGenerator, User user1, TeamRole role1, User user2, TeamRole role2, List<User> members)
 	{
 		var hasOwner = role1 == TeamRole.Owner || role2 == TeamRole.Owner || members.Count >= 1;
-		hasOwner.Should().Be(true, "team has to have exactly 1 owner");
+		hasOwner.ShouldBe(true, "team has to have exactly 1 owner");
 
 		return (role1, role2) switch
 		{
@@ -44,8 +44,8 @@ public static class TeamGeneratorExtensions
 
 	public static TeamGenerator WithRandomMembers(this TeamGenerator teamGenerator, int count, List<User> pot, int lastXNonOwners = 0)
 	{
-		count.Should().BeGreaterThan(0);
-		pot.Should().HaveCountGreaterThanOrEqualTo(1);
+		count.ShouldBeGreaterThan(0);
+		pot.Count.ShouldBeGreaterThanOrEqualTo(1);
 
 		return teamGenerator
 			.RuleFor(t => t.NumberOfMembers, count)
@@ -57,13 +57,14 @@ public static class TeamGeneratorExtensions
 						.RuleFor(tm => tm.Nickname, user.Name)
 						.RuleFor(tm => tm.Role, index == 1 ? user.GetOwner() : TeamRole.Member)
 						.Generate()))
+				.OrderBy(t => t.Id)
 				.ToList());
 	}
 
 	public static TeamGenerator WithMembers(this TeamGenerator teamGenerator, List<User> members, params (User User, TeamRole Role)[] userMembers)
 	{
-		userMembers.Where(x => x.Role == TeamRole.Owner).Should().ContainSingle("team has to have exactly 1 owner");
-		members.Should().NotContain(userMembers.Select(x => x.User));
+		userMembers.Where(x => x.Role == TeamRole.Owner).ShouldHaveSingleItem("team has to have exactly 1 owner");
+		members.ShouldNotContain(userMembers.Select(x => x.User));
 		return teamGenerator.GetTeamGeneratorWithMembers(members, userMembers);
 	}
 
@@ -85,6 +86,7 @@ public static class TeamGeneratorExtensions
 						.RuleFor(tm => tm.Nickname, member.Name)
 						.RuleFor(tm => tm.Role, TeamRole.Member)
 						.Generate()))
+				.OrderBy(tm => tm.Id)
 				.ToList()
 			);
 	}
@@ -109,6 +111,8 @@ public static class TeamGeneratorExtensions
 		return teamGenerator
 			.RuleFor(TeamGenerators.TEAM_EVENTTYPES_FIELD, (f, t) => TeamGenerators.EventType
 				.RuleForBackingField(et => et.TeamId, t.Id)
-				.Generate(count));
+				.Generate(count)
+				.OrderBy(et => et.Id)
+				.ToList());
 	}
 }

@@ -41,11 +41,11 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(async dbContext =>
 		{
 			var targetMember = await dbContext.Set<TeamMember>().FindAsync(targetMemberId);
-			targetMember.Should().BeNull("this member has been removed");
+			targetMember.ShouldBeNull("this member has been removed");
 
 			var targetMemberUser = await dbContext.Users.FindAsync(targetUser.Id);
 			targetMemberUser.ShouldNotBeNull();
-			targetMemberUser.Should().BeEquivalentTo(targetUser);
+			targetMemberUser.ShouldHaveSameValuesAs(targetUser);
 		});
 	}
 
@@ -81,11 +81,11 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(async dbContext =>
 		{
 			var targetMember = await dbContext.Set<TeamMember>().FindAsync(targetMemberId);
-			targetMember.Should().BeNull("this member has been removed");
+			targetMember.ShouldBeNull("this member has been removed");
 
 			var targetMemberUser = await dbContext.Users.FindAsync(initiatorUser.Id);
 			targetMemberUser.ShouldNotBeNull();
-			targetMemberUser.Should().BeEquivalentTo(initiatorUser);
+			targetMemberUser.ShouldHaveSameValuesAs(initiatorUser);
 		});
 	}
 

@@ -32,7 +32,8 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 		response.ShouldBe200OK();
 
 		var userInvitations = await response.ReadFromJsonAsync<List<InvitationResponse>>();
-		invitations.Should().BeEquivalentTo(userInvitations, o => o.ExcludingMissingMembers());
+		userInvitations.ShouldNotBeNull();
+		invitations.ShouldHaveSameValuesAs(userInvitations.OrderBy(i => i.Id));
 	}
 
 	[Fact]
@@ -61,6 +62,6 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 		response.ShouldBe200OK();
 
 		var invitations = await response.ReadFromJsonAsync<List<InvitationResponse>>();
-		invitations.Should().BeEmpty();
+		invitations.ShouldBeEmpty();
 	}
 }

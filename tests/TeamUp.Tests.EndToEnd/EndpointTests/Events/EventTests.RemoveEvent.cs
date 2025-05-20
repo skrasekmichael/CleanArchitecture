@@ -48,10 +48,11 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var rest = await UseDbContextAsync(dbContext =>
 		{
 			return dbContext.Events
-				.Include(e => e.EventResponses)
+				.Include(e => e.EventResponses.OrderBy(er => er.TimeStampUtc))
+				.OrderBy(e => e.Id)
 				.ToListAsync();
 		});
-		rest.Should().BeEquivalentTo(events.Except([targetEvent]));
+		rest.ShouldHaveSameValuesAs(events.Except([targetEvent]).OrderBy(e => e.Id));
 	}
 
 	[Fact]

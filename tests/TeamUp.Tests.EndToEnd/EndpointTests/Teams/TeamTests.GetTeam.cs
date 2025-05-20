@@ -60,7 +60,7 @@ public sealed class GetTeamTests(AppFixture app) : TeamTests(app)
 		response.ShouldBe200OK();
 
 		var teamResponse = await response.ReadFromJsonAsync<TeamResponse>();
-		team.Should().BeEquivalentTo(teamResponse);
+		team.ShouldHaveSameValuesAs(teamResponse);
 	}
 
 	[Fact]

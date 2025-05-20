@@ -28,7 +28,7 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 
 		var activatedUser = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(user.Id));
 		activatedUser.ShouldNotBeNull();
-		activatedUser.Status.Should().Be(UserStatus.Activated);
+		activatedUser.Status.ShouldBe(UserStatus.Activated);
 	}
 
 	[Fact]

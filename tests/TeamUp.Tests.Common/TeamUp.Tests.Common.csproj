@@ -2,9 +2,9 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" />
-    <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Respawn" />
+    <PackageReference Include="Shouldly" />
     <PackageReference Include="Testcontainers" />
     <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="xunit.extensibility.core" />

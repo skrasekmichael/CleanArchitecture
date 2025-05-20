@@ -47,12 +47,12 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 
 		var invitation = await UseDbContextAsync(dbContext => dbContext.Invitations.FindAsync(invitationId));
 		invitation.ShouldNotBeNull();
-		invitation.TeamId.Should().Be(team.Id);
-		invitation.RecipientId.Should().Be(targetUser.Id);
+		invitation.TeamId.ShouldBe(team.Id);
+		invitation.RecipientId.ShouldBe(targetUser.Id);
 
 		await WaitForIntegrationEventsAsync(); //wait for email
 
-		Inbox.Should().Contain(email => email.EmailAddress == targetUser.Email);
+		Inbox.ShouldContain(email => email.EmailAddress == targetUser.Email);
 	}
 
 	[Theory]
@@ -96,17 +96,17 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 		{
 			var invitation = await dbContext.Invitations.FindAsync(invitationId);
 			invitation.ShouldNotBeNull();
-			invitation.TeamId.Should().Be(team.Id);
+			invitation.TeamId.ShouldBe(team.Id);
 
 			var user = await dbContext.Users.FindAsync(invitation.RecipientId);
 			user.ShouldNotBeNull();
-			user.Email.Should().Be(targetEmail);
-			user.Status.Should().Be(UserStatus.Generated);
+			user.Email.ShouldBe(targetEmail);
+			user.Status.ShouldBe(UserStatus.Generated);
 		});
 
 		await WaitForIntegrationEventsAsync(); //wait for email
 
-		Inbox.Should().Contain(email => email.EmailAddress == targetEmail);
+		Inbox.ShouldContain(email => email.EmailAddress == targetEmail);
 	}
 
 	[Theory]
@@ -357,7 +357,7 @@ public sealed class InviteUserTests(AppFixture app) : InvitationTests(app)
 			var invitation = await dbContext.Invitations.SingleAsync(invitation =>
 				invitation.TeamId == team.Id &&
 				invitation.RecipientId == targetUser.Id);
-			invitation.Id.Should().Be(invitationId);
+			invitation.Id.ShouldBe(invitationId);
 		});
 
 		var problemDetails = await responseB.ReadProblemDetailsAsync();

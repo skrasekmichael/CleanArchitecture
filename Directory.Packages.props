@@ -6,8 +6,6 @@
     <PackageVersion Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageVersion Include="Bogus" Version="35.6.3" />
-    <PackageVersion Include="FluentAssertions" Version="8.2.0" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
     <PackageVersion Include="FluentValidation" Version="12.0.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageVersion Include="MailKit" Version="4.12.0" />
@@ -30,6 +28,7 @@
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.14.0" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Riok.Mapperly" Version="4.2.1" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Skrasek.Mediato.Abstractions" Version="1.0.4" />
     <PackageVersion Include="Skrasek.Mediato.MicrosoftDependencyInjection" Version="1.0.4" />
     <PackageVersion Include="Skrasek.RailwayResult" Version="1.2.0" />

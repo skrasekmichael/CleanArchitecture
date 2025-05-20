@@ -16,7 +16,9 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		var teams = TeamGenerators.Team
 			.WithRandomMembers(20, users)
 			.WithEventTypes(5)
-			.Generate(4);
+			.Generate(4)
+			.OrderBy(t => t.Id)
+			.ToList();
 
 		var user = UserGenerators.User.Generate();
 		users.Add(user);
@@ -28,7 +30,9 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 				.ForTeam(team.Id)
 				.WithEventType(team.EventTypes[0].Id)
 				.WithRandomEventResponses(team.Members)
-				.Generate(15);
+				.Generate(15)
+				.OrderBy(e => e.Id)
+				.ToList();
 		}).ToList();
 		var events = teamEvents.SelectMany(events => events);
 
@@ -36,6 +40,8 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		var targetTeam = teams[targetTeamIndex];
 		var teamOwner = targetTeam.Members.Single(member => member.Role.IsOwner());
 		var initiatorUser = users.Single(user => user.Id == teamOwner.UserId);
+
+		var targetUsers = targetTeam.Members.Select(m => users.First(u => u.Id == m.UserId));
 
 		await UseDbContextAsync(dbContext =>
 		{
@@ -56,26 +62,34 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 
 		await UseDbContextAsync(async dbContext =>
 		{
-			//no users deleted
-			var notDeletedUsers = await dbContext.Users.ToListAsync();
-			notDeletedUsers.Should().BeEquivalentTo(users);
+			//no users deleted and each affected user has one fewer team owned
+			var notDeletedUsers = await dbContext.Users.OrderBy(u => u.Id).ToListAsync();
+			notDeletedUsers.Pair<User, UserId>(users.Except([initiatorUser])).EachShouldHaveSameValues();
+			var notDeletedUser = notDeletedUsers.Single(u => u.Id == initiatorUser.Id);
+			notDeletedUser.NumberOfOwnedTeams.ShouldBe(initiatorUser.NumberOfOwnedTeams - 1);
+			notDeletedUser.Name.ShouldBe(initiatorUser.Name);
+			notDeletedUser.Email.ShouldBe(initiatorUser.Email);
+			notDeletedUser.Status.ShouldBe(initiatorUser.Status);
+			notDeletedUser.CreatedUtc.ShouldBe(initiatorUser.CreatedUtc);
 
 			//only team, team members and event types from target team were deleted
 			var notDeletedTeams = await dbContext.Teams
-				.Include(team => team.Members)
-				.Include(team => team.EventTypes)
+				.Include(team => team.Members.OrderBy(m => m.Id))
+				.Include(team => team.EventTypes.OrderBy(et => et.Id))
+				.OrderBy(team => team.Id)
 				.ToListAsync();
-			notDeletedTeams.Should().BeEquivalentTo(teams.Without(targetTeam));
+			notDeletedTeams.ShouldHaveSameValuesAs(teams.Without(targetTeam).OrderBy(t => t.Id));
 
 			//only events and event responses from target team were deleted
 			var notDeletedEvents = await dbContext.Events
-				.Include(e => e.EventResponses)
+				.Include(e => e.EventResponses.OrderBy(er => er.TimeStampUtc))
+				.OrderBy(e => e.Id)
 				.ToListAsync();
-			notDeletedEvents.Should().BeEquivalentTo(events.Except(teamEvents[targetTeamIndex]));
+			notDeletedEvents.ShouldHaveSameValuesAs(events.Except(teamEvents[targetTeamIndex]).OrderBy(e => e.Id));
 
 			//only invitation to targeted team were deleted
-			var notDeletedInvitations = await dbContext.Invitations.ToListAsync();
-			notDeletedInvitations.Should().BeEquivalentTo(invitations.Where(invitation => invitation.TeamId != targetTeam.Id));
+			var notDeletedInvitations = await dbContext.Invitations.OrderBy(i => i.Id).ToListAsync();
+			notDeletedInvitations.ShouldHaveSameValuesAs(invitations.Where(invitation => invitation.TeamId != targetTeam.Id).OrderBy(i => i.Id));
 		});
 	}
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Application.Abstractions;
 using TeamUp.Contracts.Events;
 using TeamUp.Domain.Aggregates.Events;
@@ -46,7 +45,7 @@ internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, Result
 							TeamMemberNickname = team.Members.First(member => member.Id == er.TeamMemberId).Nickname,
 							TimeStampUtc = er.TimeStampUtc,
 							Type = er.ReplyType
-						}).ToList()
+						}).OrderBy(er => er.TimeStampUtc).ToList()
 					})
 					.FirstOrDefault(),
 				Initiator = team.Members

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Application.Abstractions;
 using TeamUp.Contracts.Teams;
 

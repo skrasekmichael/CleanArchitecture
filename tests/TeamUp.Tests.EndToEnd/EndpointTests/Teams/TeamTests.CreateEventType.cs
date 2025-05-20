@@ -40,12 +40,12 @@ public sealed class CreateEventTypeTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(async dbContext =>
 		{
 			var createdEventType = await dbContext.Set<EventType>().FindAsync(eventTypeId);
-			createdEventType.Should().BeEquivalentTo(request);
+			createdEventType.ShouldHaveSameValuesAs(request);
 
 			var updatedTeam = await dbContext.Teams.FindAsync(team.Id);
 			updatedTeam.ShouldNotBeNull();
-			updatedTeam.EventTypes.Should().ContainSingle();
-			updatedTeam.EventTypes[0].Should().BeEquivalentTo(createdEventType);
+			updatedTeam.EventTypes.ShouldHaveSingleItem();
+			updatedTeam.EventTypes[0].ShouldHaveSameValuesAs(createdEventType);
 		});
 	}
 

@@ -24,24 +24,30 @@ public sealed class InvitationGenerators : BaseGenerator
 
 	public static List<Invitation> GenerateTeamInvitations(TeamId teamId, DateTime createdUtc, List<User> users)
 	{
-		return users.Select(user =>
-			Invitation
-				.RuleForBackingField(i => i.RecipientId, user.Id)
-				.RuleForBackingField(i => i.TeamId, teamId)
-				.RuleFor(i => i.CreatedUtc, createdUtc)
-				.Generate()
-		).ToList();
+		var created = createdUtc.DropMicroSeconds();
+		return users
+			.Select(user =>
+				Invitation
+					.RuleForBackingField(i => i.RecipientId, user.Id)
+					.RuleForBackingField(i => i.TeamId, teamId)
+					.RuleFor(i => i.CreatedUtc, created)
+					.Generate())
+			.OrderBy(i => i.Id)
+			.ToList();
 	}
 
 	public static List<Invitation> GenerateUserInvitations(UserId userId, DateTime createdUtc, List<Team> teams)
 	{
-		return teams.Select(team =>
-			Invitation
-				.RuleForBackingField(i => i.RecipientId, userId)
-				.RuleForBackingField(i => i.TeamId, team.Id)
-				.RuleFor(i => i.CreatedUtc, createdUtc)
-				.Generate()
-		).ToList();
+		var created = createdUtc.DropMicroSeconds();
+		return teams
+			.Select(team =>
+				Invitation
+					.RuleForBackingField(i => i.RecipientId, userId)
+					.RuleForBackingField(i => i.TeamId, team.Id)
+					.RuleFor(i => i.CreatedUtc, created)
+					.Generate())
+			.OrderBy(i => i.Id)
+			.ToList();
 	}
 
 	public sealed class InvalidInviteUserRequest : TheoryData<InvalidRequest<InviteUserRequest>>

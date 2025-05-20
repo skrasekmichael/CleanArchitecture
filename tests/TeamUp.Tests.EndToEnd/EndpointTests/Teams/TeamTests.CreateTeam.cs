@@ -49,14 +49,14 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		});
 
 		team.ShouldNotBeNull();
-		team.Name.Should().Be(createTeamRequest.Name);
-		team.EventTypes.Should().BeEmpty();
+		team.Name.ShouldBe(createTeamRequest.Name);
+		team.EventTypes.ShouldBeEmpty();
 
 		var tm = team.Members[0];
-		tm.UserId.Should().Be(user.Id);
-		tm.TeamId.Should().Be(teamId);
-		tm.Nickname.Should().Be(user.Name);
-		tm.Role.Should().Be(TeamRole.Owner);
+		tm.UserId.ShouldBe(user.Id);
+		tm.TeamId.ShouldBe(teamId);
+		tm.Nickname.ShouldBe(user.Name);
+		tm.Role.ShouldBe(TeamRole.Owner);
 	}
 
 	[Theory]
@@ -191,7 +191,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 				.Where(member => member.UserId == user.Id && member.Role == TeamRole.Owner)
 				.CountAsync();
 
-			ownedTeamsCount.Should().Be(TeamConstants.MAX_NUMBER_OF_OWNED_TEAMS);
+			ownedTeamsCount.ShouldBe(TeamConstants.MAX_NUMBER_OF_OWNED_TEAMS);
 
 			var team = await dbContext.Teams
 				.AsSplitQuery()
@@ -200,14 +200,14 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 				.FirstOrDefaultAsync(team => team.Id == teamId);
 
 			team.ShouldNotBeNull();
-			team.Name.Should().Be(createTeamRequest.Name);
-			team.EventTypes.Should().BeEmpty();
+			team.Name.ShouldBe(createTeamRequest.Name);
+			team.EventTypes.ShouldBeEmpty();
 
 			var tm = team.Members[0];
-			tm.UserId.Should().Be(user.Id);
-			tm.TeamId.Should().Be(teamId);
-			tm.Nickname.Should().Be(user.Name);
-			tm.Role.Should().Be(TeamRole.Owner);
+			tm.UserId.ShouldBe(user.Id);
+			tm.TeamId.ShouldBe(teamId);
+			tm.Nickname.ShouldBe(user.Name);
+			tm.Role.ShouldBe(TeamRole.Owner);
 		});
 
 		var problemDetails = await responseB.ReadProblemDetailsAsync();

@@ -30,6 +30,6 @@ public sealed class EntityTests : BaseTests
 		}
 
 		//assert
-		failingEntityTypes.Should().BeEmpty();
+		failingEntityTypes.ShouldBeEmpty();
 	}
 }

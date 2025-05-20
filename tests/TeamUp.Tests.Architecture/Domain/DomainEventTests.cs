@@ -14,7 +14,7 @@ public sealed class DomainEventTests : BaseTests
 			.BeSealed()
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Fact]
@@ -27,6 +27,6 @@ public sealed class DomainEventTests : BaseTests
 			.HaveNameEndingWith("DomainEvent")
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 }

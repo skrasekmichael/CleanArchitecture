@@ -37,7 +37,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		var updatedTeam = await UseDbContextAsync(dbContext => dbContext.Teams.FindAsync(team.Id));
 
 		updatedTeam.ShouldNotBeNull();
-		updatedTeam.Name.Should().Be(request.Name);
+		updatedTeam.Name.ShouldBe(request.Name);
 	}
 
 	[Theory]

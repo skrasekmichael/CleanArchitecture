@@ -1,8 +1,6 @@
 ﻿global using EventGenerator = Bogus.Faker<TeamUp.Domain.Aggregates.Events.Event>;
 global using EventResponseGenerator = Bogus.Faker<TeamUp.Domain.Aggregates.Events.EventResponse>;
 
-using FluentAssertions.Extensions;
-
 namespace TeamUp.Tests.Common.DataGenerators;
 
 public sealed class EventGenerators : BaseGenerator

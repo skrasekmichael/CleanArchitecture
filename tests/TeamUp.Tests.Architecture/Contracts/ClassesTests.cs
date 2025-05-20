@@ -36,6 +36,6 @@ public sealed class ClassesTests : BaseTests
 		}
 
 		//assert
-		failingTypes.Should().BeEmpty();
+		failingTypes.ShouldBeEmpty();
 	}
 }

@@ -32,7 +32,7 @@ public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 
 		var location = response.Headers.Location?.ToString();
 		location.ShouldNotBeNull();
-		location.Should().Be(expectedLocation);
+		location.ShouldBe(expectedLocation);
 	}
 
 	public Task DisposeAsync() => Task.CompletedTask;

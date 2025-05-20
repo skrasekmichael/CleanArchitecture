@@ -1,6 +1,4 @@
-﻿using FluentAssertions.Extensions;
-
-namespace TeamUp.Tests.Common.DataGenerators;
+﻿namespace TeamUp.Tests.Common.DataGenerators;
 
 public static class EventGeneratorExtensions
 {
@@ -20,6 +18,7 @@ public static class EventGeneratorExtensions
 					.RuleFor(er => er.ReplyType, f => f.PickRandom(EventGenerators.ReplyTypes))
 					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE))
 					.Generate())
+				.OrderBy(er => er.TimeStampUtc)
 				.ToList());
 	}
 
@@ -37,6 +36,7 @@ public static class EventGeneratorExtensions
 					.RuleFor(er => er.ReplyType, response.Type)
 					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE))
 					.Generate())
+				.OrderBy(er => er.TimeStampUtc)
 				.ToList());
 	}
 

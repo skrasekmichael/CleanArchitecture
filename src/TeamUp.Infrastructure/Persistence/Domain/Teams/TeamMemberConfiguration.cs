@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
@@ -16,7 +15,7 @@ internal sealed class TeamMemberConfiguration : BaseEntityConfiguration<TeamMemb
 			.HasForeignKey(teamMember => teamMember.UserId);
 
 		teamMemberEntityBuilder
-			.HasOne(teamMember => teamMember.Team)
+			.HasOne<Team>()
 			.WithMany(team => team.Members)
 			.HasForeignKey(teamMember => teamMember.TeamId);
 

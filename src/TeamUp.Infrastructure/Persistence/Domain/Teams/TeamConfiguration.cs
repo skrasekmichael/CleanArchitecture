@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Events;
 using TeamUp.Domain.Aggregates.Invitations;
@@ -19,7 +18,7 @@ internal sealed class TeamConfiguration : BaseEntityConfiguration<Team, TeamId>
 
 		teamEntityTypeBuilder
 			.HasMany(team => team.Members)
-			.WithOne(teamMember => teamMember.Team)
+			.WithOne()
 			.HasForeignKey(teamMember => teamMember.TeamId)
 			.OnDelete(DeleteBehavior.Cascade);
 
