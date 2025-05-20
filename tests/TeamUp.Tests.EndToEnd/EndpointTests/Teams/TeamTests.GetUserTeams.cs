@@ -25,7 +25,7 @@ public sealed class GetUserTeamsTests(AppFixture app) : TeamTests(app)
 		response.ShouldBe200OK();
 
 		var teams = await response.ReadFromJsonAsync<List<TeamSlimResponse>>();
-		teams.Should().BeEmpty();
+		teams.ShouldBeEmpty();
 	}
 
 	[Fact]
@@ -65,6 +65,7 @@ public sealed class GetUserTeamsTests(AppFixture app) : TeamTests(app)
 		response.ShouldBe200OK();
 
 		var teams = await response.ReadFromJsonAsync<List<TeamSlimResponse>>();
-		teams.Should().BeEquivalentTo(expectedTeams);
+		teams.ShouldNotBeNull();
+		teams.OrderBy(t => t.TeamId).ShouldHaveSameValuesAs(expectedTeams.OrderBy(t => t.TeamId));
 	}
 }

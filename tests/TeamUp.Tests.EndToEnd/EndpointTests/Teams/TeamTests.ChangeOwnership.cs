@@ -48,16 +48,14 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 
 		var originalOwner = teamMembers.SingleOrDefault(member => member.UserId == owner.Id);
 		originalOwner.ShouldNotBeNull();
-		originalOwner.Role.Should().Be(TeamRole.Admin);
+		originalOwner.Role.ShouldBe(TeamRole.Admin);
 
 		var newOwner = teamMembers.SingleOrDefault(member => member.UserId == targetUser.Id);
 		newOwner.ShouldNotBeNull();
-		newOwner.Role.Should().Be(TeamRole.Owner);
+		newOwner.Role.ShouldBe(TeamRole.Owner);
 
-		teamMembers
-			.Except<TeamMember>([originalOwner, newOwner])
-			.Should()
-			.Contain(member => TeamContainsMemberWithSameRole(team, member));
+		teamMembers.Except([originalOwner, newOwner])
+			.ShouldContain(member => TeamContainsMemberWithSameRole(team, member));
 	}
 
 	[Theory]
@@ -234,18 +232,16 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		});
 
 		var originalOwner = teamMembers.Single(member => member.UserId == owner.Id);
-		originalOwner.Role.Should().Be(TeamRole.Admin);
+		originalOwner.Role.ShouldBe(TeamRole.Admin);
 
 		var newOwner = teamMembers.Single(member => member.UserId == targetUserA.Id);
-		newOwner.Role.Should().Be(TeamRole.Owner);
+		newOwner.Role.ShouldBe(TeamRole.Owner);
 
 		var concurrentTarget = teamMembers.Single(member => member.UserId == targetUserB.Id);
-		concurrentTarget.Role.Should().Be(TeamRole.Member);
+		concurrentTarget.Role.ShouldBe(TeamRole.Member);
 
-		teamMembers
-			.Except<TeamMember>([originalOwner, newOwner])
-			.Should()
-			.Contain(member => TeamContainsMemberWithSameRole(team, member));
+		teamMembers.Except([originalOwner, newOwner])
+			.ShouldContain(member => TeamContainsMemberWithSameRole(team, member));
 
 		var problemDetails = await responseB.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UnitOfWork.ConcurrencyError);

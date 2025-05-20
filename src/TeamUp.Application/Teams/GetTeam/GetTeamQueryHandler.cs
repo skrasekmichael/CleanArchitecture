@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using TeamUp.Application.Abstractions;
 using TeamUp.Contracts.Teams;
 using TeamUp.Domain.Aggregates.Teams;
@@ -30,6 +29,7 @@ internal sealed class GetTeamQueryHandler : IQueryHandler<GetTeamQuery, Result<T
 						Nickname = member.Nickname,
 						Role = member.Role
 					})
+					.OrderBy(member => member.Id)
 					.ToList()
 					.AsReadOnly(),
 				EventTypes = team.EventTypes
@@ -39,6 +39,7 @@ internal sealed class GetTeamQueryHandler : IQueryHandler<GetTeamQuery, Result<T
 						Name = eventType.Name,
 						Description = eventType.Description,
 					})
+					.OrderBy(eventType => eventType.Id)
 					.ToList()
 					.AsReadOnly()
 			})

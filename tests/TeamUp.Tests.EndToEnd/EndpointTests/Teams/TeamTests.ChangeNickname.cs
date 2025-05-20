@@ -49,7 +49,7 @@ public sealed class ChangeNicknameTests(AppFixture app) : TeamTests(app)
 		});
 
 		member.ShouldNotBeNull();
-		member.Nickname.Should().Be(request.Nickname);
+		member.Nickname.ShouldBe(request.Nickname);
 	}
 
 	[Fact]

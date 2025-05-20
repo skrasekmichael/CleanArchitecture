@@ -45,9 +45,9 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 
 		var createdEvent = await UseDbContextAsync(dbContext => dbContext.Events.FindAsync(eventId));
 		createdEvent.ShouldNotBeNull();
-		createdEvent.Status.Should().Be(EventStatus.Open);
-		createdEvent.TeamId.Should().Be(team.Id);
-		createdEvent.Should().BeEquivalentTo(request, o => o.ExcludingMissingMembers());
+		createdEvent.Status.ShouldBe(EventStatus.Open);
+		createdEvent.TeamId.ShouldBe(team.Id);
+		createdEvent.ShouldHaveSameValuesAs(request);
 	}
 
 	[Fact]

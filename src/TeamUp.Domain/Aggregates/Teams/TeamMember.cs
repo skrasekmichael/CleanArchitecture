@@ -9,7 +9,6 @@ public sealed class TeamMember : Entity<TeamMemberId>
 	public UserId UserId { get; }
 
 	public TeamId TeamId { get; }
-	public Team Team { get; }
 
 	public string Nickname { get; private set; }
 	public TeamRole Role { get; private set; }
@@ -29,7 +28,6 @@ public sealed class TeamMember : Entity<TeamMemberId>
 	{
 		UserId = userId;
 		TeamId = team.Id;
-		Team = team;
 		Nickname = nickname;
 		Role = role;
 		TimeStamp = timeStamp;

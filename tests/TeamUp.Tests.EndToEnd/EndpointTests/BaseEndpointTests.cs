@@ -79,7 +79,7 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 	{
 		var waitTask = BackgroundCallback.WaitForCallbackAsync();
 		var completedTask = await Task.WhenAny(waitTask, Task.Delay(millisecondsTimeout));
-		completedTask.Should().Be(waitTask, "Background callback has to be called");
+		completedTask.ShouldBe(waitTask, "Background callback has to be called");
 	}
 
 	protected async Task<(HttpResponseMessage A, HttpResponseMessage B)> RunConcurrentRequestsAsync(Func<Task<HttpResponseMessage>> requestA, Func<Task<HttpResponseMessage>> requestB)

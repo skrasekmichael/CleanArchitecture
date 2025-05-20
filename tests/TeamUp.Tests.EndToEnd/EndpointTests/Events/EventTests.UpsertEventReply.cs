@@ -50,8 +50,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleOrDefaultAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ShouldNotBeNull();
-		eventResponse.ReplyType.Should().Be(request.ReplyType);
-		eventResponse.Message.Should().Be(request.Message);
+		eventResponse.ReplyType.ShouldBe(request.ReplyType);
+		eventResponse.Message.ShouldBe(request.Message);
 	}
 
 	[Fact]
@@ -94,8 +94,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleOrDefaultAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ShouldNotBeNull();
-		eventResponse.ReplyType.Should().Be(request.ReplyType);
-		eventResponse.Message.Should().Be(request.Message);
+		eventResponse.ReplyType.ShouldBe(request.ReplyType);
+		eventResponse.Message.ShouldBe(request.Message);
 	}
 
 	[Fact]
@@ -140,8 +140,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleOrDefaultAsync(er => er.TeamMemberId == initiatorMemberId));
 		eventResponse.ShouldNotBeNull();
-		eventResponse.ReplyType.Should().Be(request.ReplyType);
-		eventResponse.Message.Should().Be(request.Message);
+		eventResponse.ReplyType.ShouldBe(request.ReplyType);
+		eventResponse.Message.ShouldBe(request.Message);
 	}
 
 	[Fact]
@@ -472,8 +472,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		responseB.ShouldBe409Conflict();
 
 		var eventResponse = await UseDbContextAsync(dbContext => dbContext.Set<EventResponse>().SingleAsync(er => er.TeamMemberId == initiatorMemberId));
-		eventResponse.ReplyType.Should().Be(request.ReplyType);
-		eventResponse.Message.Should().Be(request.Message);
+		eventResponse.ReplyType.ShouldBe(request.ReplyType);
+		eventResponse.Message.ShouldBe(request.Message);
 
 		var problemDetails = await responseB.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UnitOfWork.UniqueConstraintError);

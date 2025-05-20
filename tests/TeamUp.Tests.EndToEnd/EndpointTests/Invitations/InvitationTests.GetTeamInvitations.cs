@@ -35,7 +35,8 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		response.ShouldBe200OK();
 
 		var teamInvitations = await response.ReadFromJsonAsync<List<TeamInvitationResponse>>();
-		invitations.Should().BeEquivalentTo(teamInvitations, o => o.ExcludingMissingMembers());
+		teamInvitations.ShouldNotBeNull();
+		invitations.ShouldHaveSameValuesAs(teamInvitations.OrderBy(i => i.Id));
 	}
 
 	[Fact]

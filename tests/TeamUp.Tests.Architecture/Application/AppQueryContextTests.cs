@@ -28,6 +28,6 @@ public sealed class AppQueryContextTests : BaseTests
 		}
 
 		//assert
-		failingTypes.Should().BeEmpty();
+		failingTypes.ShouldBeEmpty();
 	}
 }

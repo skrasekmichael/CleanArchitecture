@@ -36,6 +36,6 @@ public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(a
 		response.ShouldBe200OK();
 
 		var userResponse = await response.ReadFromJsonAsync<AccountResponse>();
-		user.Should().BeEquivalentTo(userResponse, o => o.ExcludingMissingMembers());
+		user.ShouldHaveSameValuesAs(userResponse);
 	}
 }

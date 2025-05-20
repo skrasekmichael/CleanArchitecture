@@ -57,8 +57,8 @@ public sealed class EventsSmokeTests(AppFixture app, ITestOutputHelper output) :
 
 		Output.WriteLine($"average time without first run: {avg} ({avg.TotalMilliseconds} ms)");
 
-		avg.Should().BeLessThan(TimeSpan.FromMilliseconds(25));
-		firstRun.Should().BeLessThan(TimeSpan.FromMilliseconds(800));
+		avg.ShouldBeLessThan(TimeSpan.FromMilliseconds(25));
+		firstRun.ShouldBeLessThan(TimeSpan.FromMilliseconds(800));
 	}
 
 	[Fact]
@@ -114,7 +114,7 @@ public sealed class EventsSmokeTests(AppFixture app, ITestOutputHelper output) :
 
 		Output.WriteLine($"average time without first run: {avg} ({avg.TotalMilliseconds} ms)");
 
-		avg.Should().BeLessThan(TimeSpan.FromMilliseconds(100));
-		firstRun.Should().BeLessThan(TimeSpan.FromMilliseconds(1000));
+		avg.ShouldBeLessThan(TimeSpan.FromMilliseconds(100));
+		firstRun.ShouldBeLessThan(TimeSpan.FromMilliseconds(1000));
 	}
 }

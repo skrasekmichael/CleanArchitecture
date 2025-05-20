@@ -41,7 +41,10 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 
 		Authenticate(initiatorUser);
 
-		var expectedEvents = events.Where(e => e.ToUtc > DateTime.UtcNow).ToList();
+		var expectedEvents = events
+			.Where(e => e.ToUtc > DateTime.UtcNow)
+			.OrderBy(e => e.Id)
+			.ToList();
 
 		//act
 		var response = await Client.GetAsync(GetUrl(team.Id, null));
@@ -52,7 +55,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		var returnedEvents = await response.ReadFromJsonAsync<List<EventSlimResponse>>();
 		returnedEvents.ShouldNotBeNull();
 
-		expectedEvents.Should().BeEquivalentTo(returnedEvents, o => o.ExcludingMissingMembers());
+		expectedEvents.ShouldHaveSameValuesAs(returnedEvents.OrderBy(e => e.Id));
 		returnedEvents.ForEach(e => EventShouldContainCorrectReplyCount(e, expectedEvents));
 	}
 
@@ -95,7 +98,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		var returnedEvents = await response.ReadFromJsonAsync<List<EventSlimResponse>>();
 		returnedEvents.ShouldNotBeNull();
 
-		events.Should().BeEquivalentTo(returnedEvents, o => o.ExcludingMissingMembers());
+		events.OrderBy(e => e.Id).ShouldHaveSameValuesAs(returnedEvents.OrderBy(e => e.Id));
 		returnedEvents.ForEach(e => EventShouldContainCorrectReplyCount(e, events));
 	}
 
@@ -136,7 +139,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		response.ShouldBe200OK();
 
 		var returnedEvents = await response.ReadFromJsonAsync<List<EventSlimResponse>>();
-		returnedEvents.Should().BeEmpty();
+		returnedEvents.ShouldBeEmpty();
 	}
 
 	[Fact]

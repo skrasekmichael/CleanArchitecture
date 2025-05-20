@@ -42,14 +42,14 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 				.Where(member => member.TeamId == team.Id)
 				.ToListAsync();
 
-			teamMembers.Should().HaveCount(21);
+			teamMembers.ShouldHaveCount(21);
 
 			var teamMember = teamMembers.SingleOrDefault(member => member.UserId == initiatorUser.Id);
 			teamMember.ShouldNotBeNull();
-			teamMember.Role.Should().Be(TeamRole.Member);
+			teamMember.Role.ShouldBe(TeamRole.Member);
 
 			var acceptedInvitation = await dbContext.Invitations.FindAsync(invitation.Id);
-			acceptedInvitation.Should().BeNull();
+			acceptedInvitation.ShouldBeNull();
 		});
 	}
 
@@ -222,14 +222,14 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 				.Where(member => member.TeamId == team.Id)
 				.ToListAsync();
 
-			teamMembers.Should().HaveCount(TeamConstants.MAX_TEAM_CAPACITY);
+			teamMembers.ShouldHaveCount(TeamConstants.MAX_TEAM_CAPACITY);
 
 			var teamMember = teamMembers.SingleOrDefault(member => member.UserId == userA.Id);
 			teamMember.ShouldNotBeNull();
-			teamMember.Role.Should().Be(TeamRole.Member);
+			teamMember.Role.ShouldBe(TeamRole.Member);
 
 			var acceptedInvitation = await dbContext.Invitations.FindAsync(invitationA.Id);
-			acceptedInvitation.Should().BeNull();
+			acceptedInvitation.ShouldBeNull();
 		});
 
 		var problemDetails = await responseB.ReadProblemDetailsAsync();

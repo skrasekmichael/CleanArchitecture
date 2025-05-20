@@ -22,7 +22,7 @@ public sealed class DependencyTests : BaseTests
 			.NotHaveDependencyOnAll(dependency)
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Theory]
@@ -36,7 +36,7 @@ public sealed class DependencyTests : BaseTests
 			.NotHaveDependencyOnAll(dependency)
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Theory]
@@ -49,7 +49,7 @@ public sealed class DependencyTests : BaseTests
 			.NotHaveDependencyOnAll(dependency)
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Theory]
@@ -61,7 +61,7 @@ public sealed class DependencyTests : BaseTests
 			.NotHaveDependencyOnAll(dependency)
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 
 	[Theory]
@@ -77,6 +77,6 @@ public sealed class DependencyTests : BaseTests
 			.NotHaveDependencyOnAll(dependency)
 			.GetResult();
 
-		result.IsSuccessful.Should().BeTrue();
+		result.IsSuccessful.ShouldBeTrue();
 	}
 }

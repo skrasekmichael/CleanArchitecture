@@ -2,10 +2,12 @@
 
 namespace TeamUp.Contracts.Abstractions;
 
-public abstract record TypedId<TSelf> where TSelf : TypedId<TSelf>, new()
+public abstract record TypedId<TSelf> : IComparable<TSelf> where TSelf : TypedId<TSelf>, new()
 {
 	[JsonInclude]
 	public Guid Value { get; protected init; }
+
+	public int CompareTo(TSelf? other) => Value.CompareTo(other?.Value);
 
 	public static TSelf New() => new()
 	{

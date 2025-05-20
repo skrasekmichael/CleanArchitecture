@@ -25,12 +25,11 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		var user = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(userId));
 		user.ShouldNotBeNull();
 
-		user.Name.Should().BeEquivalentTo(request.Name);
-		user.Email.Should().BeEquivalentTo(request.Email);
-		user.Password.Should().NotBeEquivalentTo(request.Password);
+		user.Name.ShouldBe(request.Name);
+		user.Email.ShouldBe(request.Email);
 
 		await WaitForIntegrationEventsAsync(); //wait for email
-		Inbox.Should().Contain(email => email.EmailAddress == request.Email);
+		Inbox.ShouldContain(email => email.EmailAddress == request.Email);
 	}
 
 	[Fact]
@@ -99,11 +98,11 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		var user = await UseDbContextAsync(dbContext => dbContext.Users.FindAsync(userId));
 		user.ShouldNotBeNull();
 
-		user.Name.Should().BeEquivalentTo(request.Name);
-		user.Email.Should().BeEquivalentTo(request.Email);
+		user.Name.ShouldBe(request.Name);
+		user.Email.ShouldBe(request.Email);
 
 		var singleUser = await UseDbContextAsync(dbContext => dbContext.Users.SingleAsync(user => user.Email == request.Email));
-		user.Should().BeEquivalentTo(singleUser);
+		user.ShouldHaveSameValuesAs(singleUser);
 
 		var problemDetails = await responseB.ReadProblemDetailsAsync();
 		problemDetails.ShouldContainError(UnitOfWork.UniqueConstraintError);

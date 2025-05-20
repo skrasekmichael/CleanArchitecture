@@ -31,6 +31,6 @@ public sealed class ValueObjectTests : BaseTests
 		}
 
 		//assert
-		failingValueObjectTypes.Should().BeEmpty();
+		failingValueObjectTypes.ShouldBeEmpty();
 	}
 }

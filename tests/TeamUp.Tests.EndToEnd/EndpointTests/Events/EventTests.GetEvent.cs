@@ -48,9 +48,9 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var returnedEvent = await response.ReadFromJsonAsync<EventResponse>();
 		returnedEvent.ShouldNotBeNull();
 
-		returnedEvent.EventType.Should().Be(eventType.Name);
-		@event.Should().BeEquivalentTo(returnedEvent, o => o.ExcludingMissingMembers());
-		returnedEvent.EventResponses.Should().Contain(err => ResponseIsFromMemberWithCorrectNickname(err, team) && ResponseHasCorrectReply(err, @event));
+		returnedEvent.EventType.ShouldBe(eventType.Name);
+		@event.ShouldHaveSameValuesAs(returnedEvent);
+		returnedEvent.EventResponses.ShouldContain(err => ResponseIsFromMemberWithCorrectNickname(err, team) && ResponseHasCorrectReply(err, @event));
 	}
 
 	[Fact]

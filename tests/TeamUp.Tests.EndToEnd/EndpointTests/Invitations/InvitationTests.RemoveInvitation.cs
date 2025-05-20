@@ -33,7 +33,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		response.ShouldBe200OK();
 
 		var removedInvitation = await UseDbContextAsync(dbContext => dbContext.Invitations.FindAsync(invitation.Id));
-		removedInvitation.Should().BeNull();
+		removedInvitation.ShouldBeNull();
 	}
 
 	[Theory]
@@ -67,7 +67,7 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 		response.ShouldBe200OK();
 
 		var removedInvitation = await UseDbContextAsync(dbContext => dbContext.Invitations.FindAsync(invitation.Id));
-		removedInvitation.Should().BeNull();
+		removedInvitation.ShouldBeNull();
 	}
 
 	[Fact]

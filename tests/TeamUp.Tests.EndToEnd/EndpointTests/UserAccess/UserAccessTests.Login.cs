@@ -39,16 +39,16 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		response.ShouldBe200OK();
 
 		var token = await response.ReadFromJsonAsync<string>();
-		token.Should().NotBeNullOrEmpty();
+		token.ShouldNotBeNullOrEmpty();
 
 		var handler = new JwtSecurityTokenHandler();
 		var jwt = handler.ReadJwtToken(token);
 
 		jwt.ShouldNotBeNull();
-		jwt.ValidTo.Ticks.Should().BeGreaterThan(DateTime.UtcNow.Ticks);
-		jwt.Claims.Select(claim => (claim.Type, claim.Value))
-			.Should()
-			.Contain([
+		jwt.ValidTo.Ticks.ShouldBeGreaterThan(DateTime.UtcNow.Ticks);
+		jwt.Claims
+			.Select(claim => (claim.Type, claim.Value))
+			.ShouldContain([
 				(ClaimTypes.NameIdentifier, user.Id.Value.ToString()),
 				(ClaimTypes.Name, user.Name),
 				(ClaimTypes.Email, user.Email)
