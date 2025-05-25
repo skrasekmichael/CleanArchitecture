@@ -50,6 +50,20 @@ public sealed class InvitationGenerators : BaseGenerator
 			.ToList();
 	}
 
+	public static List<Invitation> GenerateRandomInvitations(DateTime createdUtc, List<User> users, List<Team> teams)
+	{
+		var created = createdUtc.DropMicroSeconds();
+		return users
+			.Select(user =>
+				Invitation
+					.RuleForBackingField(i => i.RecipientId, user.Id)
+					.RuleForBackingField(i => i.TeamId, f => f.PickRandomFromReadOnlyList(teams).Id)
+					.RuleFor(i => i.CreatedUtc, created)
+					.Generate())
+			.OrderBy(i => i.Id)
+			.ToList();
+	}
+
 	public sealed class InvalidInviteUserRequest : TheoryData<InvalidRequest<InviteUserRequest>>
 	{
 		public InvalidInviteUserRequest()

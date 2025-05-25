@@ -35,6 +35,7 @@
     <PackageVersion Include="Skrasek.RailwayResult.Errors" Version="1.2.0" />
     <PackageVersion Include="Skrasek.RailwayResult.FunctionalExtensions" Version="1.2.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+    <PackageVersion Include="System.CommandLine.DragonFruit" Version="0.4.0-alpha.22272.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
     <PackageVersion Include="Testcontainers" Version="4.4.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.4.0" />
