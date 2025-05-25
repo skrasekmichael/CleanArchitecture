@@ -1,0 +1,32 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Scripts/">
+    <File Path="scripts/rundb.ps1" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/TeamUp.Api/TeamUp.Api.csproj" />
+    <Project Path="src/TeamUp.Application/TeamUp.Application.csproj" />
+    <Project Path="src/TeamUp.Common/TeamUp.Common.csproj" />
+    <Project Path="src/TeamUp.Contracts/TeamUp.Contracts.csproj" />
+    <Project Path="src/TeamUp.Domain/TeamUp.Domain.csproj" />
+    <Project Path="src/TeamUp.Infrastructure/TeamUp.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TeamUp.Tests.Architecture/TeamUp.Tests.Architecture.csproj" />
+    <Project Path="tests/TeamUp.Tests.Common/TeamUp.Tests.Common.csproj" />
+    <Project Path="tests/TeamUp.Tests.EndToEnd/TeamUp.Tests.EndToEnd.csproj" />
+    <Project Path="tests/TeamUp.Tests.Performance/TeamUp.Tests.Performance.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/TeamUp.Tools.Seeder/TeamUp.Tools.Seeder.csproj" />
+  </Folder>
+</Solution>
