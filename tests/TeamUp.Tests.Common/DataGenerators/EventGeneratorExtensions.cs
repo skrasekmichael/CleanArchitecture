@@ -4,6 +4,8 @@ public static class EventGeneratorExtensions
 {
 	public static EventGenerator WithEventType(this EventGenerator generator, EventTypeId eventTypeId) => generator.RuleFor(x => x.EventTypeId, eventTypeId);
 
+	public static EventGenerator WithRandomEventType(this EventGenerator generator, IReadOnlyList<EventType> eventTypes) => generator.RuleFor(x => x.EventTypeId, f => f.PickRandomFromReadOnlyList(eventTypes).Id);
+
 	public static EventGenerator WithRandomEventResponses(this EventGenerator generator, IEnumerable<TeamMember> members)
 	{
 		return generator

@@ -15,7 +15,7 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		var initiatorUser = UserGenerators.User.Generate();
 		var members = UserGenerators.User.Generate(19);
 		var team = TeamGenerators.Team.WithMembers(initiatorUser, teamRole, members).Generate();
-		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow.DropMicroSeconds(), members);
+		var invitations = InvitationGenerators.GenerateTeamInvitations(team.Id, DateTime.UtcNow, members);
 
 		await UseDbContextAsync(dbContext =>
 		{

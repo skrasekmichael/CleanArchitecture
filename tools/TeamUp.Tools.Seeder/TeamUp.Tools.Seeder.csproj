@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine.DragonFruit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TeamUp.Infrastructure\TeamUp.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\tests\TeamUp.Tests.Common\TeamUp.Tests.Common.csproj" />
+  </ItemGroup>
+
+</Project>
