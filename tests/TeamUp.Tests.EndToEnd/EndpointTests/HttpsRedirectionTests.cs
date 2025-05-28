@@ -8,14 +8,14 @@ public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 	private AppFixture App { get; } = app;
 	private HttpClient Client { get; set; } = null!;
 
-	public Task InitializeAsync()
+	public ValueTask InitializeAsync()
 	{
 		Client = App.CreateClient(new WebApplicationFactoryClientOptions
 		{
 			AllowAutoRedirect = false
 		});
 
-		return Task.CompletedTask;
+		return ValueTask.CompletedTask;
 	}
 
 	[Fact]
@@ -25,7 +25,7 @@ public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 		var expectedLocation = $"https://{Client.BaseAddress!.Host}:{App.HttpsPort}/_health";
 
 		//act
-		var response = await Client.GetAsync("/_health");
+		var response = await Client.GetAsync("/_health", TestContext.Current.CancellationToken);
 
 		//assert
 		response.ShouldBe307TemporaryRedirect();
@@ -35,5 +35,5 @@ public sealed class HttpsRedirectionTests(AppFixture app) : IAsyncLifetime
 		location.ShouldBe(expectedLocation);
 	}
 
-	public Task DisposeAsync() => Task.CompletedTask;
+	public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }

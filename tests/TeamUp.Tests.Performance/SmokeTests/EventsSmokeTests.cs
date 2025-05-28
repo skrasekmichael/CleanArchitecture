@@ -1,5 +1,3 @@
-using Xunit.Abstractions;
-
 namespace TeamUp.Tests.Performance.SmokeTests;
 
 public sealed class EventsSmokeTests(AppFixture app, ITestOutputHelper output) : BasePerformanceTests(app, output)

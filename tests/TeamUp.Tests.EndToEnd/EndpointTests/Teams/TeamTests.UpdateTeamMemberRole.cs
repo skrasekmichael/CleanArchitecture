@@ -34,7 +34,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -46,7 +46,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -95,7 +95,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -107,7 +107,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -135,7 +135,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -147,7 +147,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -174,7 +174,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -186,7 +186,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -208,7 +208,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(owner);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -220,7 +220,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -238,7 +238,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -251,7 +251,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -274,7 +274,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -286,7 +286,7 @@ public sealed class UpdateTeamMemberRoleTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetMemberId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();

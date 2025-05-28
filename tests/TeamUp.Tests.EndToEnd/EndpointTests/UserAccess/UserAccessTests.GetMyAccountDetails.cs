@@ -9,7 +9,7 @@ public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(a
 	{
 		//arrange
 		//act
-		var response = await Client.GetAsync(URL);
+		var response = await Client.GetAsync(URL, CancellationToken);
 
 		//assert
 		response.ShouldBe401Unauthorized();
@@ -24,13 +24,13 @@ public sealed class GetMyAccountDetailsTests(AppFixture app) : UserAccessTests(a
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
 
 		//act
-		var response = await Client.GetAsync(URL);
+		var response = await Client.GetAsync(URL, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();

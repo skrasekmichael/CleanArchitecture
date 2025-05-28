@@ -20,13 +20,13 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.AddRange(teams);
 			dbContext.Invitations.AddRange(invitations);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(URL);
+		var response = await Client.GetAsync(URL, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -50,13 +50,13 @@ public sealed class GetMyInvitationsTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.AddRange(teams);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(URL);
+		var response = await Client.GetAsync(URL, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();

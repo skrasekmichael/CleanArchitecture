@@ -20,7 +20,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		{
 			dbContext.Users.Add(user);
 			dbContext.Teams.AddRange(ownedTeams);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -31,7 +31,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
+		var response = await Client.PostAsJsonAsync(URL, createTeamRequest, CancellationToken);
 
 		//assert
 		response.ShouldBe201Created();
@@ -71,7 +71,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -82,7 +82,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
+		var response = await Client.PostAsJsonAsync(URL, createTeamRequest, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -106,7 +106,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
+		var response = await Client.PostAsJsonAsync(URL, createTeamRequest, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -128,7 +128,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		{
 			dbContext.Users.Add(user);
 			dbContext.Teams.AddRange(ownedTeams);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -139,7 +139,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, createTeamRequest);
+		var response = await Client.PostAsJsonAsync(URL, createTeamRequest, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -161,7 +161,7 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 		{
 			dbContext.Users.Add(user);
 			dbContext.Teams.AddRange(ownedTeams);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -173,8 +173,8 @@ public sealed class CreateTeamTests(AppFixture app) : TeamTests(app)
 
 		//act
 		var (responseA, responseB) = await RunConcurrentRequestsAsync(
-			() => Client.PostAsJsonAsync(URL, createTeamRequest),
-			() => Client.PostAsJsonAsync(URL, createTeamRequest)
+			() => Client.PostAsJsonAsync(URL, createTeamRequest, CancellationToken),
+			() => Client.PostAsJsonAsync(URL, createTeamRequest, CancellationToken)
 		);
 
 		//assert

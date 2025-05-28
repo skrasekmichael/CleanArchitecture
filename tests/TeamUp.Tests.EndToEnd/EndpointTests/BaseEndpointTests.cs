@@ -17,7 +17,9 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 	internal SkewDateTimeProvider DateTimeProvider { get; private set; } = null!;
 	internal DelayedCommitUnitOfWorkOptions DelayedCommitUnitOfWorkOptions { get; private set; } = null!;
 
-	public async Task InitializeAsync()
+	protected static CancellationToken CancellationToken => TestContext.Current.CancellationToken;
+
+	public async ValueTask InitializeAsync()
 	{
 		await App.ResetDatabaseAsync();
 
@@ -106,9 +108,10 @@ public abstract class BaseEndpointTests(AppFixture app) : IAsyncLifetime
 		return (reqA.Result, reqB.Result);
 	}
 
-	public Task DisposeAsync()
+	public ValueTask DisposeAsync()
 	{
 		Client.Dispose();
-		return Task.CompletedTask;
+		GC.SuppressFinalize(this);
+		return ValueTask.CompletedTask;
 	}
 }

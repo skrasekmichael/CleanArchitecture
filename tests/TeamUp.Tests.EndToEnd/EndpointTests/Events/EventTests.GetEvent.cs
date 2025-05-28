@@ -34,13 +34,13 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(@event);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id, @event.Id));
+		var response = await Client.GetAsync(GetUrl(team.Id, @event.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -69,7 +69,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -77,7 +77,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var eventId = Guid.NewGuid();
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id.Value, eventId));
+		var response = await Client.GetAsync(GetUrl(team.Id.Value, eventId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -95,7 +95,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(initiatorUser);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -104,7 +104,7 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 		var eventId = Guid.NewGuid();
 
 		//act
-		var response = await Client.GetAsync(GetUrl(teamId, eventId));
+		var response = await Client.GetAsync(GetUrl(teamId, eventId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -137,13 +137,13 @@ public sealed class GetEventTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(@event);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id, @event.Id));
+		var response = await Client.GetAsync(GetUrl(team.Id, @event.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();

@@ -19,12 +19,12 @@ public sealed class CompleteAccountRegistrationTests(AppFixture app) : UserAcces
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		//act
 		Client.DefaultRequestHeaders.Add(UserConstants.HTTP_HEADER_PASSWORD, "password");
-		var response = await Client.PostAsync(GetUrl(user.Id), null);
+		var response = await Client.PostAsync(GetUrl(user.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -45,12 +45,12 @@ public sealed class CompleteAccountRegistrationTests(AppFixture app) : UserAcces
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		//act
 		Client.DefaultRequestHeaders.Add(UserConstants.HTTP_HEADER_PASSWORD, "password");
-		var response = await Client.PostAsync(GetUrl(user.Id), null);
+		var response = await Client.PostAsync(GetUrl(user.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();

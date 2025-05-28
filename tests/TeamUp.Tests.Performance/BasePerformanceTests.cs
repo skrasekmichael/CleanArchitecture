@@ -2,8 +2,6 @@
 using System.Net.Http.Headers;
 using TeamUp.Application.Users;
 using TeamUp.Infrastructure.Persistence;
-using Xunit.Abstractions;
-
 
 namespace TeamUp.Tests.Performance;
 
@@ -22,7 +20,7 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 		Output = output;
 	}
 
-	public async Task InitializeAsync()
+	public async ValueTask InitializeAsync()
 	{
 		await App.ResetDatabaseAsync();
 
@@ -73,16 +71,17 @@ public abstract class BasePerformanceTests : IAsyncLifetime
 	public async Task<TimeSpan> RunTestAsync(HttpRequestMessage message)
 	{
 		var timestamp = Stopwatch.GetTimestamp();
-		var response = await Client.SendAsync(message);
+		var response = await Client.SendAsync(message, TestContext.Current.CancellationToken);
 		var elapsed = Stopwatch.GetElapsedTime(timestamp);
 
 		response.ShouldBe200OK();
 		return elapsed;
 	}
 
-	public Task DisposeAsync()
+	public ValueTask DisposeAsync()
 	{
 		Client.Dispose();
-		return Task.CompletedTask;
+		GC.SuppressFinalize(this);
+		return ValueTask.CompletedTask;
 	}
 }

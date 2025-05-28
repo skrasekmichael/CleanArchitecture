@@ -18,7 +18,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(owner);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -29,7 +29,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -56,7 +56,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -67,7 +67,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -86,7 +86,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -97,7 +97,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync(GetUrl(teamId), request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(teamId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -120,7 +120,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -131,7 +131,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -156,7 +156,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(owner);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -167,7 +167,7 @@ public sealed class UpdateTeamNameTests(AppFixture app) : TeamTests(app)
 		};
 
 		//act
-		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PatchAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();

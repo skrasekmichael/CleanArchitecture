@@ -14,7 +14,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		var request = UserGenerators.ValidRegisterUserRequest.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request);
+		var response = await Client.PostAsJsonAsync(URL, request, CancellationToken);
 
 		//assert
 		response.ShouldBe201Created();
@@ -41,7 +41,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		var request = new RegisterUserRequest()
@@ -52,7 +52,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request);
+		var response = await Client.PostAsJsonAsync(URL, request, CancellationToken);
 
 		//assert
 		response.ShouldBe409Conflict();
@@ -67,7 +67,7 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 	{
 		//arrange
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request.Request);
+		var response = await Client.PostAsJsonAsync(URL, request.Request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -84,8 +84,8 @@ public sealed class RegisterUserTests(AppFixture app) : UserAccessTests(app)
 
 		//act
 		var (responseA, responseB) = await RunConcurrentRequestsAsync(
-			() => Client.PostAsJsonAsync(URL, request),
-			() => Client.PostAsJsonAsync(URL, request)
+			() => Client.PostAsJsonAsync(URL, request, CancellationToken),
+			() => Client.PostAsJsonAsync(URL, request, CancellationToken)
 		);
 
 		//assert

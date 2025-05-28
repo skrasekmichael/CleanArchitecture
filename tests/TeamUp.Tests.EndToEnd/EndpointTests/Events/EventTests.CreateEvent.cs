@@ -35,7 +35,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 			.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe201Created();
@@ -77,7 +77,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 			.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -114,7 +114,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 			.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -145,7 +145,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 			.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(teamId), request);
+		var response = await Client.PostAsJsonAsync(GetUrl(teamId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -182,7 +182,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 			.Generate();
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -219,7 +219,7 @@ public sealed class CreateEventTests(AppFixture app) : EventTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request);
+		var response = await Client.PostAsJsonAsync(GetUrl(team.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();

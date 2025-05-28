@@ -23,13 +23,13 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.AddRange(invitations);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id));
+		var response = await Client.GetAsync(GetUrl(team.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -54,13 +54,13 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.AddRange(invitations);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id));
+		var response = await Client.GetAsync(GetUrl(team.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -85,13 +85,13 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.AddRange(invitations);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id));
+		var response = await Client.GetAsync(GetUrl(team.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -110,13 +110,13 @@ public sealed class GetTeamInvitationsTests(AppFixture app) : InvitationTests(ap
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(initiatorUser);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(teamId));
+		var response = await Client.GetAsync(GetUrl(teamId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
