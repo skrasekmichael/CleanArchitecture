@@ -27,13 +27,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -67,13 +67,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -108,13 +108,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -138,13 +138,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(owner);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -169,13 +169,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, user]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -199,13 +199,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(owner);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id.Value, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id.Value, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -226,12 +226,12 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 		Authenticate(user);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(teamId, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(teamId, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -256,13 +256,13 @@ public sealed class RemoveTeamMemberTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetMemberId), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();

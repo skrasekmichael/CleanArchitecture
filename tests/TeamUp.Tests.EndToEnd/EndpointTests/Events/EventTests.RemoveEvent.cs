@@ -32,7 +32,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -40,7 +40,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var targetEvent = F.PickRandom(events);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -77,7 +77,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -85,7 +85,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var targetEvent = F.PickRandom(events);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEvent.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -116,7 +116,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -124,7 +124,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var targetEventId = EventId.New();
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEventId));
+		var response = await Client.DeleteAsync(GetUrl(team.Id, targetEventId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -142,7 +142,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(initiatorUser);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -151,7 +151,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var targetEventId = EventId.New();
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(targetTeamId, targetEventId));
+		var response = await Client.DeleteAsync(GetUrl(targetTeamId, targetEventId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -194,7 +194,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 			dbContext.Teams.AddRange([team1, team2]);
 			dbContext.Events.AddRange(team1Events);
 			dbContext.Events.AddRange(team2Events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -203,7 +203,7 @@ public sealed class RemoveEventTests(AppFixture app) : EventTests(app)
 		var targetEvent = F.PickRandom(team2Events);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(targetTeamId, targetEvent.Id));
+		var response = await Client.DeleteAsync(GetUrl(targetTeamId, targetEvent.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();

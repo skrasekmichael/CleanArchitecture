@@ -23,7 +23,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		var request = new LoginRequest
@@ -33,7 +33,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request);
+		var response = await Client.PostAsJsonAsync(URL, request, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -71,7 +71,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		var request = new LoginRequest
@@ -81,7 +81,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request);
+		var response = await Client.PostAsJsonAsync(URL, request, CancellationToken);
 
 		//assert
 		response.ShouldBe401Unauthorized();
@@ -102,7 +102,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request);
+		var response = await Client.PostAsJsonAsync(URL, request, CancellationToken);
 
 		//assert
 		response.ShouldBe401Unauthorized();
@@ -126,7 +126,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		var request = new LoginRequest
@@ -136,7 +136,7 @@ public sealed class LoginTests(AppFixture app) : UserAccessTests(app)
 		};
 
 		//act
-		var response = await Client.PostAsJsonAsync(URL, request);
+		var response = await Client.PostAsJsonAsync(URL, request, CancellationToken);
 
 		//assert
 		response.ShouldBe401Unauthorized();

@@ -21,13 +21,13 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
+		var response = await Client.DeleteAsync(GetUrl(invitation.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -55,13 +55,13 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
+		var response = await Client.DeleteAsync(GetUrl(invitation.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -86,13 +86,13 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
+		var response = await Client.DeleteAsync(GetUrl(invitation.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -118,13 +118,13 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(invitation.Id));
+		var response = await Client.DeleteAsync(GetUrl(invitation.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -147,13 +147,13 @@ public sealed class RemoveInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(invitationId));
+		var response = await Client.DeleteAsync(GetUrl(invitationId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();

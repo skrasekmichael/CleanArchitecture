@@ -25,7 +25,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -33,7 +33,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id;
 
 		//assert
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value, CancellationToken);
 
 		//act
 		response.ShouldBe200OK();
@@ -82,7 +82,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -90,7 +90,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var targetMemberId = team.Members.First(member => member.UserId == initiatorUser.Id).Id;
 
 		//assert
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId.Value, CancellationToken);
 
 		//act
 		response.ShouldBe403Forbidden();
@@ -112,7 +112,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.Add(owner);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -120,7 +120,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var targetMemberId = Guid.NewGuid();
 
 		//assert
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId, CancellationToken);
 
 		//act
 		response.ShouldBe404NotFound();
@@ -144,7 +144,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser, targetUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -152,7 +152,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var targetMemberId = team.Members.First(member => member.UserId == targetUser.Id).Id.Value;
 
 		//assert
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberId, CancellationToken);
 
 		//act
 		response.ShouldBe403Forbidden();
@@ -170,7 +170,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
@@ -179,7 +179,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 		var targetMemberId = Guid.NewGuid();
 
 		//assert
-		var response = await Client.PutAsJsonAsync(GetUrl(teamId), targetMemberId);
+		var response = await Client.PutAsJsonAsync(GetUrl(teamId), targetMemberId, CancellationToken);
 
 		//act
 		response.ShouldBe404NotFound();
@@ -205,7 +205,7 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, targetUserA, targetUserB]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(owner);
@@ -215,8 +215,8 @@ public sealed class ChangeOwnershipTests(AppFixture app) : TeamTests(app)
 
 		//assert
 		var (responseA, responseB) = await RunConcurrentRequestsAsync(
-			() => Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberAId.Value),
-			() => Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberBId.Value)
+			() => Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberAId.Value, CancellationToken),
+			() => Client.PutAsJsonAsync(GetUrl(team.Id), targetMemberBId.Value, CancellationToken)
 		);
 
 		//act

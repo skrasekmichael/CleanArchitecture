@@ -36,7 +36,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -47,7 +47,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 			.ToList();
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id, null));
+		var response = await Client.GetAsync(GetUrl(team.Id, null), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -82,7 +82,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -90,7 +90,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		var oldestEventDate = events.Select(e => e.FromUtc).Min();
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id, oldestEventDate));
+		var response = await Client.GetAsync(GetUrl(team.Id, oldestEventDate), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -125,7 +125,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -133,7 +133,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		var futureDate = events.Select(e => e.ToUtc).Max().AddHours(1).AsUtc();
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id, futureDate));
+		var response = await Client.GetAsync(GetUrl(team.Id, futureDate), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -151,7 +151,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(initiatorUser);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -159,7 +159,7 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 		var teamId = Guid.NewGuid();
 
 		//act
-		var response = await Client.GetAsync(GetUrl(teamId, null));
+		var response = await Client.GetAsync(GetUrl(teamId, null), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -192,13 +192,13 @@ public sealed class GetEventsTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.AddRange(events);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(GetUrl(team.Id, null));
+		var response = await Client.GetAsync(GetUrl(team.Id, null), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();

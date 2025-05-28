@@ -13,13 +13,13 @@ public sealed class GetUserTeamsTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(user);
 
 		//act
-		var response = await Client.GetAsync(URL);
+		var response = await Client.GetAsync(URL, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -53,13 +53,13 @@ public sealed class GetUserTeamsTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(otherTeam);
 			dbContext.Teams.AddRange(memberTeams);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.GetAsync(URL);
+		var response = await Client.GetAsync(URL, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();

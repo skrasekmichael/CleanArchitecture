@@ -17,11 +17,11 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		//act
-		var response = await Client.PostAsync(GetUrl(user.Id), null);
+		var response = await Client.PostAsync(GetUrl(user.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -43,11 +43,11 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		//act
-		var response = await Client.PostAsync(GetUrl(user.Id), null);
+		var response = await Client.PostAsync(GetUrl(user.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -68,11 +68,11 @@ public sealed class ActivateAccountTests(AppFixture app) : UserAccessTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		//act
-		var response = await Client.PostAsync(GetUrl(user.Id), null);
+		var response = await Client.PostAsync(GetUrl(user.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();

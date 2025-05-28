@@ -34,7 +34,7 @@ public sealed class AppFixture<TAppFactory> : IAsyncLifetime where TAppFactory :
 		Faker.DefaultStrictMode = true;
 	}
 
-	public async Task InitializeAsync()
+	public async ValueTask InitializeAsync()
 	{
 		await _dbContainer.StartAsync();
 
@@ -57,7 +57,7 @@ public sealed class AppFixture<TAppFactory> : IAsyncLifetime where TAppFactory :
 		AppFactory = TAppFactory.Create(ConnectionString);
 	}
 
-	public async Task DisposeAsync()
+	public async ValueTask DisposeAsync()
 	{
 		await AppFactory.DisposeAsync();
 		await _dbContainer.DisposeAsync();

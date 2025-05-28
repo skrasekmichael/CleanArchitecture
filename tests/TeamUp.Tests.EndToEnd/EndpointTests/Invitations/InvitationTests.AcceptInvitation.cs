@@ -24,13 +24,13 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -69,13 +69,13 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -99,12 +99,12 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange([initiatorUser, owner]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync(GetUrl(invitationId), null);
+		var response = await Client.PostAsync(GetUrl(invitationId), null, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -130,13 +130,13 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -161,13 +161,13 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.Add(invitation);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PostAsync(GetUrl(invitation.Id), null);
+		var response = await Client.PostAsync(GetUrl(invitation.Id), null, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -194,7 +194,7 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Invitations.AddRange([invitationA, invitationB]);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		//act
@@ -202,12 +202,12 @@ public sealed class AcceptInvitationTests(AppFixture app) : InvitationTests(app)
 			() =>
 			{
 				Authenticate(userA);
-				return Client.PostAsync(GetUrl(invitationA.Id), null);
+				return Client.PostAsync(GetUrl(invitationA.Id), null, CancellationToken);
 			},
 			() =>
 			{
 				Authenticate(userB);
-				return Client.PostAsync(GetUrl(invitationB.Id), null);
+				return Client.PostAsync(GetUrl(invitationB.Id), null, CancellationToken);
 			}
 		);
 

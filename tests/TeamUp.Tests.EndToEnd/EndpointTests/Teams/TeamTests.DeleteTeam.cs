@@ -49,13 +49,13 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 			dbContext.Teams.AddRange(teams);
 			dbContext.Events.AddRange(events);
 			dbContext.Invitations.AddRange(invitations);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(targetTeam.Id));
+		var response = await Client.DeleteAsync(GetUrl(targetTeam.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -110,13 +110,13 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id));
+		var response = await Client.DeleteAsync(GetUrl(team.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -135,12 +135,12 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 		await UseDbContextAsync(dbContext =>
 		{
 			dbContext.Users.Add(user);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 		Authenticate(user);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(teamId));
+		var response = await Client.DeleteAsync(GetUrl(teamId), CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -163,13 +163,13 @@ public sealed class DeleteTeamTests(AppFixture app) : TeamTests(app)
 			dbContext.Users.AddRange([owner, initiatorUser]);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.DeleteAsync(GetUrl(team.Id));
+		var response = await Client.DeleteAsync(GetUrl(team.Id), CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();

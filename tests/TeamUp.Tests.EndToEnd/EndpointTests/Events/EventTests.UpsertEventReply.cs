@@ -35,7 +35,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -43,7 +43,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -79,7 +79,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -87,7 +87,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -123,7 +123,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -133,7 +133,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		DateTimeProvider.ExactTime = targetEvent.FromUtc.AddMinutes(-1) - targetEvent.MeetTime - targetEvent.ReplyClosingTimeBeforeMeetTime;
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe200OK();
@@ -163,7 +163,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -171,7 +171,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetEventId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id.Value, targetEventId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -193,7 +193,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		{
 			dbContext.Users.Add(initiatorUser);
 			dbContext.Users.AddRange(members);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -201,7 +201,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetEventId), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(teamId, targetEventId), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -235,7 +235,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -243,7 +243,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe403Forbidden();
@@ -283,7 +283,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.AddRange(teams);
 			dbContext.Events.AddRange([event1, event2]);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -291,7 +291,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team1.Id, event2.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team1.Id, event2.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe404NotFound();
@@ -327,7 +327,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -335,7 +335,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		var request = EventGenerators.ValidUpsertEventReplyRequest.Generate();
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -369,7 +369,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -379,7 +379,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 		DateTimeProvider.ExactTime = targetEvent.FromUtc.AddMinutes(10) - targetEvent.MeetTime - targetEvent.ReplyClosingTimeBeforeMeetTime;
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -414,13 +414,13 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
 
 		//act
-		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request.Request);
+		var response = await Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request.Request, CancellationToken);
 
 		//assert
 		response.ShouldBe400BadRequest();
@@ -454,7 +454,7 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 			dbContext.Users.AddRange(members);
 			dbContext.Teams.Add(team);
 			dbContext.Events.Add(targetEvent);
-			return dbContext.SaveChangesAsync();
+			return dbContext.SaveChangesAsync(CancellationToken);
 		});
 
 		Authenticate(initiatorUser);
@@ -463,8 +463,8 @@ public sealed class UpsertEventReplyTests(AppFixture app) : EventTests(app)
 
 		//act
 		var (responseA, responseB) = await RunConcurrentRequestsAsync(
-			() => Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request),
-			() => Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request)
+			() => Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken),
+			() => Client.PutAsJsonAsync(GetUrl(team.Id, targetEvent.Id), request, CancellationToken)
 		);
 
 		//assert
