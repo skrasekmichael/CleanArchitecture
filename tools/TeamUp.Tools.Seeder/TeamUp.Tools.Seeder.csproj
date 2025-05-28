@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EFCore.BulkExtensions.PostgreSql" />
+    <PackageReference Include="FluentValidation" />
     <PackageReference Include="System.CommandLine.DragonFruit" />
   </ItemGroup>
 
