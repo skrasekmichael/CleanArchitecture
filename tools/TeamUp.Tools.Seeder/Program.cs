@@ -9,7 +9,7 @@ namespace TeamUp.Tools.Seeder;
 static class Program
 {
 	/// <param name="connectionString">DB connection string</param>
-	/// <param name="seedingInstructionsJSON">Expects seeding instructions in JSON format, if nothing is passed, the tool wil use default seeding instructions</param>
+	/// <param name="seedingInstructionsJSON">Expects seeding instructions in JSON format, if nothing is passed, the tool will use default seeding instructions</param>
 	/// <param name="seedDb">true means the tool will try to seed the database according to seeding strategy</param>
 	/// <param name="clearDb">true means the tool will clear the database</param>
 	static async Task<int> Main(
