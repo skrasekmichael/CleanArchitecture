@@ -24,6 +24,29 @@ public static class EventGeneratorExtensions
 				.ToList());
 	}
 
+	public static EventGenerator WithRandomEventResponses(this EventGenerator generator, IEnumerable<TeamMember> members, int randomMembersCount)
+	{
+		var randomMembers = members
+			.OrderBy(_ => Guid.NewGuid())
+			.Take(randomMembersCount)
+			.ToList();
+
+		return generator
+			.RuleFor(EventGenerators.EVENT_RESPONSES_FIELD, (f, e) => randomMembers
+				.Select(member => EventGenerators.Response
+					.RuleForBackingField(er => er.EventId, e.Id)
+					.RuleForBackingField(er => er.TeamMemberId, member.Id)
+					.RuleFor(er => er.TimeStampUtc, f => f.Date
+						.Between(DateTime.UtcNow.AddDays(-2), e.FromUtc - e.MeetTime - e.ReplyClosingTimeBeforeMeetTime)
+						.DropMicroSeconds()
+						.AsUtc())
+					.RuleFor(er => er.ReplyType, f => f.PickRandom(EventGenerators.ReplyTypes))
+					.RuleFor(er => er.Message, (f, er) => er.ReplyType == ReplyType.Yes ? string.Empty : f.Random.Text(1, EventConstants.EVENT_REPLY_MESSAGE_MAX_SIZE))
+					.Generate())
+				.OrderBy(er => er.TimeStampUtc)
+				.ToList());
+	}
+
 	public static EventGenerator WithEventResponses(this EventGenerator generator, List<(TeamMember Member, ReplyType Type)> responses)
 	{
 		return generator
