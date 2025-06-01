@@ -3,7 +3,7 @@ using TeamUp.Infrastructure.Persistence;
 
 namespace TeamUp.Tools.Seeder;
 
-internal static class BulkInsert
+internal static class BatchedInsert
 {
 	public static async Task BatchedInsertAsync<T>(this ApplicationDbContext dbContext, List<T> input, BulkConfig bulkConfig, Action<double> progress, CancellationToken ct = default) where T : class
 	{
