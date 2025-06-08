@@ -33,6 +33,8 @@
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/TeamUp.Tools.Aspire/TeamUp.Tools.Aspire.csproj" />
+    <Project Path="tools/TeamUp.Tools.Common/TeamUp.Tools.Common.csproj" />
     <Project Path="tools/TeamUp.Tools.Seeder/TeamUp.Tools.Seeder.csproj" />
+    <Project Path="tools/TeamUp.Tools.UserTools/TeamUp.Tools.UserTools.csproj" />
   </Folder>
 </Solution>

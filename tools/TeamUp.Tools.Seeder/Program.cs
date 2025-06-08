@@ -3,6 +3,7 @@ using Npgsql;
 using Respawn;
 using Respawn.Graph;
 using TeamUp.Infrastructure.Persistence;
+using TeamUp.Tools.Common;
 
 namespace TeamUp.Tools.Seeder;
 
@@ -18,6 +19,8 @@ static class Program
 		bool seedDb = true,
 		bool clearDb = false)
 	{
+		ArgumentException.ThrowIfNullOrEmpty(connectionString, nameof(connectionString));
+
 		if (!SeedingInstructions.TryParse(seedingInstructionsJSON, out var seedingInstructions))
 		{
 			Console.Error.WriteLine("Failed to parse seeding instructions");

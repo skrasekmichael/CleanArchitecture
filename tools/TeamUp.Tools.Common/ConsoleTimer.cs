@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace TeamUp.Tools.Seeder;
+namespace TeamUp.Tools.Common;
 
-internal sealed class ConsoleTimer : IAsyncDisposable
+public sealed class ConsoleTimer : IAsyncDisposable
 {
 	private readonly int _timerX, _timerY;
 	private readonly long _startTimestamp;
