@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables(prefix: "TEAMUP_");
 
+builder.ConfigureOpenTelemetry();
+
 builder.Services.AddApiVersioning(options =>
 {
 	options.DefaultApiVersion = new ApiVersion(1);
@@ -24,6 +26,7 @@ builder.Services.AddApiVersioning(options =>
 	options.GroupNameFormat = "'v'V";
 	options.SubstituteApiVersionInUrl = true;
 });
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -60,6 +63,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapPrometheusScrapingEndpoint();
 app.MapHealthChecks("/_health");
 app.MapEndpoints();
 

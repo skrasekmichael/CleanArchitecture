@@ -6,9 +6,14 @@
   </Configurations>
   <Folder Name="/Scripts/">
     <File Path="scripts/rundb.ps1" />
+    <File Path="scripts/rungrafana.ps1" />
+    <File Path="scripts/runprometheus.ps1" />
+    <File Path="scripts/prometheus.yml" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
@@ -27,6 +32,7 @@
     <Project Path="tests/TeamUp.Tests.Performance/TeamUp.Tests.Performance.csproj" />
   </Folder>
   <Folder Name="/tools/">
+    <Project Path="tools/TeamUp.Tools.Aspire/TeamUp.Tools.Aspire.csproj" />
     <Project Path="tools/TeamUp.Tools.Seeder/TeamUp.Tools.Seeder.csproj" />
   </Folder>
 </Solution>
