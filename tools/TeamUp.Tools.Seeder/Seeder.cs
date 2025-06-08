@@ -4,6 +4,7 @@ using TeamUp.Domain.Aggregates.Teams;
 using TeamUp.Domain.Aggregates.Users;
 using TeamUp.Infrastructure.Persistence;
 using TeamUp.Tests.Common.DataGenerators;
+using TeamUp.Tools.Common;
 
 namespace TeamUp.Tools.Seeder;
 

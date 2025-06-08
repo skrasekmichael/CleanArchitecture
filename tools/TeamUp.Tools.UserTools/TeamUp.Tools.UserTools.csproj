@@ -5,14 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EFCore.BulkExtensions.PostgreSql" />
-    <PackageReference Include="FluentValidation" />
     <PackageReference Include="System.CommandLine.DragonFruit" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TeamUp.Infrastructure\TeamUp.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\tests\TeamUp.Tests.Common\TeamUp.Tests.Common.csproj" />
     <ProjectReference Include="..\TeamUp.Tools.Common\TeamUp.Tools.Common.csproj" />
   </ItemGroup>
 
