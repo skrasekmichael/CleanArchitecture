@@ -27,6 +27,7 @@
     <Project Path="tests/TeamUp.Tests.Performance/TeamUp.Tests.Performance.csproj" />
   </Folder>
   <Folder Name="/tools/">
+    <Project Path="TeamUp.Tools.Aspire/TeamUp.Tools.Aspire.csproj" Id="e19dbb9f-a6ca-4de8-80d6-6f1f90eb1ecb" />
     <Project Path="tools/TeamUp.Tools.Seeder/TeamUp.Tools.Seeder.csproj" />
   </Folder>
 </Solution>
