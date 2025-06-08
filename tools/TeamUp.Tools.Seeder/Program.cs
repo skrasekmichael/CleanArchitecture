@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Respawn;
 using Respawn.Graph;
@@ -14,13 +15,11 @@ static class Program
 	/// <param name="seedDb">true means the tool will try to seed the database according to seeding strategy</param>
 	/// <param name="clearDb">true means the tool will clear the database</param>
 	static async Task<int> Main(
-		string connectionString,
+		string? connectionString = null,
 		string? seedingInstructionsJSON = null,
 		bool seedDb = true,
 		bool clearDb = false)
 	{
-		ArgumentException.ThrowIfNullOrEmpty(connectionString, nameof(connectionString));
-
 		if (!SeedingInstructions.TryParse(seedingInstructionsJSON, out var seedingInstructions))
 		{
 			Console.Error.WriteLine("Failed to parse seeding instructions");
@@ -41,16 +40,24 @@ static class Program
 			return 1;
 		}
 
+		var config = new ConfigurationBuilder()
+			.AddApiAppSettings(out var apiStream)
+			.Build();
+
+		await apiStream.DisposeAsync();
+
+		var dbConnectionString = config.GetConnectionString(connectionStringOverride: connectionString);
+
 		if (clearDb)
 		{
 			Console.Write("Clearing database...");
-			await ConsoleTimer.CallAsync(() => ClearDatabaseAsync(connectionString), default);
+			await ConsoleTimer.CallAsync(() => ClearDatabaseAsync(dbConnectionString), default);
 		}
 
 		if (seedDb)
 		{
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseNpgsql(connectionString)
+				.UseNpgsql(dbConnectionString)
 				.Options;
 
 			await using (var dbContext = new ApplicationDbContext(options))

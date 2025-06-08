@@ -9,17 +9,16 @@ using TeamUp.Tools.Common;
 
 static class Program
 {
-	/// <param name="connectionString">DB connection string</param>
 	/// <param name="userEmail">user email</param>
+	/// <param name="connectionString">DB connection string</param>
 	/// <param name="newPassword">new password</param>
 	/// <param name="newEmail">new email</param>
 	static async Task<int> Main(
-		string connectionString,
 		string userEmail,
+		string? connectionString = null,
 		string? newPassword = null,
 		string? newEmail = null)
 	{
-		ArgumentException.ThrowIfNullOrEmpty(connectionString, nameof(connectionString));
 		ArgumentException.ThrowIfNullOrEmpty(userEmail, nameof(userEmail));
 
 		var config = new ConfigurationBuilder()
@@ -28,8 +27,9 @@ static class Program
 
 		await apiStream.DisposeAsync();
 
+		var dbConnectionString = config.GetConnectionString(connectionStringOverride: connectionString);
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-			.UseNpgsql(connectionString)
+			.UseNpgsql(dbConnectionString)
 			.Options;
 
 		await using (var dbContext = new ApplicationDbContext(options))

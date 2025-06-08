@@ -12,4 +12,14 @@ public static class ConfigurationExtensions
 		config.GetSection(TOptions.SectionName).Bind(options);
 		return Options.Create(options);
 	}
+
+	public static string GetConnectionString(this IConfiguration config, string? connectionStringOverride)
+	{
+		if (!string.IsNullOrWhiteSpace(connectionStringOverride))
+		{
+			return connectionStringOverride;
+		}
+
+		return config.GetOptions<DatabaseOptions>().Value.ConnectionString;
+	}
 }
