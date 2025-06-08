@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\TeamUp.Api\TeamUp.Api.csproj" />
+    <ProjectReference Include="..\..\src\TeamUp.Api\TeamUp.Api.csproj" />
   </ItemGroup>
 
 </Project>
